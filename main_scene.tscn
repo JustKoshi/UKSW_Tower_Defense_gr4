@@ -1,0 +1,37 @@
+[gd_scene load_steps=6 format=3 uid="uid://chdc08c7ct8xv"]
+
+[ext_resource type="MeshLibrary" uid="uid://746jf5hii373" path="res://mesh_lib.tres" id="1_g0u6i"]
+[ext_resource type="Script" path="res://Camera3D.gd" id="2_quopj"]
+
+[sub_resource type="PhysicalSkyMaterial" id="PhysicalSkyMaterial_vvaih"]
+
+[sub_resource type="Sky" id="Sky_62k22"]
+sky_material = SubResource("PhysicalSkyMaterial_vvaih")
+
+[sub_resource type="Environment" id="Environment_vognj"]
+background_mode = 2
+sky = SubResource("Sky_62k22")
+fog_enabled = true
+fog_light_color = Color(0.462538, 0.644657, 0.882591, 1)
+fog_light_energy = 0.3
+
+[node name="Main_Scene" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_vognj")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.850077, 0.526659, 0, -0.526659, 0.850077, -1.06778, 8.82208, 19.8877)
+shadow_enabled = true
+
+[node name="GridMap" type="GridMap" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.5, 0)
+mesh_library = ExtResource("1_g0u6i")
+data = {
+"cells": PackedInt32Array(4, 4, 0, 4, 3, 0, 3, 3, 0, 2, 2, 0, 2, 1, 0, 1, 1, 0, 2, 0, 0, 1, 2, 0, 2, 3, 0, 1, 3, 0, 0, 2, 0, 0, 3, 0, 2, 4, 0, 3, 4, 0, 1, 4, 0, 0, 4, 0, 65535, 4, 0, 65534, 4, 0, 65533, 4, 0, 65532, 4, 0, 65531, 4, 0, 65531, 3, 0, 65531, 2, 0, 65532, 2, 0, 65533, 2, 0, 65533, 3, 0, 65534, 3, 0, 65532, 3, 0, 65535, 3, 0, 65535, 2, 0, 65534, 2, 0, 65534, 1, 0, 65533, 1, 0, 65532, 1, 0, 65531, 1, 0, 65531, 0, 0, 65531, 65535, 0, 65532, 65535, 0, 65532, 0, 0, 65533, 0, 0, 65534, 0, 0, 65535, 0, 0, 65535, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 3, 1, 0, 3, 2, 0, 4, 2, 0, 4, 1, 0, 3, 0, 0, 4, 0, 0, 4, 65535, 0, 3, 65535, 0, 2, 65535, 0, 1, 65535, 0, 0, 65535, 0, 65535, 65535, 0, 65534, 65535, 0, 65533, 65535, 0, 65532, 65534, 0, 65531, 65534, 0, 65531, 65533, 0, 65531, 65532, 0, 65531, 65531, 0, 65532, 65531, 0, 65533, 65532, 0, 65533, 65533, 0, 65532, 65533, 0, 65532, 65532, 0, 65533, 65531, 0, 65534, 65531, 0, 65534, 65532, 0, 65534, 65533, 0, 65533, 65534, 0, 65534, 65534, 0, 65535, 65534, 0, 1, 65534, 0, 2, 65534, 0, 1, 65533, 0, 0, 65533, 0, 65535, 65533, 0, 65535, 65532, 0, 65535, 65531, 0, 0, 65531, 0, 1, 65531, 0, 2, 65531, 0, 3, 65531, 0, 3, 65532, 0, 3, 65533, 0, 3, 65534, 0, 0, 65534, 0, 2, 65533, 0, 2, 65532, 0, 1, 65532, 0, 0, 65532, 0, 4, 65534, 0, 4, 65533, 0, 4, 65532, 0, 4, 65531, 0)
+}
+metadata/_editor_floor_ = Vector3(0, 6, 0)
+
+[node name="Main Camera" type="Camera3D" parent="."]
+transform = Transform3D(0.889288, -0.257098, 0.378242, -0.00714836, 0.819121, 0.573577, -0.457291, -0.512779, 0.726597, 7, 8, 15)
+script = ExtResource("2_quopj")
