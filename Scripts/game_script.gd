@@ -11,6 +11,7 @@ extends Node3D
 
 var current_cam_index = 0
 var build_mode = false
+var hover = null
 
 #Disables all camera except one with current cam index
 func set_camera():
@@ -22,29 +23,58 @@ func _input(event: InputEvent) -> void:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
 			place_block_on_click()
 
-func place_block_on_click():
-	
+
+func get_collision_point():
 	#variable to hold mouse position
 	var mouse_pos = get_viewport().get_mouse_position()
+	
 	#setting raycast start point (mouse position), length and direction -> Vector3
 	var from = cameras[current_cam_index].project_ray_origin(mouse_pos)
-	var to = from + cameras[current_cam_index].project_ray_normal(mouse_pos) * 1000
+	var to = from + cameras[current_cam_index].project_ray_normal(mouse_pos) * 100
 	
-	#gets space, creates raycast(from, to) and sends cointains result
+	#gets space, creates raycast(from, to) and cointains result
 	var space_state = get_world_3d().direct_space_state
 	var query = PhysicsRayQueryParameters3D.create(from, to)
 	var result = space_state.intersect_ray(query)
 	
+	if result.size() > 0:
+		#print("Collision point: ", result)
+		return result.position  # Return collision point
+	else:
+		return null  #No collison
+
+#function places block on raycast position
+func place_block_on_click():
+	var collision_point = get_collision_point()
 	#checking if raycast detected any block if so place block on gridmap
-	if result.size()>0:
-		var collision_point = result.position
+	if collision_point != null:
 		var grid_pos = grid_map.local_to_map(collision_point)
 		grid_map.place_block(grid_pos)
+
+#function creates block hover on raycast position
+func update_hover_cursor():
+	var collision_point = get_collision_point()
+	if collision_point != null and build_mode:
+		var grid_pos = grid_map.local_to_map(collision_point)
+		
+		var world_pos = grid_map.map_to_local(grid_pos)
+		world_pos.y += 0.5
+		hover.global_transform.origin = world_pos
+		hover.visible = true  # Upewniamy się, że wskaźnik jest widoczny
+	else:
+		hover.visible = false  # Ukryj, jeśli promień nie trafia w siatkę
+
 		
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	set_camera()
-
+	hover = MeshInstance3D.new()
+	var mesh_lib = grid_map.mesh_library
+	if mesh_lib:
+		hover.mesh = mesh_lib.get_item_mesh(1)
+		add_child(hover)
+		hover.visible = false
+		
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	if Input.is_action_just_pressed("Camera_F1"):
@@ -53,7 +83,7 @@ func _process(delta: float) -> void:
 	elif Input.is_action_just_pressed("Camera_F2"):
 		current_cam_index = 1
 		set_camera()
-
+	update_hover_cursor()
 
 #Signal to enter build mode
 func _on_button_pressed() -> void:
