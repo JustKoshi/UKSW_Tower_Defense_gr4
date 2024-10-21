@@ -4,11 +4,13 @@
 resource_name = "Green"
 albedo_color = Color(0.283518, 0.735714, 0.552265, 1)
 roughness = 0.4
+disable_receive_shadows = true
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ivt7t"]
 resource_name = "BrownDark"
 albedo_color = Color(0.607141, 0.351749, 0.27004, 1)
 roughness = 0.4
+disable_receive_shadows = true
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_bsdrw"]
 _surfaces = [{
