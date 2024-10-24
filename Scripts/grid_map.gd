@@ -106,15 +106,23 @@ func can_place_block(pos_vector: Vector3) -> bool:
 		
 	return true
 
-func place_block_in_tilemap(position: Vector3):
+func place_block_in_tilemap_temp(position: Vector3):
 	if is_within_bounds(position):
 		var tile_pos = Vector3(position.x+map_size, position.y, position.z+map_size)
-		tile_state[tile_pos.z][tile_pos.x] = 1
+		if(tile_state[tile_pos.z][tile_pos.x] == 0):
+			tile_state[tile_pos.z][tile_pos.x] = 1
+		
+func place_block_in_tilemap_permanent(position: Vector3):
+	if is_within_bounds(position):
+		var tile_pos = Vector3(position.x+map_size, position.y, position.z+map_size)
+		if(tile_state[tile_pos.z][tile_pos.x]==1):
+			tile_state[tile_pos.z][tile_pos.x] = 2
 	
 func remove_block_from_tilemap(position: Vector3):
 	if is_within_bounds(position):
 		var tile_pos = Vector3(position.x+map_size, position.y, position.z+map_size)
-		tile_state[tile_pos.z][tile_pos.x] = 0
+		if(tile_state[tile_pos.z][tile_pos.x]==1):
+			tile_state[tile_pos.z][tile_pos.x] = 0
 	
 func place_block(position_vec: Vector3):
 	
@@ -126,7 +134,7 @@ func can_place_tetris_block(grid_pos: Vector3, shape):
 	var flag = true
 	for pos in shape:
 		var new_pos = grid_pos + pos
-		place_block_in_tilemap(new_pos)
+		place_block_in_tilemap_temp(new_pos)
 		if not (can_place_block(new_pos)):
 			print("Can't place Tetris block here")
 			flag = false
@@ -144,7 +152,7 @@ func does_path_exist(start: Vector3, end: Vector3) -> bool:
 	var end_pos = Vector3(end.x+map_size, end.y, end.z+map_size)
 	
 	if tile_state[start_pos.z][start_pos.x] == 1 or tile_state[end_pos.z][end_pos.x] == 1:
-		print("Start/end point blocked")
+		print("Start/end point cannot be blocked")
 		return false
 
 	var visited = []
@@ -159,7 +167,7 @@ func dfs_search(current_pos: Vector3,target_pos: Vector3, visited) -> bool:
 		return true
 	if not is_within_tile_bounds(current_pos):
 		return false
-	if tile_state[current_pos.z][current_pos.x] == 1 or visited[current_pos.z][current_pos.x]:
+	if tile_state[current_pos.z][current_pos.x] == 1 or visited[current_pos.z][current_pos.x] or tile_state[current_pos.z][current_pos.x] == 2:
 		return false
 	
 	visited[current_pos.z][current_pos.x] = true
@@ -177,7 +185,10 @@ func place_tetris_block(position_tetris: Vector3, shape):
 	if can_place_tetris_block(position_tetris, shape):
 		for block in shape:
 			place_block(block+position_tetris)
+			place_block_in_tilemap_permanent(block+position_tetris)
 		randomize_block()
+		for row in tile_state:
+			print(row)
 		
 	#for row in tile_state:
 		#print(row)
