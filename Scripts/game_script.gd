@@ -11,6 +11,7 @@ extends Node3D
 
 var current_cam_index = 0
 var build_mode = false
+var coordinates_check_mode = false
 var hover = [null, null, null, null]
 
 #Disables all camera except one with current cam index
@@ -28,7 +29,9 @@ func _input(event: InputEvent) -> void:
 	if build_mode and event is InputEventKey:
 		if event.keycode == KEY_E and event.is_pressed():
 			grid_map.rotate_block_forward()
-	
+	if coordinates_check_mode and event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
+			check_coordinates()
 func get_collision_point():
 	#variable to hold mouse position
 	var mouse_pos = get_viewport().get_mouse_position()
@@ -73,8 +76,11 @@ func update_hover_cursor():
 		for h in hover:
 			h.visible = false  #Hides hover if it doesnt collide with grid
 		
-
-		
+func check_coordinates():
+	var collision_point = get_collision_point()
+	if collision_point != null:
+		var grid_pos = grid_map.local_to_map(collision_point)	
+		print(grid_pos)
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	set_camera()
@@ -91,9 +97,18 @@ func _process(delta: float) -> void:
 	if Input.is_action_just_pressed("Camera_F1"):
 		current_cam_index = 0
 		set_camera()
+		coordinates_check_mode = false	
 	elif Input.is_action_just_pressed("Camera_F2"):
 		current_cam_index = 1
 		set_camera()
+		coordinates_check_mode = false	
+	elif Input.is_action_just_pressed("Camera_F9"):
+		current_cam_index = 1
+		set_camera()
+		coordinates_check_mode = true
+		build_mode = false
+	if build_mode:
+		coordinates_check_mode = false	
 	update_hover_cursor()
 
 #Signal to enter build mode
