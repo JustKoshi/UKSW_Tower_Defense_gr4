@@ -12,7 +12,9 @@ extends Node3D
 var current_cam_index = 0
 var build_mode = false
 var coordinates_check_mode = false
-var hover = [null, null, null, null]
+var hover = [null, null, null, null] #array that holds blocks for hover. 4 couse very tetris block size = 4
+var hover_block_type = 1 #Index of mesh_lib array for block to use in hover
+
 
 #Disables all camera except one with current cam index
 func set_camera():
@@ -32,6 +34,7 @@ func _input(event: InputEvent) -> void:
 	if coordinates_check_mode and event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
 			check_coordinates()
+			
 func get_collision_point():
 	#variable to hold mouse position
 	var mouse_pos = get_viewport().get_mouse_position()
@@ -75,12 +78,14 @@ func update_hover_cursor():
 	else:
 		for h in hover:
 			h.visible = false  #Hides hover if it doesnt collide with grid
-		
+
+#prints in output coordinates of clicked point	
 func check_coordinates():
 	var collision_point = get_collision_point()
 	if collision_point != null:
 		var grid_pos = grid_map.local_to_map(collision_point)	
 		print(grid_pos)
+		
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	set_camera()
@@ -88,7 +93,7 @@ func _ready() -> void:
 		hover[i] = MeshInstance3D.new()
 		var mesh_lib = grid_map.mesh_library
 		if mesh_lib:
-			hover[i].mesh = mesh_lib.get_item_mesh(1)
+			hover[i].mesh = mesh_lib.get_item_mesh(hover_block_type)
 			add_child(hover[i])
 			hover[i].visible = false
 		
