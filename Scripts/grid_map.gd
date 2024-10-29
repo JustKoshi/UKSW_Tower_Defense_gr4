@@ -1,6 +1,6 @@
 extends GridMap
 
-var block_type = 7
+
 
 #all tetris block shapes and their rotations
 var tetris_blocks_L = [
@@ -65,6 +65,9 @@ var tile_state = [] #We will call this array tileset. It holds current state of 
 
 var shortest_path = [] #Array that will hold fastest route from start to finish
 
+var block_color = [1,3,5,7,8] #array that holds index of tetris blocks in mesh
+var block_type = block_color[0] #current block color
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	#print_used_tiles()
@@ -92,6 +95,9 @@ func randomize_block():
 	current_block = all_tetris_blocks[block_index]
 	current_shape = current_block[index%4]
 	index = 0
+	
+func randomize_color():
+	block_type = block_color[randi() % block_color.size()]
 	
 #Checks if block is within bounds of map
 func is_within_bounds(pos_vector: Vector3) -> bool:
@@ -208,6 +214,7 @@ func place_tetris_block(position_tetris: Vector3, shape):
 			place_block(block+position_tetris)
 			place_block_in_tilemap_permanent(block+position_tetris)
 		randomize_block()
+		randomize_color()
 		shortest_path = find_shortest_path(start_point, end_point)
 		convert_path_to_grid_map()
 		mark_shortest_path()

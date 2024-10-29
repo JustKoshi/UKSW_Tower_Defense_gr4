@@ -13,7 +13,7 @@ var current_cam_index = 0
 var build_mode = false
 var coordinates_check_mode = false
 var hover = [null, null, null, null] #array that holds blocks for hover. 4 couse very tetris block size = 4
-var hover_block_type = 1 #Index of mesh_lib array for block to use in hover
+
 
 
 #Disables all camera except one with current cam index
@@ -61,6 +61,7 @@ func place_block_on_click():
 	if collision_point != null:
 		var grid_pos = grid_map.local_to_map(collision_point)
 		grid_map.place_tetris_block(grid_pos, grid_map.current_shape)
+		update_hover_mesh()
 
 #function creates block hover on raycast position
 func update_hover_cursor():
@@ -93,7 +94,7 @@ func _ready() -> void:
 		hover[i] = MeshInstance3D.new()
 		var mesh_lib = grid_map.mesh_library
 		if mesh_lib:
-			hover[i].mesh = mesh_lib.get_item_mesh(hover_block_type)
+			hover[i].mesh = mesh_lib.get_item_mesh(grid_map.block_type)
 			add_child(hover[i])
 			hover[i].visible = false
 		
@@ -125,3 +126,11 @@ func _on_button_pressed() -> void:
 		current_cam_index = 0
 		build_mode = false
 	set_camera()
+
+func update_hover_mesh() -> void:
+	var mesh_lib = grid_map.mesh_library
+	if not mesh_lib:
+		return  # Upewnij się, że mesh_library istnieje
+	for i in range(hover.size()):
+		if hover[i]:
+			hover[i].mesh = mesh_lib.get_item_mesh(grid_map.block_type)

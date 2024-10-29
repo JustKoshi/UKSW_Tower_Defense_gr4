@@ -1,0 +1,3 @@
+[gd_scene format=3 uid="uid://vmra8hmv8mmy"]
+
+[node name="Enemy_basic" type="Node3D"]
