@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://cle8cibm038ww"]
+
+[ext_resource type="Script" path="res://Scripts/path_follow_3d.gd" id="1_ty8fq"]
+[ext_resource type="PackedScene" uid="uid://vmra8hmv8mmy" path="res://Scenes/enemy_basic.tscn" id="2_bywgg"]
+
+[node name="EnemyPathFollow" type="PathFollow3D"]
+script = ExtResource("1_ty8fq")
+
+[node name="Enemy_basic" parent="." instance=ExtResource("2_bywgg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)

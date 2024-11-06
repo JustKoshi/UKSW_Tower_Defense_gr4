@@ -75,6 +75,9 @@ func _ready() -> void:
 	for i in range(10):
 		tile_state.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
 	generate_start_end_points()
+	shortest_path = find_shortest_path(start_point, end_point)
+	convert_path_to_grid_map()
+	mark_shortest_path()
 	
 func rotate_block_forward():
 	index += 1
@@ -226,8 +229,8 @@ func place_tetris_block(position_tetris: Vector3, shape):
 func generate_start_end_points():
 	end_point = Vector3((-map_size)-1 ,0, randi()%10 - map_size)
 	start_point = Vector3(map_size,0, randi()%10 - map_size)
-	self.set_cell_item(start_point, 3)
-	self.set_cell_item(end_point, 3)
+	self.set_cell_item(start_point, 4)
+	self.set_cell_item(end_point, 4)
 	start_point = Vector3(start_point.x-1,start_point.y+1, start_point.z)
 	end_point = Vector3(end_point.x+1,end_point.y+1, end_point.z)
 	print("Start_point" + str(start_point))

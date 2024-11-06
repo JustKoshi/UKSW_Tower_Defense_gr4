@@ -9,11 +9,13 @@ extends Node3D
 #variable to cointain raycast to detect clicks in build mode
 @onready var raycast = $"Top Camera/RayCast3D"
 
+@onready var enemy_path = $"Enemy Path"
+
 var current_cam_index = 0
 var build_mode = false
 var coordinates_check_mode = false
 var hover = [null, null, null, null] #array that holds blocks for hover. 4 couse very tetris block size = 4
-
+var short_path = [] #array that holds shortest path converted to local
 
 
 #Disables all camera except one with current cam index
@@ -35,7 +37,7 @@ func _input(event: InputEvent) -> void:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
 			check_coordinates()
 			
-func get_collision_point():
+func get_collision_point(): #returns raycast collision point with map
 	#variable to hold mouse position
 	var mouse_pos = get_viewport().get_mouse_position()
 	
@@ -62,6 +64,8 @@ func place_block_on_click():
 		var grid_pos = grid_map.local_to_map(collision_point)
 		grid_map.place_tetris_block(grid_pos, grid_map.current_shape)
 		update_hover_mesh()
+		convert_path_to_local()
+		enemy_path.set_path(short_path)
 
 #function creates block hover on raycast position
 func update_hover_cursor():
@@ -90,14 +94,17 @@ func check_coordinates():
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	set_camera()
+	var mesh_lib = grid_map.mesh_library
 	for i in range(hover.size()):
 		hover[i] = MeshInstance3D.new()
-		var mesh_lib = grid_map.mesh_library
 		if mesh_lib:
 			hover[i].mesh = mesh_lib.get_item_mesh(grid_map.block_type)
 			add_child(hover[i])
 			hover[i].visible = false
-		
+	
+	convert_path_to_local()
+	enemy_path.set_path(short_path)
+	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	if Input.is_action_just_pressed("Camera_F1"):
@@ -115,7 +122,8 @@ func _process(delta: float) -> void:
 		build_mode = false
 	if build_mode:
 		coordinates_check_mode = false	
-	update_hover_cursor()
+		update_hover_cursor()
+
 
 #Signal to enter build mode
 func _on_button_pressed() -> void:
@@ -127,6 +135,7 @@ func _on_button_pressed() -> void:
 		build_mode = false
 	set_camera()
 
+#called in _progress updates mesh that is hover for block placement
 func update_hover_mesh() -> void:
 	var mesh_lib = grid_map.mesh_library
 	if not mesh_lib:
@@ -134,3 +143,22 @@ func update_hover_mesh() -> void:
 	for i in range(hover.size()):
 		if hover[i]:
 			hover[i].mesh = mesh_lib.get_item_mesh(grid_map.block_type)
+
+#transforms shortest_path from gridmap placement to local 
+func convert_path_to_local()-> void:
+	#delete path previous path
+	if not short_path.is_empty():
+		short_path = []
+		
+	#add start_end points to path (to be discussed)
+	var path_start = grid_map.start_point
+	path_start.x +=1
+	var path_end = grid_map.end_point
+	path_end.x -=1
+	short_path.append(grid_map.map_to_local(path_start))
+	
+	#we add grid_map.shortest_path to short_path changing it to local needs 
+	for vect in grid_map.shortest_path:
+			vect.y += 1
+			short_path.append(grid_map.map_to_local(vect))
+	short_path.append(grid_map.map_to_local(path_end))
