@@ -154,7 +154,7 @@ func remove_block_from_tilemap(position: Vector3):
 func place_block(position_vec: Vector3):
 	
 	if can_place_block(position_vec):
-		self.set_cell_item(position_vec,block_type)
+		set_cell_item(position_vec,block_type)
 		print("Bloczek postawiony na pozycji: ", position_vec)
 
 #function checks if tetris block can be placed in desirable spot

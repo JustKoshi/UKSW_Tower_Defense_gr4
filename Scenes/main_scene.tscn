@@ -50,7 +50,6 @@ environment = SubResource("Environment_vognj")
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.849893, 0.526956, 0, -0.526956, 0.849893, -1.068, 30.1443, 23.156)
 light_energy = 1.1
-shadow_enabled = true
 
 [node name="GridMap" type="GridMap" parent="."]
 mesh_library = ExtResource("2_5f8px")
@@ -100,5 +99,8 @@ script = ExtResource("5_6gjld")
 [node name="Enemy Path" type="Path3D" parent="."]
 curve = SubResource("Curve3D_xbv8h")
 script = ExtResource("6_p3rev")
+
+[node name="Front camera" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 18)
 
 [connection signal="pressed" from="Control/Button" to="." method="_on_button_pressed"]

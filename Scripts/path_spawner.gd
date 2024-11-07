@@ -15,6 +15,7 @@ func set_path(points: Array):
 	
 	#add new curve points
 	for point in points:
+		point.y -= 0.5
 		curve.add_point(point)
 	
 	#length of path follower has to follow - important to understand 	

@@ -1,7 +1,7 @@
 extends Node3D
 
 #List containing all cameras and current cam index
-@onready var cameras = [$"Main Camera", $"Top Camera"]
+@onready var cameras = [$"Main Camera", $"Top Camera", $"Front camera" ]
 
 #variable to contain main GridMap
 @onready var grid_map = $GridMap
@@ -108,11 +108,14 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	if Input.is_action_just_pressed("Camera_F1"):
-		current_cam_index = 0
+		if current_cam_index >0 :
+			current_cam_index -= 1
+		current_cam_index = current_cam_index%3
 		set_camera()
 		coordinates_check_mode = false	
 	elif Input.is_action_just_pressed("Camera_F2"):
-		current_cam_index = 1
+		current_cam_index += 1
+		current_cam_index = current_cam_index%3
 		set_camera()
 		coordinates_check_mode = false	
 	elif Input.is_action_just_pressed("Camera_F9"):
