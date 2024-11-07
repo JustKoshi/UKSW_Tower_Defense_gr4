@@ -67,6 +67,7 @@ var shortest_path = [] #Array that will hold fastest route from start to finish
 
 var block_color = [1,3,5,7,8] #array that holds index of tetris blocks in mesh
 var block_type = block_color[0] #current block color
+var tower_nr = 9 #index of tower in mesh
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -305,5 +306,20 @@ func mark_shortest_path():
 			var grid_pos = Vector3(i ,0 ,j)
 			if grid_pos not in shortest_path:
 				self.set_cell_item(grid_pos, 0)
-			
-	
+
+#checking if on the desired grid spot there is tetris block already
+func can_place_tower(pos_vector: Vector3) -> bool:
+	if is_within_bounds((pos_vector)):
+		if self.get_cell_item(pos_vector) in block_color:
+			return true
+		else:
+			return false
+	else:
+		return false
+
+#function placing tower in position pos_vector
+func place_tower(pos_vector: Vector3):
+	if can_place_tower(pos_vector):
+		pos_vector.y+=1
+		self.set_cell_item(pos_vector,tower_nr)
+		print("Wieża postawiona na pozycji: ", pos_vector)

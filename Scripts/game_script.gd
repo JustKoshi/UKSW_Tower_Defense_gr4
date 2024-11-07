@@ -6,13 +6,22 @@ extends Node3D
 #variable to contain main GridMap
 @onready var grid_map = $GridMap
 
+#variables holding buttons inside build ui
+@onready var tetris_button = $"Control/Walls build button"
+@onready var tower_button = $"Control/Tower build button"
+@onready var build_ui_button = $"Control/Build UI button"
+
 #variable to cointain raycast to detect clicks in build mode
 @onready var raycast = $"Top Camera/RayCast3D"
 
+
 @onready var enemy_path = $"Enemy Path"
 
+var build_ui = false
+var tower_build = false
+var tetris_build_mode = false
+
 var current_cam_index = 0
-var build_mode = false
 var coordinates_check_mode = false
 var hover = [null, null, null, null] #array that holds blocks for hover. 4 couse very tetris block size = 4
 var short_path = [] #array that holds shortest path converted to local
@@ -24,18 +33,21 @@ func set_camera():
 			cameras[i].current = (i == current_cam_index)
 
 func _input(event: InputEvent) -> void:
-	if build_mode and event is InputEventMouseButton:
+	if tetris_build_mode and event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
 			place_block_on_click()
-	if build_mode and event is InputEventKey:
+	if tetris_build_mode and event is InputEventKey:
 		if event.keycode == KEY_Q and event.is_pressed():
 			grid_map.rotate_block_backwards()
-	if build_mode and event is InputEventKey:
+	if tetris_build_mode and event is InputEventKey:
 		if event.keycode == KEY_E and event.is_pressed():
 			grid_map.rotate_block_forward()
 	if coordinates_check_mode and event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
 			check_coordinates()
+	if tower_build and event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
+			place_tower_on_click()
 			
 func get_collision_point(): #returns raycast collision point with map
 	#variable to hold mouse position
@@ -66,11 +78,19 @@ func place_block_on_click():
 		update_hover_mesh()
 		convert_path_to_local()
 		enemy_path.set_path(short_path)
+		
+#function places tower on raycast position
+func place_tower_on_click():
+	var collision_point = get_collision_point()
+	#checking if raycast detected any block if so place block on gridmap
+	if collision_point != null:
+		var grid_pos = grid_map.local_to_map(collision_point)
+		grid_map.place_tower(grid_pos)
 
 #function creates block hover on raycast position
 func update_hover_cursor():
 	var collision_point = get_collision_point()
-	if collision_point != null and build_mode:
+	if collision_point != null and tetris_build_mode:
 		var grid_pos = grid_map.local_to_map(collision_point)
 		var grid_pos_f = Vector3(grid_pos.x, grid_pos.y, grid_pos.z)
 		for i in range(grid_map.current_shape.size()):
@@ -122,21 +142,22 @@ func _process(delta: float) -> void:
 		current_cam_index = 1
 		set_camera()
 		coordinates_check_mode = true
-		build_mode = false
-	if build_mode:
+		tetris_build_mode = false
+	if tetris_build_mode:
 		coordinates_check_mode = false	
 		update_hover_cursor()
 
 
 #Signal to enter build mode
-func _on_button_pressed() -> void:
-	if not build_mode:
-		current_cam_index = 1
-		build_mode = true
+func _on_tetris_build_button_pressed() -> void:
+	if not tetris_build_mode:
+		tetris_build_mode = true
+		build_ui_button.disabled = true
+		tower_button.disabled = true
 	else:
-		current_cam_index = 0
-		build_mode = false
-	set_camera()
+		tetris_build_mode = false
+		build_ui_button.disabled = false
+		tower_button.disabled = false
 
 #called in _progress updates mesh that is hover for block placement
 func update_hover_mesh() -> void:
@@ -146,6 +167,7 @@ func update_hover_mesh() -> void:
 	for i in range(hover.size()):
 		if hover[i]:
 			hover[i].mesh = mesh_lib.get_item_mesh(grid_map.block_type)
+
 
 #transforms shortest_path from gridmap placement to local 
 func convert_path_to_local()-> void:
@@ -165,3 +187,32 @@ func convert_path_to_local()-> void:
 			vect.y += 1
 			short_path.append(grid_map.map_to_local(vect))
 	short_path.append(grid_map.map_to_local(path_end))
+
+#build ui button enables other buttons used to buy and place walls and towers
+func _on_build_ui_button_pressed() -> void:
+	if not build_ui:
+		current_cam_index = 1
+		tetris_button.visible = true
+		tetris_button.disabled = false
+		tower_button.visible = true
+		tower_button.disabled = false
+		build_ui = true
+	else:
+		current_cam_index = 0
+		tetris_button.visible = false
+		tetris_button.disabled = true
+		tower_button.visible = false
+		tower_button.disabled = true
+		build_ui = false
+	set_camera()
+
+func _on_tower_build_button_pressed() -> void:
+	if not tower_build:
+		tower_build = true
+		build_ui_button.disabled = true
+		tetris_button.disabled = true
+	else:
+		tower_build = false
+		build_ui_button.disabled = false
+		tetris_button.disabled = false
+
