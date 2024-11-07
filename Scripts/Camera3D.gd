@@ -17,7 +17,7 @@ func _ready():
 func _process(delta):
 	# Sprawdzanie naciśnięcia klawiszy
 	if Input.is_action_pressed("move_left"):
-		angle -= speed * delta  # W lewo (klawisz "A")
+		angle -= speed * delta  # W lewo (klawisz "Q")
 	elif Input.is_action_pressed("move_right"):
 		angle += speed * delta  # W prawo (klawisz "E")
 	
