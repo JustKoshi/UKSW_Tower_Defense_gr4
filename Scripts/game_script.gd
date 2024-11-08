@@ -11,11 +11,11 @@ extends Node3D
 @onready var tower_button = $"Control/Tower build button"
 @onready var build_ui_button = $"Control/Build UI button"
 
-#variable to cointain raycast to detect clicks in build mode
+#variable to contain raycast to detect clicks in build mode
 @onready var raycast = $"Top Camera/RayCast3D"
 
-
-@onready var enemy_path = $"Enemy Path"
+#variable to contain Enemy Path Spawner
+@onready var enemy_path = $"Enemy Spawner"
 
 var build_ui = false
 var tower_build = false
@@ -215,4 +215,3 @@ func _on_tower_build_button_pressed() -> void:
 		tower_build = false
 		build_ui_button.disabled = false
 		tetris_button.disabled = false
-

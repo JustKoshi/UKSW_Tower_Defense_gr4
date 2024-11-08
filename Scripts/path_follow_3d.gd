@@ -2,6 +2,7 @@ extends PathFollow3D
 
 var speed = 1 #how fast character will follow path
 var curve_length = 0.0
+@onready var enemy = $Skeleton_Minion
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -14,4 +15,5 @@ func set_curve_length(length) -> void:
 func _process(delta: float) -> void:
 	progress += speed * delta  # Poruszanie wzdłuż ścieżki
 	if progress >= curve_length:
-		progress = 0.0  # Resetuj offset, gdy osiągnie koniec
+		enemy.attack()
+		  # Resetuj offset, gdy osiągnie koniec

@@ -1,13 +1,10 @@
-
-[gd_scene load_steps=16 format=3 uid="uid://chdc08c7ct8xv"]
-
+[gd_scene load_steps=18 format=3 uid="uid://chdc08c7ct8xv"]
 
 [ext_resource type="Script" path="res://Scripts/game_script.gd" id="1_wclms"]
 [ext_resource type="MeshLibrary" uid="uid://746jf5hii373" path="res://mesh_lib.tres" id="2_5f8px"]
 [ext_resource type="Script" path="res://Scripts/grid_map.gd" id="3_u8xi5"]
 [ext_resource type="Script" path="res://Scripts/Camera3D.gd" id="4_km4am"]
 [ext_resource type="Script" path="res://Scripts/label.gd" id="5_6gjld"]
-
 [ext_resource type="Script" path="res://Scripts/path_spawner.gd" id="6_p3rev"]
 
 [sub_resource type="Gradient" id="Gradient_lq3fq"]
@@ -42,9 +39,6 @@ fog_light_energy = 0.2
 fog_density = 0.005
 volumetric_fog_density = 0.0001
 
-
-[sub_resource type="Curve3D" id="Curve3D_xbv8h"]
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7g3q7"]
 bg_color = Color(0, 0, 0, 1)
 border_width_left = 3
@@ -76,6 +70,8 @@ border_width_top = 3
 border_width_right = 3
 border_width_bottom = 3
 border_color = Color(0.819608, 0.839216, 0, 1)
+
+[sub_resource type="Curve3D" id="Curve3D_xbv8h"]
 
 [node name="Main_Scene" type="Node3D"]
 script = ExtResource("1_wclms")
@@ -169,7 +165,7 @@ offset_right = 143.0
 offset_bottom = 44.0
 script = ExtResource("5_6gjld")
 
-[node name="Enemy Path" type="Path3D" parent="."]
+[node name="Enemy Spawner" type="Path3D" parent="."]
 curve = SubResource("Curve3D_xbv8h")
 script = ExtResource("6_p3rev")
 
@@ -179,4 +175,3 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 18)
 [connection signal="pressed" from="Control/Build UI button" to="." method="_on_build_ui_button_pressed"]
 [connection signal="pressed" from="Control/Walls build button" to="." method="_on_tetris_build_button_pressed"]
 [connection signal="pressed" from="Control/Tower build button" to="." method="_on_tower_build_button_pressed"]
-

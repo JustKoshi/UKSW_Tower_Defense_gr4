@@ -1,11 +1,14 @@
-[gd_scene load_steps=3 format=3 uid="uid://cgyodar67rlt1"]
+[gd_scene load_steps=5 format=3 uid="uid://cgyodar67rlt1"]
 
 [ext_resource type="PackedScene" uid="uid://bjykvswkpb53w" path="res://Resources/characters/gltf/Skeleton_Minion.glb" id="1_r4ydw"]
+[ext_resource type="Script" path="res://Scripts/enemy_basic.gd" id="2_lhsps"]
+[ext_resource type="PackedScene" uid="uid://c7v15bprqvth6" path="res://Resources/Weapons/Skeleton_Blade.gltf" id="2_ndc5u"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_qg4mi"]
 
 [node name="basic_enemy" instance=ExtResource("1_r4ydw")]
 transform = Transform3D(-0.75, 0, -6.55671e-08, 0, 0.75, 0, 6.55671e-08, 0, -0.75, 0, 0, 0)
+script = ExtResource("2_lhsps")
 
 [node name="Skeleton3D" parent="Rig" index="0"]
 bones/0/position = Vector3(0, 0.05, 0)
@@ -92,6 +95,14 @@ bones/39/position = Vector3(-0.453507, 0.906761, -0.68886)
 bones/39/rotation = Quaternion(-0.707107, -7.27951e-08, -7.27951e-08, 0.707107)
 bones/40/position = Vector3(-0.513182, 0.839757, 0.11844)
 bones/40/rotation = Quaternion(0.669631, -0.442474, -0.551558, 0.227145)
+
+[node name="BoneAttachment3D" type="BoneAttachment3D" parent="Rig/Skeleton3D" index="9"]
+transform = Transform3D(5.36442e-07, -0.34202, -0.939692, -0.843155, -0.505244, 0.183894, -0.537669, 0.792307, -0.288376, -0.573503, 0.848293, 0.128158)
+bone_name = "hand.r"
+bone_idx = 12
+
+[node name="Skeleton_Blade2" parent="Rig/Skeleton3D/BoneAttachment3D" index="0" instance=ExtResource("2_ndc5u")]
+transform = Transform3D(-0.120605, -0.787135, 0.0766454, -0.779199, 0.105004, -0.147732, 0.135296, -0.0969235, -0.782498, 0.0273444, 0.10238, -0.0213428)
 
 [node name="AnimationPlayer" parent="." index="1"]
 autoplay = "Running_A"

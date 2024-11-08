@@ -38,6 +38,7 @@ func _process(delta: float) -> void:
 	timer += delta
 	if timer > spawnTime and enemy_count < enemy_limit :
 		timer = 0
+		#We instantiate basic_enemy
 		var new_follower = follower.instantiate()
 		follower_list.append(new_follower)
 		add_child(new_follower)

@@ -4,7 +4,6 @@
 [ext_resource type="PackedScene" uid="uid://cgyodar67rlt1" path="res://Scenes/basic_enemy.tscn" id="2_uojxn"]
 
 [node name="EnemyPathFollow" type="PathFollow3D"]
-loop = false
 script = ExtResource("1_ty8fq")
 
 [node name="Skeleton_Minion" parent="." instance=ExtResource("2_uojxn")]
