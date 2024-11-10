@@ -31,7 +31,7 @@ func set_target(targets: Array) ->void:
 #Shooting function
 func shooting() -> void:
 	var new_bullet = bullet.instantiate()
-	new_bullet.target=current_enemy
+	new_bullet.target=current_enemy.get_node("Aim")
 	new_bullet.arrow_damage=damage
 	get_node("Bullets").add_child(new_bullet)
 	new_bullet.global_position = $Aim2.global_position

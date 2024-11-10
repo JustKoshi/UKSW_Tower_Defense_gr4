@@ -3,7 +3,7 @@ extends Path3D
 var curve_length = 0.0
 var timer = 5
 var spawnTime = 5 
-var enemy_limit = 5 
+var enemy_limit = 10 
 var enemy_count = 0
 
 var follower = preload("res://Scenes/enemy_path.tscn")

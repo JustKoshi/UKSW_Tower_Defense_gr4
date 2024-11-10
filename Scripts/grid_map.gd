@@ -327,5 +327,3 @@ func place_tower_in_tilemap(col_point: Vector3)->void:
 	var tile_pos = Vector3(grid_pos.x+map_size, grid_pos.y, grid_pos.z+map_size)
 	if tile_state[tile_pos.z][tile_pos.x]==2:
 		tile_state[tile_pos.z][tile_pos.x]=3
-	for r in tile_state:
-		print (r)
