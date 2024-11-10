@@ -1,7 +1,7 @@
 extends Node3D
 
 #List containing all cameras and current cam index
-@onready var cameras = [$"Main Camera", $"Top Camera"]
+@onready var cameras = [$"Main Camera", $"Top Camera", $"Front camera" ]
 
 #variable to contain main GridMap
 @onready var grid_map = $GridMap
@@ -11,17 +11,23 @@ extends Node3D
 @onready var tower_button = $"Control/Tower build button"
 @onready var build_ui_button = $"Control/Build UI button"
 
-#variable to cointain raycast to detect clicks in build mode
+#variable to contain raycast to detect clicks in build mode
 @onready var raycast = $"Top Camera/RayCast3D"
+
+#variable to contain Enemy Path Spawner
+@onready var enemy_path = $"Enemy Spawner"
+
+var NormalTowerScene = preload("res://Scenes/normal_tower_lvl_1.tscn")
 
 var build_ui = false
 var tower_build = false
 var tetris_build_mode = false
+
 var current_cam_index = 0
 var coordinates_check_mode = false
 var hover = [null, null, null, null] #array that holds blocks for hover. 4 couse very tetris block size = 4
-
-
+var short_path = [] #array that holds shortest path converted to local
+var tower_hover_holder:MeshInstance3D = null
 
 #Disables all camera except one with current cam index
 func set_camera():
@@ -45,7 +51,7 @@ func _input(event: InputEvent) -> void:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
 			place_tower_on_click()
 			
-func get_collision_point():
+func get_collision_point(): #returns raycast collision point with map
 	#variable to hold mouse position
 	var mouse_pos = get_viewport().get_mouse_position()
 	
@@ -72,15 +78,46 @@ func place_block_on_click():
 		var grid_pos = grid_map.local_to_map(collision_point)
 		grid_map.place_tetris_block(grid_pos, grid_map.current_shape)
 		update_hover_mesh()
+		convert_path_to_local()
+		enemy_path.set_path(short_path)
 		
 #function places tower on raycast position
 func place_tower_on_click():
+	tower_hover_holder.free()
 	var collision_point = get_collision_point()
 	#checking if raycast detected any block if so place block on gridmap
-	if collision_point != null:
+	if collision_point != null and grid_map.can_place_tower(collision_point):
+		var tower = NormalTowerScene.instantiate()
 		var grid_pos = grid_map.local_to_map(collision_point)
-		grid_map.place_tower(grid_pos)
+		var place_pos = grid_map.map_to_local(grid_pos)
+		place_pos.y+=1
+		tower.position=place_pos
+		tower.get_node("MobDetector").visible=false
+		grid_map.place_tower_in_tilemap(collision_point)
+		get_node("Tower Holder").add_child(tower)
+		print("Added tower in position: ",grid_pos)
+		tower_hover_holder=null
 
+#function that hover towers over the map showing where it can be placed and its range
+func hover_tower():
+	var collision_point = get_collision_point()
+	if tower_hover_holder==null:
+		tower_hover_holder = NormalTowerScene.instantiate()
+		get_node("Tower Holder").add_child(tower_hover_holder)
+	tower_hover_holder.can_shoot=false
+	if collision_point != null:
+		tower_hover_holder.visible=true
+		var grid_pos = grid_map.local_to_map(collision_point)
+		var place_pos = grid_map.map_to_local(grid_pos)
+		place_pos.y=5
+		tower_hover_holder.position=place_pos
+		#if not grid_map.can_place_tower(collision_point):
+		#	print("no")
+		#else:
+		#	print("yes")
+	else:
+		tower_hover_holder.visible=false
+	
 #function creates block hover on raycast position
 func update_hover_cursor():
 	var collision_point = get_collision_point()
@@ -108,22 +145,28 @@ func check_coordinates():
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	set_camera()
+	var mesh_lib = grid_map.mesh_library
 	for i in range(hover.size()):
 		hover[i] = MeshInstance3D.new()
-		var mesh_lib = grid_map.mesh_library
 		if mesh_lib:
 			hover[i].mesh = mesh_lib.get_item_mesh(grid_map.block_type)
 			add_child(hover[i])
 			hover[i].visible = false
-		
+	
+	convert_path_to_local()
+	enemy_path.set_path(short_path)
+	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	if Input.is_action_just_pressed("Camera_F1"):
-		current_cam_index = 0
+		if current_cam_index >0 :
+			current_cam_index -= 1
+		current_cam_index = current_cam_index%3
 		set_camera()
 		coordinates_check_mode = false	
 	elif Input.is_action_just_pressed("Camera_F2"):
-		current_cam_index = 1
+		current_cam_index += 1
+		current_cam_index = current_cam_index%3
 		set_camera()
 		coordinates_check_mode = false	
 	elif Input.is_action_just_pressed("Camera_F9"):
@@ -133,7 +176,11 @@ func _process(delta: float) -> void:
 		tetris_build_mode = false
 	if tetris_build_mode:
 		coordinates_check_mode = false	
-	update_hover_cursor()
+		update_hover_cursor()
+	if tower_build:
+		coordinates_check_mode = false
+		hover_tower()
+
 
 #Signal to enter build mode
 func _on_tetris_build_button_pressed() -> void:
@@ -146,6 +193,7 @@ func _on_tetris_build_button_pressed() -> void:
 		build_ui_button.disabled = false
 		tower_button.disabled = false
 
+#called in _progress updates mesh that is hover for block placement
 func update_hover_mesh() -> void:
 	var mesh_lib = grid_map.mesh_library
 	if not mesh_lib:
@@ -153,6 +201,26 @@ func update_hover_mesh() -> void:
 	for i in range(hover.size()):
 		if hover[i]:
 			hover[i].mesh = mesh_lib.get_item_mesh(grid_map.block_type)
+
+
+#transforms shortest_path from gridmap placement to local 
+func convert_path_to_local()-> void:
+	#delete path previous path
+	if not short_path.is_empty():
+		short_path = []
+		
+	#add start_end points to path (to be discussed)
+	var path_start = grid_map.start_point
+	path_start.x +=1
+	var path_end = grid_map.end_point
+	path_end.x -=1
+	short_path.append(grid_map.map_to_local(path_start))
+	
+	#we add grid_map.shortest_path to short_path changing it to local needs 
+	for vect in grid_map.shortest_path:
+			vect.y += 1
+			short_path.append(grid_map.map_to_local(vect))
+	short_path.append(grid_map.map_to_local(path_end))
 
 #build ui button enables other buttons used to buy and place walls and towers
 func _on_build_ui_button_pressed() -> void:
