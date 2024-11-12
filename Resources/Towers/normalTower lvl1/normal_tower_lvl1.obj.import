@@ -1,0 +1,22 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://b7nb05oipn7ic"
+path="res://.godot/imported/normal_tower_lvl1.obj-5a41262489532206d2029e8b190b92cd.mesh"
+
+[deps]
+
+files=["res://.godot/imported/normal_tower_lvl1.obj-5a41262489532206d2029e8b190b92cd.mesh"]
+
+source_file="res://Resources/Towers/normalTower lvl1/normal_tower_lvl1.obj"
+dest_files=["res://.godot/imported/normal_tower_lvl1.obj-5a41262489532206d2029e8b190b92cd.mesh", "res://.godot/imported/normal_tower_lvl1.obj-5a41262489532206d2029e8b190b92cd.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true
+force_disable_mesh_compression=false

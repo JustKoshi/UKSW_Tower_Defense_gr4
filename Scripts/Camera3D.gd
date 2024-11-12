@@ -5,19 +5,19 @@ var angle = -40.0
 var speed = 0.5
 
 # Center of circle (Camera moves around this point)
-var center = Vector3(0, 15, 0)
-var tilt_value = -15
+var center = Vector3(0, 20, 0)
+var tilt_value = -20
 
 func _ready():
 	#initial position of camera
-	var initial_pos = Vector3(7, 15, 15)
+	var initial_pos = Vector3(7, 20, 15)
 	var offset = initial_pos - center
 	angle = atan2(offset.x, offset.z)
 
 func _process(delta):
 	# Sprawdzanie naciśnięcia klawiszy
 	if Input.is_action_pressed("move_left"):
-		angle -= speed * delta  # W lewo (klawisz "A")
+		angle -= speed * delta  # W lewo (klawisz "Q")
 	elif Input.is_action_pressed("move_right"):
 		angle += speed * delta  # W prawo (klawisz "E")
 	
