@@ -108,7 +108,7 @@ bone_name = "hand.r"
 bone_idx = 12
 
 [node name="Skeleton_Blade2" parent="Rig/Skeleton3D/BoneAttachment3D" index="0" instance=ExtResource("3_jseot")]
-transform = Transform3D(0.263032, -0.539132, 0.0123001, -0.515227, -0.247198, 0.182851, -0.159234, -0.0907218, -0.571327, 0, 0, 0)
+transform = Transform3D(-0.153267, -0.580095, 5.2306e-08, -0.578461, 0.152836, 0.0449873, -0.0434947, 0.0114918, -0.598311, 0, 0, 0)
 
 [node name="AnimationPlayer" parent="." index="1"]
 autoplay = "Running_A"

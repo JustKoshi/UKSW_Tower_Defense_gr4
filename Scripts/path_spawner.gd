@@ -65,4 +65,3 @@ func _process(delta: float) -> void:
 
 func delete_from_list(enemy: Object)->void:
 	follower_list.erase(enemy)
-
