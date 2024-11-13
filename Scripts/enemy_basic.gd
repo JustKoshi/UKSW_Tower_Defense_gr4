@@ -15,7 +15,6 @@ func _physics_process(delta):
 	else:
 		play_run_animation()
 		
-	
 
 func play_attack_animation():
 	if animation_player.current_animation != "1H_Melee_Attack_Stab":
@@ -32,7 +31,7 @@ func play_run_animation():
 func take_damage(damage: int) -> void:
 	health-=damage
 	if(health<=0):
-		queue_free()
+		get_parent_node_3d().delete_object()
 
 #Resetting attacking 
 func _on_attack_cd_timeout() -> void:

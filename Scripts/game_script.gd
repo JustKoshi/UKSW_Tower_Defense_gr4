@@ -29,10 +29,45 @@ var hover = [null, null, null, null] #array that holds blocks for hover. 4 couse
 var short_path = [] #array that holds shortest path converted to local
 var tower_hover_holder:Object = null#Object that holds tower instance that is now currently selected and might be placed
 
-#Disables all camera except one with current cam index
-func set_camera():
-	for i in range (cameras.size()):
-			cameras[i].current = (i == current_cam_index)
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	set_camera()
+	var mesh_lib = grid_map.mesh_library
+	for i in range(hover.size()):
+		hover[i] = MeshInstance3D.new()
+		if mesh_lib:
+			hover[i].mesh = mesh_lib.get_item_mesh(grid_map.block_type)
+			add_child(hover[i])
+			hover[i].visible = false
+	
+	convert_path_to_local()
+	enemy_path.set_path(short_path)
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	if Input.is_action_just_pressed("Camera_F1"):
+		if current_cam_index >0 :
+			current_cam_index -= 1
+		current_cam_index = current_cam_index%3
+		set_camera()
+		coordinates_check_mode = false	
+	elif Input.is_action_just_pressed("Camera_F2"):
+		current_cam_index += 1
+		current_cam_index = current_cam_index%3
+		set_camera()
+		coordinates_check_mode = false	
+	elif Input.is_action_just_pressed("Camera_F9"):
+		current_cam_index = 1
+		set_camera()
+		coordinates_check_mode = true
+		tetris_build_mode = false
+	if tetris_build_mode:
+		coordinates_check_mode = false	
+		update_hover_cursor()
+	if tower_build:
+		coordinates_check_mode = false
+		hover_tower()
 
 func _input(event: InputEvent) -> void:
 	if tetris_build_mode and event is InputEventMouseButton:
@@ -51,6 +86,13 @@ func _input(event: InputEvent) -> void:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
 			place_tower_on_click()
 			
+			
+#Disables all camera except one with current cam index
+func set_camera():
+	for i in range (cameras.size()):
+			cameras[i].current = (i == current_cam_index)
+
+
 func get_collision_point(): #returns raycast collision point with map
 	#variable to hold mouse position
 	var mouse_pos = get_viewport().get_mouse_position()
@@ -174,45 +216,6 @@ func check_coordinates():
 		var grid_pos = grid_map.local_to_map(collision_point)	
 		print(grid_pos)
 		
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	set_camera()
-	var mesh_lib = grid_map.mesh_library
-	for i in range(hover.size()):
-		hover[i] = MeshInstance3D.new()
-		if mesh_lib:
-			hover[i].mesh = mesh_lib.get_item_mesh(grid_map.block_type)
-			add_child(hover[i])
-			hover[i].visible = false
-	
-	convert_path_to_local()
-	enemy_path.set_path(short_path)
-	
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	if Input.is_action_just_pressed("Camera_F1"):
-		if current_cam_index >0 :
-			current_cam_index -= 1
-		current_cam_index = current_cam_index%3
-		set_camera()
-		coordinates_check_mode = false	
-	elif Input.is_action_just_pressed("Camera_F2"):
-		current_cam_index += 1
-		current_cam_index = current_cam_index%3
-		set_camera()
-		coordinates_check_mode = false	
-	elif Input.is_action_just_pressed("Camera_F9"):
-		current_cam_index = 1
-		set_camera()
-		coordinates_check_mode = true
-		tetris_build_mode = false
-	if tetris_build_mode:
-		coordinates_check_mode = false	
-		update_hover_cursor()
-	if tower_build:
-		coordinates_check_mode = false
-		hover_tower()
-
 
 #Signal to enter build mode
 func _on_tetris_build_button_pressed() -> void:

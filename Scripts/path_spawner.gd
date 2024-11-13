@@ -44,3 +44,6 @@ func _process(delta: float) -> void:
 		add_child(new_follower)
 		new_follower.set_curve_length(curve_length)
 		enemy_count+=1
+
+func delete_from_list(enemy: Object)->void:
+	follower_list.erase(enemy)
