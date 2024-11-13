@@ -312,6 +312,7 @@ func mark_shortest_path():
 #function checking if tower can be placed on top of tetris block
 func can_place_tower(col_point: Vector3)->bool:
 	var grid_pos = self.local_to_map(col_point)
+	grid_pos.y=1
 	if is_within_bounds(grid_pos):
 		var tile_pos = Vector3(grid_pos.x+map_size, grid_pos.y, grid_pos.z+map_size)
 		if tile_state[tile_pos.z][tile_pos.x]==2:
