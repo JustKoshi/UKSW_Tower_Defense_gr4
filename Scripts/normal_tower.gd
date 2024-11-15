@@ -48,4 +48,3 @@ func _process(delta: float) -> void:
 			shooting()
 			can_shoot=false
 			$"Shooting CD".start()
-	

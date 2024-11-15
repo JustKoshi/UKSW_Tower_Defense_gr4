@@ -17,3 +17,7 @@ func _process(delta: float) -> void:
 		if enemy.finished_walk==false:
 			enemy.finished_walk=true
 		  # Resetuj offset, gdy osiągnie koniec
+		
+func delete_object()->void:
+	get_parent_node_3d().delete_from_list(self)
+	queue_free()

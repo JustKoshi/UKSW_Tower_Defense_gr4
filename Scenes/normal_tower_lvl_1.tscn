@@ -5,9 +5,11 @@
 [ext_resource type="Script" path="res://Scripts/normal_tower.gd" id="3_0d14h"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_iyvvs"]
+transparency = 1
 albedo_texture = ExtResource("2_muqog")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rjsrd"]
+transparency = 1
 albedo_texture = ExtResource("2_muqog")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ccfuv"]
@@ -41,7 +43,7 @@ shape = SubResource("BoxShape3D_ccfuv")
 [node name="Range" type="CollisionShape3D" parent="MobDetector"]
 shape = SubResource("SphereShape3D_ke3xq")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="MobDetector"]
+[node name="Ran" type="MeshInstance3D" parent="MobDetector"]
 mesh = SubResource("SphereMesh_26rvo")
 surface_material_override/0 = SubResource("StandardMaterial3D_ksthd")
 

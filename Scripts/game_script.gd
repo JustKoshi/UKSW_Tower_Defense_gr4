@@ -27,12 +27,47 @@ var current_cam_index = 0
 var coordinates_check_mode = false
 var hover = [null, null, null, null] #array that holds blocks for hover. 4 couse very tetris block size = 4
 var short_path = [] #array that holds shortest path converted to local
-var tower_hover_holder:MeshInstance3D = null
+var tower_hover_holder:Object = null#Object that holds tower instance that is now currently selected and might be placed
 
-#Disables all camera except one with current cam index
-func set_camera():
-	for i in range (cameras.size()):
-			cameras[i].current = (i == current_cam_index)
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	set_camera()
+	var mesh_lib = grid_map.mesh_library
+	for i in range(hover.size()):
+		hover[i] = MeshInstance3D.new()
+		if mesh_lib:
+			hover[i].mesh = mesh_lib.get_item_mesh(grid_map.block_type)
+			add_child(hover[i])
+			hover[i].visible = false
+	
+	convert_path_to_local()
+	enemy_path.set_path(short_path)
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	if Input.is_action_just_pressed("Camera_F1"):
+		if current_cam_index >0 :
+			current_cam_index -= 1
+		current_cam_index = current_cam_index%3
+		set_camera()
+		coordinates_check_mode = false	
+	elif Input.is_action_just_pressed("Camera_F2"):
+		current_cam_index += 1
+		current_cam_index = current_cam_index%3
+		set_camera()
+		coordinates_check_mode = false	
+	elif Input.is_action_just_pressed("Camera_F9"):
+		current_cam_index = 1
+		set_camera()
+		coordinates_check_mode = true
+		tetris_build_mode = false
+	if tetris_build_mode:
+		coordinates_check_mode = false	
+		update_hover_cursor()
+	if tower_build:
+		coordinates_check_mode = false
+		hover_tower()
 
 func _input(event: InputEvent) -> void:
 	if tetris_build_mode and event is InputEventMouseButton:
@@ -51,6 +86,13 @@ func _input(event: InputEvent) -> void:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
 			place_tower_on_click()
 			
+			
+#Disables all camera except one with current cam index
+func set_camera():
+	for i in range (cameras.size()):
+			cameras[i].current = (i == current_cam_index)
+
+
 func get_collision_point(): #returns raycast collision point with map
 	#variable to hold mouse position
 	var mouse_pos = get_viewport().get_mouse_position()
@@ -83,18 +125,24 @@ func place_block_on_click():
 		
 #function places tower on raycast position
 func place_tower_on_click():
-	tower_hover_holder.free()
+	tower_hover_holder.free()#deleting hover tower before getting collision point
 	var collision_point = get_collision_point()
 	#checking if raycast detected any block if so place block on gridmap
 	if collision_point != null and grid_map.can_place_tower(collision_point):
+	#if tower can be placed instantiate tower and change its cordinates and turn off range and turning of hover transparency
 		var tower = NormalTowerScene.instantiate()
 		var grid_pos = grid_map.local_to_map(collision_point)
 		var place_pos = grid_map.map_to_local(grid_pos)
-		place_pos.y+=1
+		place_pos.y+=1.5
 		tower.position=place_pos
+		var mat = tower.get_active_material(0)
+		var mat_dup = mat.duplicate()
+		mat_dup.transparency=BaseMaterial3D.TRANSPARENCY_DISABLED
+		tower.set_surface_override_material(0,mat_dup)
+		tower.set_surface_override_material(1,mat_dup)		
 		tower.get_node("MobDetector").visible=false
 		grid_map.place_tower_in_tilemap(collision_point)
-		get_node("Tower Holder").add_child(tower)
+		self.get_node("Tower Holder").add_child(tower)
 		print("Added tower in position: ",grid_pos)
 		tower_hover_holder=null
 
@@ -102,20 +150,46 @@ func place_tower_on_click():
 func hover_tower():
 	var collision_point = get_collision_point()
 	if tower_hover_holder==null:
+		#if there was no hover instantiate 1 hover tower and making its opacity = 0.5
 		tower_hover_holder = NormalTowerScene.instantiate()
 		get_node("Tower Holder").add_child(tower_hover_holder)
+		var mat = tower_hover_holder.get_active_material(0)
+		var mat_duplicate = mat.duplicate()
+		mat_duplicate.albedo_color = Color(1,1,1,0.5)
+		tower_hover_holder.set_surface_override_material(0,mat_duplicate)
+		tower_hover_holder.set_surface_override_material(1,mat_duplicate)
 	tower_hover_holder.can_shoot=false
+	#make sure that hover tower cant shoot
 	if collision_point != null:
 		tower_hover_holder.visible=true
 		var grid_pos = grid_map.local_to_map(collision_point)
 		var place_pos = grid_map.map_to_local(grid_pos)
-		place_pos.y=5
-		tower_hover_holder.position=place_pos
-		#if not grid_map.can_place_tower(collision_point):
-		#	print("no")
-		#else:
-		#	print("yes")
+		place_pos.y=4.5
+		tower_hover_holder.position=place_pos#changing tower position after cursor
+		if grid_map.can_place_tower(collision_point):
+			#if tower can be placed change its color to normal
+			var mat_range = tower_hover_holder.get_node("MobDetector").get_child(1).get_active_material(0)
+			var mat = tower_hover_holder.get_active_material(0)
+			var mat_duplicate = mat.duplicate()
+			var mat_range_duplicate = mat_range.duplicate()
+			mat_range_duplicate.albedo_color = Color(0,0,0,0.54)
+			mat_duplicate.albedo_color = Color(1,1,1,0.5)
+			tower_hover_holder.get_node("MobDetector").get_child(1).set_surface_override_material(0,mat_range_duplicate)
+			tower_hover_holder.set_surface_override_material(0,mat_duplicate)
+			tower_hover_holder.set_surface_override_material(1,mat_duplicate)
+		else:
+			#if it cant be placed change its color to red
+			var mat_range = tower_hover_holder.get_node("MobDetector").get_child(1).get_active_material(0)
+			var mat = tower_hover_holder.get_active_material(0)
+			var mat_duplicate = mat.duplicate()
+			var mat_range_duplicate = mat_range.duplicate()
+			mat_range_duplicate.albedo_color = Color(1,0,0,0.54)
+			mat_duplicate.albedo_color = Color(1,0,0,0.5)
+			tower_hover_holder.get_node("MobDetector").get_child(1).set_surface_override_material(0,mat_range_duplicate)
+			tower_hover_holder.set_surface_override_material(0,mat_duplicate)
+			tower_hover_holder.set_surface_override_material(1,mat_duplicate)
 	else:
+		#hide hover if cursor is out of gridmap
 		tower_hover_holder.visible=false
 	
 #function creates block hover on raycast position
@@ -128,7 +202,7 @@ func update_hover_cursor():
 			pass
 			var block_pos = grid_pos_f + grid_map.current_shape[i]
 			var world_pos = grid_map.map_to_local(block_pos)
-			world_pos.y += 0.5
+			world_pos.y = 3.5
 			hover[i].global_transform.origin = world_pos
 			hover[i].visible = true  # We make sure that hover is visible
 	else:
@@ -142,45 +216,6 @@ func check_coordinates():
 		var grid_pos = grid_map.local_to_map(collision_point)	
 		print(grid_pos)
 		
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	set_camera()
-	var mesh_lib = grid_map.mesh_library
-	for i in range(hover.size()):
-		hover[i] = MeshInstance3D.new()
-		if mesh_lib:
-			hover[i].mesh = mesh_lib.get_item_mesh(grid_map.block_type)
-			add_child(hover[i])
-			hover[i].visible = false
-	
-	convert_path_to_local()
-	enemy_path.set_path(short_path)
-	
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	if Input.is_action_just_pressed("Camera_F1"):
-		if current_cam_index >0 :
-			current_cam_index -= 1
-		current_cam_index = current_cam_index%3
-		set_camera()
-		coordinates_check_mode = false	
-	elif Input.is_action_just_pressed("Camera_F2"):
-		current_cam_index += 1
-		current_cam_index = current_cam_index%3
-		set_camera()
-		coordinates_check_mode = false	
-	elif Input.is_action_just_pressed("Camera_F9"):
-		current_cam_index = 1
-		set_camera()
-		coordinates_check_mode = true
-		tetris_build_mode = false
-	if tetris_build_mode:
-		coordinates_check_mode = false	
-		update_hover_cursor()
-	if tower_build:
-		coordinates_check_mode = false
-		hover_tower()
-
 
 #Signal to enter build mode
 func _on_tetris_build_button_pressed() -> void:

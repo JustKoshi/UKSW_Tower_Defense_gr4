@@ -1,6 +1,7 @@
 extends Path3D
 
 var curve_length = 0.0
+
 var timer = 2
 var fast_timer = 5
 
@@ -8,6 +9,7 @@ var spawnTime = 3
 var spawn_Fast_Time = 5
 
 var enemy_limit = 100
+
 var enemy_count = 0
 
 var follower = preload("res://Scenes/enemy_path.tscn")
@@ -50,6 +52,7 @@ func _process(delta: float) -> void:
 		add_child(new_follower)
 		new_follower.set_curve_length(curve_length)
 		enemy_count+=1
+		
 	if fast_timer > spawn_Fast_Time and enemy_count < enemy_limit:
 		fast_timer = 0
 		
@@ -58,3 +61,7 @@ func _process(delta: float) -> void:
 		add_child(new_fast_follower)
 		new_fast_follower.set_curve_length(curve_length)
 		enemy_count+=1
+
+
+func delete_from_list(enemy: Object)->void:
+	follower_list.erase(enemy)
