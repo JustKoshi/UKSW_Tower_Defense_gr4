@@ -10,6 +10,8 @@ extends Node3D
 @onready var tetris_button = $"Control/Walls build button"
 @onready var tower_button = $"Control/Tower build button"
 @onready var build_ui_button = $"Control/Build UI button"
+@onready var freeze_tower_button = $"Control/Freeze Tower button"
+@onready var normal_tower_button = $"Control/Normal Tower button"
 
 #variable to contain raycast to detect clicks in build mode
 @onready var raycast = $"Top Camera/RayCast3D"
@@ -18,11 +20,15 @@ extends Node3D
 @onready var enemy_path = $"Enemy Spawner"
 
 var NormalTowerScene = preload("res://Scenes/normal_tower_lvl_1.tscn")
+var FreezeTowerScene = preload("res://Scenes/Freeze_tower_lvl_1.tscn")
 
 var build_ui = false
 var tower_build = false
 var tetris_build_mode = false
+var tower_mode = false
 
+var hovering_tower = 0
+var tower_to_hover = 0#Which tower is picked with button 0-none 1-normal 2-freeze 3-aoe
 var current_cam_index = 0
 var coordinates_check_mode = false
 var hover = [null, null, null, null] #array that holds blocks for hover. 4 couse very tetris block size = 4
@@ -67,7 +73,7 @@ func _process(delta: float) -> void:
 		update_hover_cursor()
 	if tower_build:
 		coordinates_check_mode = false
-		hover_tower()
+		hover_tower(tower_to_hover)
 
 func _input(event: InputEvent) -> void:
 	if tetris_build_mode and event is InputEventMouseButton:
@@ -84,7 +90,7 @@ func _input(event: InputEvent) -> void:
 			check_coordinates()
 	if tower_build and event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
-			place_tower_on_click()
+			place_tower_on_click(hovering_tower)
 			
 			
 #Disables all camera except one with current cam index
@@ -124,13 +130,20 @@ func place_block_on_click():
 		enemy_path.set_path(short_path)
 		
 #function places tower on raycast position
-func place_tower_on_click():
+func place_tower_on_click(tower_type:int):
 	tower_hover_holder.free()#deleting hover tower before getting collision point
 	var collision_point = get_collision_point()
 	#checking if raycast detected any block if so place block on gridmap
 	if collision_point != null and grid_map.can_place_tower(collision_point):
 	#if tower can be placed instantiate tower and change its cordinates and turn off range and turning of hover transparency
-		var tower = NormalTowerScene.instantiate()
+		var tower
+		if(tower_to_hover==1):
+			tower = NormalTowerScene.instantiate()
+			tower.can_shoot=true
+		elif(tower_to_hover==2):
+			tower = FreezeTowerScene.instantiate()
+			tower.can_dmg = true
+			tower.get_node("MobDetector").get_child(0).disabled=false
 		var grid_pos = grid_map.local_to_map(collision_point)
 		var place_pos = grid_map.map_to_local(grid_pos)
 		place_pos.y+=1.5
@@ -145,21 +158,27 @@ func place_tower_on_click():
 		self.get_node("Tower Holder").add_child(tower)
 		print("Added tower in position: ",grid_pos)
 		tower_hover_holder=null
+		hovering_tower = 0
 
 #function that hover towers over the map showing where it can be placed and its range
-func hover_tower():
+func hover_tower(tower_type:int):
 	var collision_point = get_collision_point()
-	if tower_hover_holder==null:
+	if tower_hover_holder==null or tower_to_hover!=hovering_tower:
 		#if there was no hover instantiate 1 hover tower and making its opacity = 0.5
-		tower_hover_holder = NormalTowerScene.instantiate()
+		if(tower_to_hover==1):
+			tower_hover_holder = NormalTowerScene.instantiate()
+			tower_hover_holder.can_shoot=false
+			hovering_tower=1
+		elif(tower_to_hover==2):
+			tower_hover_holder = FreezeTowerScene.instantiate()
+			tower_hover_holder.can_dmg = false
+			hovering_tower=2
 		get_node("Tower Holder").add_child(tower_hover_holder)
 		var mat = tower_hover_holder.get_active_material(0)
 		var mat_duplicate = mat.duplicate()
 		mat_duplicate.albedo_color = Color(1,1,1,0.5)
 		tower_hover_holder.set_surface_override_material(0,mat_duplicate)
 		tower_hover_holder.set_surface_override_material(1,mat_duplicate)
-	tower_hover_holder.can_shoot=false
-	#make sure that hover tower cant shoot
 	if collision_point != null:
 		tower_hover_holder.visible=true
 		var grid_pos = grid_map.local_to_map(collision_point)
@@ -276,11 +295,49 @@ func _on_build_ui_button_pressed() -> void:
 	set_camera()
 
 func _on_tower_build_button_pressed() -> void:
-	if not tower_build:
-		tower_build = true
+	if not tower_mode:
+		tower_mode = true
 		build_ui_button.disabled = true
 		tetris_button.disabled = true
+		normal_tower_button.visible = true
+		normal_tower_button.disabled = false
+		freeze_tower_button.visible = true
+		freeze_tower_button.disabled = false
 	else:
-		tower_build = false
+		tower_mode = false
 		build_ui_button.disabled = false
 		tetris_button.disabled = false
+		normal_tower_button.visible = false
+		normal_tower_button.disabled = true
+		freeze_tower_button.visible = false
+		freeze_tower_button.disabled = true
+		if normal_tower_button.button_pressed:
+			normal_tower_button.button_pressed = false
+			tower_build = false
+			tower_to_hover = 0
+		if freeze_tower_button.button_pressed:
+			freeze_tower_button.button_pressed = false
+			tower_build = false
+			tower_to_hover = 0
+
+
+func _on_normal_tower_button_pressed() -> void:
+	if !tower_build:
+		tower_build=true
+		tower_to_hover = 1
+		freeze_tower_button.disabled = true
+	else:
+		tower_build = false
+		tower_to_hover = 0
+		freeze_tower_button.disabled = false
+
+
+func _on_freeze_tower_button_pressed() -> void:
+	if !tower_build:
+		tower_build=true
+		tower_to_hover = 2
+		normal_tower_button.disabled = true
+	else:
+		tower_build = false
+		tower_to_hover = 0
+		normal_tower_button.disabled = false

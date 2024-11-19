@@ -89,7 +89,7 @@ bones/38/position = Vector3(0.520841, 0.788312, -0.0576373)
 bones/38/rotation = Quaternion(0.794627, -1.11759e-07, 0.607098, -5.96046e-08)
 bones/39/rotation = Quaternion(-0.707107, -7.27951e-08, -7.27951e-08, 0.707107)
 bones/40/position = Vector3(-0.510844, 0.788312, 0.0597369)
-bones/40/rotation = Quaternion(0.758253, 1.82539e-07, -0.651961, 1.11759e-08)
+bones/40/rotation = Quaternion(0.758253, 1.52737e-07, -0.651961, 1.11759e-08)
 
 [node name="BoneAttachment3D" type="BoneAttachment3D" parent="Rig/Skeleton3D" index="9"]
 transform = Transform3D(0.149894, -2.98023e-08, -0.988701, 6.85453e-07, -0.999999, 1.16229e-06, -0.988701, -1.17719e-06, -0.149894, -0.547911, 0.737155, 0.0979765)

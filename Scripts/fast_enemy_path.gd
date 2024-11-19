@@ -1,6 +1,6 @@
 extends PathFollow3D
 
-var speed = 1 #how fast character will follow path
+var speed = 2.5 #how fast character will follow path
 var curve_length = 0.0
 @onready var enemy = $Skeleton_Minion
 # Called when the node enters the scene tree for the first time.
@@ -17,7 +17,7 @@ func _process(delta: float) -> void:
 		if enemy.finished_walk==false:
 			enemy.finished_walk=true
 		  # Resetuj offset, gdy osiągnie koniec
-
+		
 func delete_object()->void:
 	get_parent_node_3d().delete_from_list(self)
 	queue_free()
