@@ -5,7 +5,7 @@
 [ext_resource type="Script" path="res://Scripts/grid_map.gd" id="3_u8xi5"]
 [ext_resource type="Script" path="res://Scripts/Camera3D.gd" id="4_km4am"]
 [ext_resource type="Script" path="res://Scripts/label.gd" id="5_6gjld"]
-[ext_resource type="Script" path="res://Scripts/resource_count_label.gd" id="6_7ej5e"]
+[ext_resource type="Script" path="res://Scenes/resource_count_label.gd" id="6_7ej5e"]
 [ext_resource type="Script" path="res://Scripts/path_spawner.gd" id="6_p3rev"]
 
 [sub_resource type="Gradient" id="Gradient_lq3fq"]
@@ -177,10 +177,8 @@ text = "Resource building"
 
 [node name="Resource count label" type="Label" parent="Control"]
 layout_mode = 0
-offset_left = 7.0
-offset_top = 95.0
-offset_right = 92.0
-offset_bottom = 130.0
+offset_right = 40.0
+offset_bottom = 23.0
 vertical_alignment = 1
 script = ExtResource("6_7ej5e")
 
@@ -197,8 +195,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 18)
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -22, 18, 0)
 
 [node name="RayCast3D" type="RayCast3D" parent="Resource Camera"]
-
-[node name="Resource Holder" type="Node" parent="."]
 
 [connection signal="pressed" from="Control/Build UI button" to="." method="_on_build_ui_button_pressed"]
 [connection signal="pressed" from="Control/Walls build button" to="." method="_on_tetris_build_button_pressed"]
