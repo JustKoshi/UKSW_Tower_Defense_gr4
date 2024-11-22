@@ -1,12 +1,18 @@
-[gd_scene load_steps=4 format=3 uid="uid://dt23d5ipegngd"]
+[gd_scene load_steps=6 format=3 uid="uid://dt23d5ipegngd"]
 
 [ext_resource type="ArrayMesh" uid="uid://c84bk3f6g5821" path="res://Resources/Resource_buildings/building_lumbermill_blue.obj" id="1_jxm2i"]
 [ext_resource type="Script" path="res://Scripts/lumbermill.gd" id="2_6bixp"]
+[ext_resource type="Texture2D" uid="uid://b1ms4h5mcmjd0" path="res://Resources/Towers/hexagons_medieval.png" id="2_hbsqb"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6vy3w"]
+albedo_texture = ExtResource("2_hbsqb")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_cw6o8"]
 
 [node name="lumbermill" type="MeshInstance3D"]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
 mesh = ExtResource("1_jxm2i")
+surface_material_override/0 = SubResource("StandardMaterial3D_6vy3w")
 script = ExtResource("2_6bixp")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
@@ -15,5 +21,6 @@ script = ExtResource("2_6bixp")
 shape = SubResource("BoxShape3D_cw6o8")
 
 [node name="Timer" type="Timer" parent="."]
+wait_time = 3.0
 
-[connection signal="timeout" from="Timer" to="." method="gen_wood"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

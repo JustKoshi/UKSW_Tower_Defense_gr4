@@ -155,25 +155,56 @@ func check_coordinates():
 		var grid_pos = grid_map.local_to_map(collision_point)	
 		print(grid_pos)
 		
+func wood_timers():
+	for i in get_node("Resource Holder").get_child_count():
+		if get_node("Resource Holder").get_child(i).generates_wood==true:
+			get_node("Resource Holder").get_child(i).get_node("Timer").start()
+			get_node("Resource Holder").get_child(i).generates_wood=false
+			wood = wood + 1
+			#print("Timer ", i)
 
 func place_resource_on_click():
+	resource_hover_holder.free()
 	var collision_point = get_collision_point()
+	
+	#checking if raycast detected any block if so place block on gridmap
+	if collision_point != null:
+		var grid_pos = grid_map.local_to_map(collision_point)
+		if grid_map.can_place_resource(grid_pos, grid_map.lumber_shape):
+			var lumbermill = Lumbermill.instantiate()
+			
+			var place_pos = grid_map.map_to_local(grid_pos)
+			place_pos.y=2.5
+			place_pos.x+=1.5
+			place_pos.z+=1.5
+			lumbermill.position=place_pos
+			grid_map.place_resource_in_tilemap(collision_point)
+			get_node("Resource Holder").add_child(lumbermill)
+			print("Added lumbermill in position: ",grid_pos)
+			resource_hover_holder=null
 	
 func hover_resource():
 	var collision_point = get_collision_point()
 	
 	if resource_hover_holder == null:
 		resource_hover_holder = Lumbermill.instantiate()
-		lumbermill.game_script = self
+		resource_hover_holder.game_script = self
 		get_node("Resource Holder").add_child(resource_hover_holder)
 	resource_hover_holder.generates_wood = false
 	if collision_point != null:
+		
+		
+		#print(collision_point)
 		resource_hover_holder.visible = true
 		var grid_pos = grid_map.local_to_map(collision_point)
 		var place_pos = grid_map.map_to_local(grid_pos)
-		place_pos.y=1
-		tower_hover_holder.position=place_pos
+		#print(grid_pos)
+		place_pos.y=2.5
+		place_pos.x+=1.5
+		place_pos.z+=1.5
+		resource_hover_holder.position=place_pos
 	else:
+		#print("nie dziala raycast")
 		resource_hover_holder.visible = false
 	
 	
@@ -194,6 +225,7 @@ func _ready() -> void:
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	wood_timers()
 	if Input.is_action_just_pressed("Camera_F1"):
 		if current_cam_index >0 :
 			current_cam_index -= 1
