@@ -31,9 +31,9 @@ func play_run_animation():
 
 #Function that changes speed of the enemy when in range of freeze tower
 func change_speed(value:float)->void:
-	print("Speed before change: ",get_parent_node_3d().speed)
+	#print("Speed before change: ",get_parent_node_3d().speed)
 	get_parent_node_3d().speed=get_parent_node_3d().speed * value
-	print("Speed after change: ",get_parent_node_3d().speed)
+	#print("Speed after change: ",get_parent_node_3d().speed)#Testing purposes
 
 #Function that happens when mob is struck with arrow/spell/canon
 func take_damage(damage: int) -> void:
