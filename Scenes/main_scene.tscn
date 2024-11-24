@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://chdc08c7ct8xv"]
+[gd_scene load_steps=19 format=3 uid="uid://chdc08c7ct8xv"]
 
 [ext_resource type="Script" path="res://Scripts/game_script.gd" id="1_wclms"]
 [ext_resource type="MeshLibrary" uid="uid://746jf5hii373" path="res://mesh_lib.tres" id="2_5f8px"]
@@ -71,6 +71,13 @@ border_width_right = 3
 border_width_bottom = 3
 border_color = Color(0.819608, 0.839216, 0, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rx7pr"]
+bg_color = Color(0.196078, 0.196078, 0.196078, 0.682353)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
 [sub_resource type="Curve3D" id="Curve3D_xbv8h"]
 
 [node name="Main_Scene" type="Node3D"]
@@ -96,7 +103,7 @@ transform = Transform3D(0.889288, -0.257098, 0.378242, -0.00714836, 0.819121, 0.
 script = ExtResource("4_km4am")
 
 [node name="Top Camera" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 22, 0)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 18, 0)
 
 [node name="RayCast3D" type="RayCast3D" parent="Top Camera"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 7.86805e-07, -18)
@@ -161,9 +168,20 @@ text = "Tower building"
 
 [node name="FPS_label" type="Label" parent="Control"]
 layout_mode = 0
-offset_right = 143.0
-offset_bottom = 44.0
+offset_left = 5.0
+offset_right = 148.0
+offset_bottom = 28.0
+theme_override_font_sizes/font_size = 20
 script = ExtResource("5_6gjld")
+
+[node name="Build time Label" type="Label" parent="Control"]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 28.0
+offset_right = 35.0
+offset_bottom = 56.0
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_rx7pr")
 
 [node name="Enemy Spawner" type="Path3D" parent="."]
 curve = SubResource("Curve3D_xbv8h")
@@ -174,6 +192,17 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 18)
 
 [node name="Tower Holder" type="Node" parent="."]
 
+[node name="Build Timer" type="Timer" parent="."]
+wait_time = 10.0
+one_shot = true
+autostart = true
+
+[node name="Switch Label Timer" type="Timer" parent="."]
+wait_time = 2.0
+
 [connection signal="pressed" from="Control/Build UI button" to="." method="_on_build_ui_button_pressed"]
 [connection signal="pressed" from="Control/Walls build button" to="." method="_on_tetris_build_button_pressed"]
 [connection signal="pressed" from="Control/Tower build button" to="." method="_on_tower_build_button_pressed"]
+[connection signal="wave_ended" from="Enemy Spawner" to="." method="_on_enemy_spawner_wave_ended"]
+[connection signal="timeout" from="Build Timer" to="." method="_on_build_timer_timeout"]
+[connection signal="timeout" from="Switch Label Timer" to="." method="_on_switch_label_timer_timeout"]
