@@ -316,8 +316,13 @@ func turn_off_build_mode():
 			tetris_button.button_pressed = false
 		tetris_build_mode = false
 		tower_build = false
-		build_ui = false
+		
+	
+	if build_ui_button.button_pressed:
+		build_ui_button.button_pressed = false
+	build_ui = false
 	build_ui_button.disabled = true
+	
 	
 		
 func _on_build_timer_timeout() -> void:

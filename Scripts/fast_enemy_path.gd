@@ -19,5 +19,5 @@ func _process(delta: float) -> void:
 		  # Resetuj offset, gdy osiągnie koniec
 		
 func delete_object()->void:
-	get_parent_node_3d().delete_from_list(self)
+	get_parent_node_3d().delete_enemy()
 	queue_free()
