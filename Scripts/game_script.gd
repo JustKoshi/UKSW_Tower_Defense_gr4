@@ -32,10 +32,12 @@ var current_cam_index = 0
 var coordinates_check_mode = false
 var hover = [null, null, null, null] #array that holds blocks for hover. 4 couse very tetris block size = 4
 var short_path = [] #array that holds shortest path converted to local
+
 var tower_hover_holder:Object = null#Object that holds tower instance that is now currently selected and might be placed
 
 var wave_number = 1
 var is_build_phase = true
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -102,6 +104,7 @@ func _input(event: InputEvent) -> void:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
 			place_tower_on_click()
 			
+
 			
 #Disables all camera except one with current cam index
 func set_camera():
@@ -137,8 +140,10 @@ func place_block_on_click():
 		grid_map.place_tetris_block(grid_pos, grid_map.current_shape)
 		update_hover_mesh()
 		convert_path_to_local()
+
 		enemy_spawner.set_path(short_path)
-		
+
+
 #function places tower on raycast position
 func place_tower_on_click():
 	tower_hover_holder.free()#deleting hover tower before getting collision point
