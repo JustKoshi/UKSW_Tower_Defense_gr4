@@ -11,11 +11,18 @@ extends Node3D
 @onready var tower_button = $"Control/Tower build button"
 @onready var build_ui_button = $"Control/Build UI button"
 
+#variables to contain build time logoic and ui label informing about build time
+@onready var build_timer = $"Build Timer"
+@onready var build_time_label = $"Control/Build time Label"
+@onready var switch_label_timer = $"Switch Label Timer"
+
 #variable to contain raycast to detect clicks in build mode
 @onready var raycast = $"Top Camera/RayCast3D"
 
 #variable to contain Enemy Path Spawner
-@onready var enemy_path = $"Enemy Spawner"
+@onready var enemy_spawner = $"Enemy Spawner"
+
+var NormalTowerScene = preload("res://Scenes/normal_tower_lvl_1.tscn")
 
 var build_ui = false
 var tower_build = false
@@ -26,12 +33,60 @@ var coordinates_check_mode = false
 var hover = [null, null, null, null] #array that holds blocks for hover. 4 couse very tetris block size = 4
 var short_path = [] #array that holds shortest path converted to local
 
+var tower_hover_holder:Object = null#Object that holds tower instance that is now currently selected and might be placed
 
-#Disables all camera except one with current cam index
-func set_camera():
-	for i in range (cameras.size()):
-			cameras[i].current = (i == current_cam_index)
+var wave_number = 1
+var is_build_phase = true
 
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	set_camera()
+	update_label_build_time()
+	var mesh_lib = grid_map.mesh_library
+	for i in range(hover.size()):
+		hover[i] = MeshInstance3D.new()
+		if mesh_lib:
+			hover[i].mesh = mesh_lib.get_item_mesh(grid_map.block_type)
+			add_child(hover[i])
+			hover[i].visible = false
+	
+	convert_path_to_local()
+	enemy_spawner.set_path(short_path)
+	
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	if Input.is_action_just_pressed("Camera_F1"):
+		if current_cam_index >0 :
+			current_cam_index -= 1
+		current_cam_index = current_cam_index%3
+		set_camera()
+		coordinates_check_mode = false	
+	elif Input.is_action_just_pressed("Camera_F2"):
+		current_cam_index += 1
+		current_cam_index = current_cam_index%3
+		set_camera()
+		coordinates_check_mode = false	
+	elif Input.is_action_just_pressed("Camera_F9"):
+		current_cam_index = 1
+		set_camera()
+		coordinates_check_mode = true
+		tetris_build_mode = false
+		
+	if tetris_build_mode:
+		coordinates_check_mode = false	
+		
+	update_hover_tetris()
+
+	if tower_build:
+		coordinates_check_mode = false
+		hover_tower()
+	elif tower_hover_holder != null:
+		tower_hover_holder.queue_free()
+		
+	if is_build_phase:
+		update_label_build_time()
+		
 func _input(event: InputEvent) -> void:
 	if tetris_build_mode and event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
@@ -49,6 +104,14 @@ func _input(event: InputEvent) -> void:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
 			place_tower_on_click()
 			
+
+			
+#Disables all camera except one with current cam index
+func set_camera():
+	for i in range (cameras.size()):
+			cameras[i].current = (i == current_cam_index)
+
+
 func get_collision_point(): #returns raycast collision point with map
 	#variable to hold mouse position
 	var mouse_pos = get_viewport().get_mouse_position()
@@ -77,18 +140,82 @@ func place_block_on_click():
 		grid_map.place_tetris_block(grid_pos, grid_map.current_shape)
 		update_hover_mesh()
 		convert_path_to_local()
-		enemy_path.set_path(short_path)
-		
+
+		enemy_spawner.set_path(short_path)
+
+
 #function places tower on raycast position
 func place_tower_on_click():
+	tower_hover_holder.free()#deleting hover tower before getting collision point
 	var collision_point = get_collision_point()
 	#checking if raycast detected any block if so place block on gridmap
-	if collision_point != null:
+	if collision_point != null and grid_map.can_place_tower(collision_point):
+	#if tower can be placed instantiate tower and change its cordinates and turn off range and turning of hover transparency
+		var tower = NormalTowerScene.instantiate()
 		var grid_pos = grid_map.local_to_map(collision_point)
-		grid_map.place_tower(grid_pos)
+		var place_pos = grid_map.map_to_local(grid_pos)
+		place_pos.y+=1.5
+		tower.position=place_pos
+		var mat = tower.get_active_material(0)
+		var mat_dup = mat.duplicate()
+		mat_dup.transparency=BaseMaterial3D.TRANSPARENCY_DISABLED
+		tower.set_surface_override_material(0,mat_dup)
+		tower.set_surface_override_material(1,mat_dup)		
+		tower.get_node("MobDetector").visible=false
+		grid_map.place_tower_in_tilemap(collision_point)
+		self.get_node("Tower Holder").add_child(tower)
+		print("Added tower in position: ",grid_pos)
+		tower_hover_holder=null
 
+#function that hover towers over the map showing where it can be placed and its range
+func hover_tower():
+	var collision_point = get_collision_point()
+	
+	if tower_hover_holder==null:
+		#if there was no hover instantiate 1 hover tower and making its opacity = 0.5
+		tower_hover_holder = NormalTowerScene.instantiate()
+		get_node("Tower Holder").add_child(tower_hover_holder)
+		var mat = tower_hover_holder.get_active_material(0)
+		var mat_duplicate = mat.duplicate()
+		mat_duplicate.albedo_color = Color(1,1,1,0.5)
+		tower_hover_holder.set_surface_override_material(0,mat_duplicate)
+		tower_hover_holder.set_surface_override_material(1,mat_duplicate)
+	tower_hover_holder.can_shoot=false
+	#make sure that hover tower cant shoot
+	if collision_point != null:
+		tower_hover_holder.visible=true
+		var grid_pos = grid_map.local_to_map(collision_point)
+		var place_pos = grid_map.map_to_local(grid_pos)
+		place_pos.y=4.5
+		tower_hover_holder.position=place_pos#changing tower position after cursor
+		if grid_map.can_place_tower(collision_point):
+			#if tower can be placed change its color to normal
+			var mat_range = tower_hover_holder.get_node("MobDetector").get_child(1).get_active_material(0)
+			var mat = tower_hover_holder.get_active_material(0)
+			var mat_duplicate = mat.duplicate()
+			var mat_range_duplicate = mat_range.duplicate()
+			mat_range_duplicate.albedo_color = Color(0,0,0,0.54)
+			mat_duplicate.albedo_color = Color(1,1,1,0.5)
+			tower_hover_holder.get_node("MobDetector").get_child(1).set_surface_override_material(0,mat_range_duplicate)
+			tower_hover_holder.set_surface_override_material(0,mat_duplicate)
+			tower_hover_holder.set_surface_override_material(1,mat_duplicate)
+		else:
+			#if it cant be placed change its color to red
+			var mat_range = tower_hover_holder.get_node("MobDetector").get_child(1).get_active_material(0)
+			var mat = tower_hover_holder.get_active_material(0)
+			var mat_duplicate = mat.duplicate()
+			var mat_range_duplicate = mat_range.duplicate()
+			mat_range_duplicate.albedo_color = Color(1,0,0,0.54)
+			mat_duplicate.albedo_color = Color(1,0,0,0.5)
+			tower_hover_holder.get_node("MobDetector").get_child(1).set_surface_override_material(0,mat_range_duplicate)
+			tower_hover_holder.set_surface_override_material(0,mat_duplicate)
+			tower_hover_holder.set_surface_override_material(1,mat_duplicate)
+	else:
+		#hide hover if cursor is out of gridmap
+		tower_hover_holder.visible=false
+	
 #function creates block hover on raycast position
-func update_hover_cursor():
+func update_hover_tetris():
 	var collision_point = get_collision_point()
 	if collision_point != null and tetris_build_mode:
 		var grid_pos = grid_map.local_to_map(collision_point)
@@ -97,7 +224,7 @@ func update_hover_cursor():
 			pass
 			var block_pos = grid_pos_f + grid_map.current_shape[i]
 			var world_pos = grid_map.map_to_local(block_pos)
-			world_pos.y += 0.5
+			world_pos.y = 3.5
 			hover[i].global_transform.origin = world_pos
 			hover[i].visible = true  # We make sure that hover is visible
 	else:
@@ -111,42 +238,6 @@ func check_coordinates():
 		var grid_pos = grid_map.local_to_map(collision_point)	
 		print(grid_pos)
 		
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	set_camera()
-	var mesh_lib = grid_map.mesh_library
-	for i in range(hover.size()):
-		hover[i] = MeshInstance3D.new()
-		if mesh_lib:
-			hover[i].mesh = mesh_lib.get_item_mesh(grid_map.block_type)
-			add_child(hover[i])
-			hover[i].visible = false
-	
-	convert_path_to_local()
-	enemy_path.set_path(short_path)
-	
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	if Input.is_action_just_pressed("Camera_F1"):
-		if current_cam_index >0 :
-			current_cam_index -= 1
-		current_cam_index = current_cam_index%3
-		set_camera()
-		coordinates_check_mode = false	
-	elif Input.is_action_just_pressed("Camera_F2"):
-		current_cam_index += 1
-		current_cam_index = current_cam_index%3
-		set_camera()
-		coordinates_check_mode = false	
-	elif Input.is_action_just_pressed("Camera_F9"):
-		current_cam_index = 1
-		set_camera()
-		coordinates_check_mode = true
-		tetris_build_mode = false
-	if tetris_build_mode:
-		coordinates_check_mode = false	
-		update_hover_cursor()
-
 
 #Signal to enter build mode
 func _on_tetris_build_button_pressed() -> void:
@@ -167,7 +258,6 @@ func update_hover_mesh() -> void:
 	for i in range(hover.size()):
 		if hover[i]:
 			hover[i].mesh = mesh_lib.get_item_mesh(grid_map.block_type)
-
 
 #transforms shortest_path from gridmap placement to local 
 func convert_path_to_local()-> void:
@@ -215,3 +305,53 @@ func _on_tower_build_button_pressed() -> void:
 		tower_build = false
 		build_ui_button.disabled = false
 		tetris_button.disabled = false
+
+func update_label_build_time():
+	build_time_label.text = "Czas na budowanie: " + str(ceil(build_timer.time_left)) + "s"
+
+func turn_off_build_mode():
+	if build_ui:
+		tower_button.disabled = true
+		tower_button.visible = false
+		if tower_button.button_pressed:
+			tower_button.button_pressed = false
+		tetris_button.disabled = true
+		tetris_button.visible = false
+		if tetris_button.button_pressed:
+			tetris_button.button_pressed = false
+		tetris_build_mode = false
+		tower_build = false
+		
+	
+	if build_ui_button.button_pressed:
+		build_ui_button.button_pressed = false
+	build_ui = false
+	build_ui_button.disabled = true
+	
+	
+		
+func _on_build_timer_timeout() -> void:
+	is_build_phase = false
+	build_time_label.text = "Faza budowania zakończona!"
+	switch_label_timer.start()
+	turn_off_build_mode()
+	if !enemy_spawner.wave_in_progress:
+		enemy_spawner.start_wave()
+
+#resets build timer and enables buttons
+func reset_build_timer():
+	is_build_phase = true
+	tower_button.disabled = false
+	build_ui_button.disabled = false
+	tetris_button.disabled = false
+	
+	build_timer.start()
+
+#when end wave signal is recived resets build timer
+func _on_enemy_spawner_wave_ended(wave_number: Variant) -> void:
+	enemy_spawner.current_wave+=1
+	reset_build_timer()
+
+#changes label 2 s after wave started
+func _on_switch_label_timer_timeout() -> void:
+	build_time_label.text = "Fala: " + str(enemy_spawner.current_wave)

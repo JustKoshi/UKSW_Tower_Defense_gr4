@@ -14,6 +14,13 @@ func set_curve_length(length) -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	progress += speed * delta  # Poruszanie wzdłuż ścieżki
-	if progress >= curve_length:
-		enemy.attack()
+
+	if progress >= curve_length and is_instance_valid(enemy):
+		if enemy.finished_walk==false:
+			enemy.finished_walk=true
 		  # Resetuj offset, gdy osiągnie koniec
+
+func delete_object()->void:
+	get_parent_node_3d().delete_enemy()
+	queue_free()
+

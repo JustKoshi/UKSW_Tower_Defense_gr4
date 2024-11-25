@@ -49,7 +49,7 @@ var tetris_blocks_S = [
 var start_point = Vector3(5,0,0)
 var end_point = Vector3(-6,0,0)
 
-#map size is 10x10 but q1-q4 are size 5x5 so it is simpler to use 5 couse map coordinates -5,4
+#map size is map_size*2 X map_size*2 but q1-q4 are size map_size X map_size so it is simpler to use map_size couse map coordinates can be negative
 var map_size = 5
 
 #all directions to chceck for dfs and bfs search
@@ -61,24 +61,32 @@ var block_index = 0 #index of block in all_tetris_blocks
 var all_tetris_blocks = [tetris_blocks_L, tetris_blocks_sqr, tetris_blocks_J, tetris_blocks_Z, tetris_blocks_I, tetris_blocks_T, tetris_blocks_S]
 var current_block = all_tetris_blocks[block_index] #current tetris block
 var current_shape = current_block[index] #current exact block shape (rotation)
-var tile_state = [] #We will call this array tileset. It holds current state of map but in 2D. 
+var tile_state = [] #We will call this array tileset. It holds current state of map but in 2D. 0-nothing 1-temp block 2-tetris block 3-tetris block with tower on
 
 var shortest_path = [] #Array that will hold fastest route from start to finish
 
 var block_color = [1,3,5,7,8] #array that holds index of tetris blocks in mesh
 var block_type = block_color[0] #current block color
-var tower_nr = 9 #index of tower in mesh
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	#print_used_tiles()
 	randomize_block()
-	for i in range(10):
-		tile_state.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+	for i in range(map_size*2):
+		var row = []
+		for j in range(map_size * 2):
+			row.append(0)
+		tile_state.append(row)
+		
 	generate_start_end_points()
 	shortest_path = find_shortest_path(start_point, end_point)
 	convert_path_to_grid_map()
 	mark_shortest_path()
+	
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	pass
 	
 func rotate_block_forward():
 	index += 1
@@ -188,7 +196,10 @@ func does_path_exist(start: Vector3, end: Vector3) -> bool:
 
 	var visited = []
 	for i in range(map_size*2):
-		visited.append([false, false, false, false, false, false, false, false, false, false])
+		var row = []
+		for j in range (map_size*2):
+			row.append(false)
+		visited.append(row)
 	
 	return dfs_search(start_pos, end_pos, visited)
 	
@@ -199,7 +210,7 @@ func dfs_search(current_pos: Vector3,target_pos: Vector3, visited) -> bool:
 		return true
 	if not is_within_tile_bounds(current_pos):
 		return false
-	if tile_state[current_pos.z][current_pos.x] == 1 or visited[current_pos.z][current_pos.x] or tile_state[current_pos.z][current_pos.x] == 2:
+	if tile_state[current_pos.z][current_pos.x] == 1 or visited[current_pos.z][current_pos.x] or tile_state[current_pos.z][current_pos.x] == 2 or tile_state[current_pos.z][current_pos.x] == 3:
 		return false
 	
 	visited[current_pos.z][current_pos.x] = true
@@ -237,9 +248,6 @@ func generate_start_end_points():
 	print("Start_point" + str(start_point))
 	print("end_point" + str(end_point))
 	
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
 
 #func print_used_tiles():
 	#for x in range(-5, 5):
@@ -286,7 +294,7 @@ func find_shortest_path(start: Vector3, end: Vector3) -> Array:
 			var neighbor = current + direction
 			
 			# Checks if neighbor is within tileset bounds, if neighbor is a blockade and if was visited before
-			if is_within_tile_bounds(neighbor) and tile_state[neighbor.z][neighbor.x] != 2 and not visited.has(neighbor):
+			if is_within_tile_bounds(neighbor) and tile_state[neighbor.z][neighbor.x] < 2 and not visited.has(neighbor):
 				visited.append(neighbor)
 				parent[neighbor] = current  # Ustawienie rodzica
 				queue.append(neighbor)
@@ -301,25 +309,28 @@ func convert_path_to_grid_map():
 func mark_shortest_path():
 	for pos in shortest_path:
 		self.set_cell_item(pos, 6)
-	for i in range(-5,5):
-		for j in range(-5, 5):
+	for i in range(-map_size, map_size):
+		for j in range(-map_size, map_size):
 			var grid_pos = Vector3(i ,0 ,j)
 			if grid_pos not in shortest_path:
 				self.set_cell_item(grid_pos, 0)
-
-#checking if on the desired grid spot there is tetris block already
-func can_place_tower(pos_vector: Vector3) -> bool:
-	if is_within_bounds((pos_vector)):
-		if self.get_cell_item(pos_vector) in block_color:
+				
+#function checking if tower can be placed on top of tetris block
+func can_place_tower(col_point: Vector3)->bool:
+	var grid_pos = self.local_to_map(col_point)
+	grid_pos.y=1
+	if is_within_bounds(grid_pos):
+		var tile_pos = Vector3(grid_pos.x+map_size, grid_pos.y, grid_pos.z+map_size)
+		if tile_state[tile_pos.z][tile_pos.x]==2:
 			return true
 		else:
 			return false
 	else:
 		return false
 
-#function placing tower in position pos_vector
-func place_tower(pos_vector: Vector3):
-	if can_place_tower(pos_vector):
-		pos_vector.y+=1
-		self.set_cell_item(pos_vector,tower_nr)
-		print("Wieża postawiona na pozycji: ", pos_vector)
+#fucntion that updates tilemap after placing tower
+func place_tower_in_tilemap(col_point: Vector3)->void:
+	var grid_pos = self.local_to_map(col_point)
+	var tile_pos = Vector3(grid_pos.x+map_size, grid_pos.y, grid_pos.z+map_size)
+	if tile_state[tile_pos.z][tile_pos.x]==2:
+		tile_state[tile_pos.z][tile_pos.x]=3
