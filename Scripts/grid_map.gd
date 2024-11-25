@@ -88,6 +88,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	pass
 	
+	
 func rotate_block_forward():
 	index += 1
 	current_shape = current_block[index%4]

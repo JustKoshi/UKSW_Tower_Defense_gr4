@@ -68,12 +68,10 @@ func _process(delta: float) -> void:
 func set_path(points: Array) -> void:
 	#delete previous curve points
 	curve.clear_points()
-
 	#add new curve points
 	for point in points:
 		point.y -= 0.5
 		curve.add_point(point)
-
 	#length of path follower has to follow - important to understand 	
 	curve_length = curve.get_baked_length()
 
@@ -124,4 +122,3 @@ func randomize_fast_enemy_cd():
 
 func randomize_basic_enemy_cd():
 	basic_enemy_spawn_cd = randf_range(1.5, 2.5)
-
