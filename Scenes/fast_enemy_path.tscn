@@ -1,7 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://be6np03rn0jlv"]
+[gd_scene load_steps=3 format=3 uid="uid://dgdw6gomnj1c8"]
 
 [ext_resource type="Script" path="res://Scripts/fast_enemy_path.gd" id="1_boldv"]
-[ext_resource type="PackedScene" uid="uid://b76m6q4tvqrhi" path="res://Scenes/fast_enemy.tscn" id="2_rxu6o"]
+[ext_resource type="PackedScene" uid="uid://bgnd5td4h65iq" path="res://Scenes/fast_enemy.tscn" id="2_rxu6o"]
 
 [node name="FastEnemyPathFollow" type="PathFollow3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 50, 0, 50)

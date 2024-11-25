@@ -1,6 +1,6 @@
-[gd_scene load_steps=5 format=3 uid="uid://b76m6q4tvqrhi"]
+[gd_scene load_steps=5 format=3 uid="uid://bgnd5td4h65iq"]
 
-[ext_resource type="PackedScene" uid="uid://c5dadyocl3fte" path="res://Resources/characters/gltf/Skeleton_Rogue.glb" id="1_8dmih"]
+[ext_resource type="PackedScene" uid="uid://bngrmv1ck2rjw" path="res://Resources/characters/gltf/Skeleton_Rogue.glb" id="1_8dmih"]
 [ext_resource type="Script" path="res://Scripts/fast_enemy.gd" id="2_d7cdj"]
 [ext_resource type="PackedScene" uid="uid://c7v15bprqvth6" path="res://Resources/Weapons/Skeleton_Blade.gltf" id="3_jseot"]
 

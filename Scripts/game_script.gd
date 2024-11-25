@@ -14,11 +14,16 @@ extends Node3D
 @onready var normal_tower_button = $"Control/Normal Tower button"
 @onready var resource_button = $"Control/Resource build button"
 
+#variables to contain build time logoic and ui label informing about build time
+@onready var build_timer = $"Build Timer"
+@onready var build_time_label = $"Control/Build time Label"
+@onready var switch_label_timer = $"Switch Label Timer"
+
 #variable to contain raycast to detect clicks in build mode
 @onready var raycast = $"Top Camera/RayCast3D"
 
 #variable to contain Enemy Path Spawner
-@onready var enemy_path = $"Enemy Spawner"
+@onready var enemy_spawner = $"Enemy Spawner"
 
 var NormalTowerScene = preload("res://Scenes/normal_tower_lvl_1.tscn")
 var FreezeTowerScene = preload("res://Scenes/Freeze_tower_lvl_1.tscn")
@@ -46,11 +51,15 @@ var resource_hover_holder:MeshInstance3D = null
 #resource counter:
 var wood=0
 
+var wave_number = 1
+var is_build_phase = true
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	label.game_script = self
 	set_camera()
+	update_label_build_time()
 	var mesh_lib = grid_map.mesh_library
 	for i in range(hover.size()):
 		hover[i] = MeshInstance3D.new()
@@ -60,7 +69,7 @@ func _ready() -> void:
 			hover[i].visible = false
 	
 	convert_path_to_local()
-	enemy_path.set_path(short_path)
+	enemy_spawner.set_path(short_path)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -84,13 +93,17 @@ func _process(delta: float) -> void:
 		tetris_build_mode = false
 	if tetris_build_mode:
 		coordinates_check_mode = false	
-		update_hover_cursor()
+	update_hover_tetris()#Poza ifem mechanizm wylaczania jest w srodku funkcji!!!
 	if tower_build:
 		coordinates_check_mode = false
 		hover_tower(tower_to_hover)
+	elif tower_hover_holder != null:
+		tower_hover_holder.queue_free()
 	if resource_build:
 		coordinates_check_mode = false
 		hover_resource()
+	if is_build_phase:
+		update_label_build_time()
 
 func _input(event: InputEvent) -> void:
 	if tetris_build_mode and event is InputEventMouseButton:
@@ -112,7 +125,7 @@ func _input(event: InputEvent) -> void:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
 			place_resource_on_click()
 			
-			
+
 #Disables all camera except one with current cam index
 func set_camera():
 	for i in range (cameras.size()):
@@ -147,8 +160,9 @@ func place_block_on_click():
 		grid_map.place_tetris_block(grid_pos, grid_map.current_shape)
 		update_hover_mesh()
 		convert_path_to_local()
-		enemy_path.set_path(short_path)
-		
+		enemy_spawner.set_path(short_path)
+
+
 #function places tower on raycast position
 func place_tower_on_click(tower_type:int):
 	tower_hover_holder.free()#deleting hover tower before getting collision point
@@ -232,7 +246,7 @@ func hover_tower(tower_type:int):
 		tower_hover_holder.visible=false
 	
 #function creates block hover on raycast position
-func update_hover_cursor():
+func update_hover_tetris():
 	var collision_point = get_collision_point()
 	if collision_point != null and tetris_build_mode:
 		var grid_pos = grid_map.local_to_map(collision_point)
@@ -273,7 +287,6 @@ func place_resource_on_click():
 		var grid_pos = grid_map.local_to_map(collision_point)
 		if grid_map.can_place_resource(grid_pos, grid_map.lumber_shape):
 			var lumbermill = Lumbermill.instantiate()
-			
 			var place_pos = grid_map.map_to_local(grid_pos)
 			place_pos.y=2.5
 			place_pos.x+=1.5
@@ -293,8 +306,6 @@ func hover_resource():
 		get_node("Resource Holder").add_child(resource_hover_holder)
 	resource_hover_holder.generates_wood = false
 	if collision_point != null:
-		
-		
 		#print(collision_point)
 		resource_hover_holder.visible = true
 		var grid_pos = grid_map.local_to_map(collision_point)
@@ -331,10 +342,9 @@ func update_hover_mesh() -> void:
 		if hover[i]:
 			hover[i].mesh = mesh_lib.get_item_mesh(grid_map.block_type)
 
-
 #transforms shortest_path from gridmap placement to local 
 func convert_path_to_local()-> void:
-	#delete path previous path
+	#delete previous path
 	if not short_path.is_empty():
 		short_path = []
 		
@@ -436,3 +446,69 @@ func _on_freeze_tower_button_pressed() -> void:
 		tower_build = false
 		tower_to_hover = 0
 		normal_tower_button.disabled = false
+
+func update_label_build_time():
+	build_time_label.text = "Czas na budowanie: " + str(ceil(build_timer.time_left)) + "s"
+
+func turn_off_build_mode():
+	if resource_build or build_ui:
+		current_cam_index = 0
+		set_camera()
+	if build_ui:
+		tower_button.disabled = true
+		tower_button.visible = false
+		if tower_button.button_pressed:
+			tower_button.button_pressed = false
+		tetris_button.disabled = true
+		tetris_button.visible = false
+		if tetris_button.button_pressed:
+			tetris_button.button_pressed = false
+		tetris_build_mode = false
+		tower_build = false
+		tower_mode = false
+		normal_tower_button.disabled = true
+		normal_tower_button.visible = false
+		if normal_tower_button.button_pressed:
+			normal_tower_button.button_pressed = false
+		freeze_tower_button.disabled = true
+		freeze_tower_button.visible = false
+		if freeze_tower_button.button_pressed:
+			freeze_tower_button.button_pressed = false
+	if build_ui_button.button_pressed:
+		build_ui_button.button_pressed = false
+	build_ui = false
+	build_ui_button.disabled = true
+	resource_button.disabled = true
+	resource_button.visible = false
+	resource_build = false
+
+
+func _on_build_timer_timeout() -> void:
+	is_build_phase = false
+	build_time_label.text = "Faza budowania zakończona!"
+	switch_label_timer.start()
+	turn_off_build_mode()
+	if !enemy_spawner.wave_in_progress:
+		enemy_spawner.start_wave()
+
+#resets build timer and enables buttons
+func reset_build_timer():
+	is_build_phase = true
+	tower_button.disabled = false
+	build_ui_button.disabled = false
+	tetris_button.disabled = false
+	resource_button.disabled = false
+	normal_tower_button.disabled = false
+	freeze_tower_button.disabled = false
+	
+	build_timer.start()
+
+#when end wave signal is recived resets build timer
+func _on_enemy_spawner_wave_ended(wave_number: Variant) -> void:
+	#print("Przekazano sygnal")
+	enemy_spawner.current_wave+=1
+	reset_build_timer()
+
+#changes label 2 s after wave started
+func _on_switch_label_timer_timeout() -> void:
+	build_time_label.text = "Fala: " + str(enemy_spawner.current_wave)

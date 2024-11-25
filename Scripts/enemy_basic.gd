@@ -18,8 +18,9 @@ func _physics_process(delta):
 		
 
 func play_attack_animation():
-	if animation_player.current_animation != "1H_Melee_Attack_Stab":
-		animation_player.play("1H_Melee_Attack_Stab")
+	if animation_player.current_animation != "1H_Melee_Attack_Jump_Chop":
+		animation_player.play("1H_Melee_Attack_Jump_Chop")
+
 
 func play_run_animation():
 	if animation_player.current_animation != "Running_A":

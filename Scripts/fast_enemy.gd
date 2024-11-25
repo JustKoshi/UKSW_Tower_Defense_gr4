@@ -7,7 +7,7 @@ var freezing = false
 @onready var animation_player = $AnimationPlayer
 
 func _physics_process(delta):
-	# Dodaj grawitację do osi Y prędkości
+	# Dodaj grawitacje do osi Y predkosci
 	if finished_walk:
 		play_attack_animation()
 		if can_attack:
