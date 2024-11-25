@@ -1,7 +1,7 @@
 extends Node3D
 
 #List containing all cameras and current cam index
-@onready var cameras = [$"Main Camera", $"Top Camera", $"Front camera" ]
+@onready var cameras = [$"Main Camera", $"Top Camera", $"Front camera", $"Resource Camera" ]
 
 #variable to contain main GridMap
 @onready var grid_map = $GridMap
@@ -12,6 +12,7 @@ extends Node3D
 @onready var build_ui_button = $"Control/Build UI button"
 @onready var freeze_tower_button = $"Control/Freeze Tower button"
 @onready var normal_tower_button = $"Control/Normal Tower button"
+@onready var resource_button = $"Control/Resource build button"
 
 #variable to contain raycast to detect clicks in build mode
 @onready var raycast = $"Top Camera/RayCast3D"
@@ -21,11 +22,13 @@ extends Node3D
 
 var NormalTowerScene = preload("res://Scenes/normal_tower_lvl_1.tscn")
 var FreezeTowerScene = preload("res://Scenes/Freeze_tower_lvl_1.tscn")
+var Lumbermill = preload("res://Scenes/lumbermill.tscn")
 
 var build_ui = false
 var tower_build = false
 var tetris_build_mode = false
 var tower_mode = false
+var resource_build = false
 
 var hovering_tower = 0
 var tower_to_hover = 0#Which tower is picked with button 0-none 1-normal 2-freeze 3-aoe
@@ -33,10 +36,20 @@ var current_cam_index = 0
 var coordinates_check_mode = false
 var hover = [null, null, null, null] #array that holds blocks for hover. 4 couse very tetris block size = 4
 var short_path = [] #array that holds shortest path converted to local
-var tower_hover_holder:Object = null#Object that holds tower instance that is now currently selected and might be placed
+
+var tower_hover_holder:MeshInstance3D = null#Object that holds tower instance that is now currently selected and might be placed
+var resource_hover_holder:MeshInstance3D = null
+
+
+@onready var label = $"Control/Resource count label"
+@onready var lumbermill = $"Resource Holder"/resource_hover_holder
+#resource counter:
+var wood=0
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	label.game_script = self
 	set_camera()
 	var mesh_lib = grid_map.mesh_library
 	for i in range(hover.size()):
@@ -52,6 +65,7 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	wood_timers()
 	if Input.is_action_just_pressed("Camera_F1"):
 		if current_cam_index >0 :
 			current_cam_index -= 1
@@ -74,6 +88,9 @@ func _process(delta: float) -> void:
 	if tower_build:
 		coordinates_check_mode = false
 		hover_tower(tower_to_hover)
+	if resource_build:
+		coordinates_check_mode = false
+		hover_resource()
 
 func _input(event: InputEvent) -> void:
 	if tetris_build_mode and event is InputEventMouseButton:
@@ -91,6 +108,9 @@ func _input(event: InputEvent) -> void:
 	if tower_build and event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
 			place_tower_on_click(hovering_tower)
+	if resource_build and event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
+			place_resource_on_click()
 			
 			
 #Disables all camera except one with current cam index
@@ -236,16 +256,71 @@ func check_coordinates():
 		print(grid_pos)
 		
 
+func wood_timers():
+	for i in get_node("Resource Holder").get_child_count():
+		if get_node("Resource Holder").get_child(i).generates_wood==true:
+			get_node("Resource Holder").get_child(i).get_node("Timer").start()
+			get_node("Resource Holder").get_child(i).generates_wood=false
+			wood = wood + 1
+			#print("Timer ", i)
+
+func place_resource_on_click():
+	resource_hover_holder.free()
+	var collision_point = get_collision_point()
+	
+	#checking if raycast detected any block if so place block on gridmap
+	if collision_point != null:
+		var grid_pos = grid_map.local_to_map(collision_point)
+		if grid_map.can_place_resource(grid_pos, grid_map.lumber_shape):
+			var lumbermill = Lumbermill.instantiate()
+			
+			var place_pos = grid_map.map_to_local(grid_pos)
+			place_pos.y=2.5
+			place_pos.x+=1.5
+			place_pos.z+=1.5
+			lumbermill.position=place_pos
+			grid_map.place_resource_in_tilemap(collision_point)
+			get_node("Resource Holder").add_child(lumbermill)
+			print("Added lumbermill in position: ",grid_pos)
+			resource_hover_holder=null
+	
+func hover_resource():
+	var collision_point = get_collision_point()
+	
+	if resource_hover_holder == null:
+		resource_hover_holder = Lumbermill.instantiate()
+		resource_hover_holder.game_script = self
+		get_node("Resource Holder").add_child(resource_hover_holder)
+	resource_hover_holder.generates_wood = false
+	if collision_point != null:
+		
+		
+		#print(collision_point)
+		resource_hover_holder.visible = true
+		var grid_pos = grid_map.local_to_map(collision_point)
+		var place_pos = grid_map.map_to_local(grid_pos)
+		#print(grid_pos)
+		place_pos.y=2.5
+		place_pos.x+=1.5
+		place_pos.z+=1.5
+		resource_hover_holder.position=place_pos
+	else:
+		#print("nie dziala raycast")
+		resource_hover_holder.visible = false
+
+
 #Signal to enter build mode
 func _on_tetris_build_button_pressed() -> void:
 	if not tetris_build_mode:
 		tetris_build_mode = true
 		build_ui_button.disabled = true
 		tower_button.disabled = true
+		resource_button.disabled = true
 	else:
 		tetris_build_mode = false
 		build_ui_button.disabled = false
 		tower_button.disabled = false
+		resource_button.disabled = false
 
 #called in _progress updates mesh that is hover for block placement
 func update_hover_mesh() -> void:
@@ -284,6 +359,8 @@ func _on_build_ui_button_pressed() -> void:
 		tetris_button.disabled = false
 		tower_button.visible = true
 		tower_button.disabled = false
+		resource_button.visible = true
+		resource_button.disabled = false
 		build_ui = true
 	else:
 		current_cam_index = 0
@@ -291,6 +368,8 @@ func _on_build_ui_button_pressed() -> void:
 		tetris_button.disabled = true
 		tower_button.visible = false
 		tower_button.disabled = true
+		resource_button.visible = false
+		resource_button.disabled = true
 		build_ui = false
 	set_camera()
 
@@ -303,10 +382,12 @@ func _on_tower_build_button_pressed() -> void:
 		normal_tower_button.disabled = false
 		freeze_tower_button.visible = true
 		freeze_tower_button.disabled = false
+		resource_button.disabled = true
 	else:
 		tower_mode = false
 		build_ui_button.disabled = false
 		tetris_button.disabled = false
+		resource_button.disabled = false
 		normal_tower_button.visible = false
 		normal_tower_button.disabled = true
 		freeze_tower_button.visible = false
@@ -320,6 +401,20 @@ func _on_tower_build_button_pressed() -> void:
 			tower_build = false
 			tower_to_hover = 0
 
+func _on_resource_build_button_pressed() -> void:
+	if not resource_build:
+		current_cam_index = 3
+		resource_build = true
+		build_ui_button.disabled = true
+		tetris_button.disabled = true
+		tower_button.disabled = true
+	else:
+		current_cam_index = 1
+		resource_build = false
+		build_ui_button.disabled = false
+		tetris_button.disabled = false
+		tower_button.disabled = false
+	set_camera()
 
 func _on_normal_tower_button_pressed() -> void:
 	if !tower_build:
