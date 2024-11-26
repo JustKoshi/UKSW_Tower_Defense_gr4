@@ -3,18 +3,18 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://bngrmv1ck2rjw"
-path="res://.godot/imported/Skeleton_Rogue.glb-79e2c554c81821bd08fc17054f081d37.scn"
+uid="uid://c0d6uulodrcuo"
+path="res://.godot/imported/Mage.glb-b2301bad5c75ea1f4d067c19b7f6c053.scn"
 
 [deps]
 
-source_file="res://Resources/characters/gltf/Skeleton_Rogue.glb"
-dest_files=["res://.godot/imported/Skeleton_Rogue.glb-79e2c554c81821bd08fc17054f081d37.scn"]
+source_file="res://Resources/Towers/FreezeTowerlvl1/Mage.glb"
+dest_files=["res://.godot/imported/Mage.glb-b2301bad5c75ea1f4d067c19b7f6c053.scn"]
 
 [params]
 
 nodes/root_type="CharacterBody3D"
-nodes/root_name="Fast_enemy"
+nodes/root_name="MAGE"
 nodes/apply_root_scale=true
 nodes/root_scale=1.0
 nodes/import_as_skeleton_bones=false
@@ -31,6 +31,12 @@ animation/trimming=false
 animation/remove_immutable_tracks=true
 animation/import_rest_as_RESET=false
 import_script/path=""
-_subresources={}
-gltf/naming_version=0
+_subresources={
+"nodes": {
+"PATH:Rig/Skeleton3D/Spellbook": {
+"import/skip_import": true
+}
+}
+}
+gltf/naming_version=1
 gltf/embedded_image_handling=1

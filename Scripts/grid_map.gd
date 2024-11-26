@@ -46,11 +46,14 @@ var tetris_blocks_S = [
 	[Vector3(0,0,0), Vector3(0,0,-1), Vector3(1,0,-1), Vector3(1,0,-2)]  # Czwarta rotacja (taka sama jak druga)
 ]
 
+var lumber_shape = [Vector3(0,0,0), Vector3(1,0,0), Vector3(1,0,1), Vector3(0,0,1)]
+
 var start_point = Vector3(5,0,0)
 var end_point = Vector3(-6,0,0)
 
-#map size is 10x10 but q1-q4 are size 5x5 so it is simpler to use 5 couse map coordinates -5,4
+#map size is map_size*2 X map_size*2 but q1-q4 are size map_size X map_size so it is simpler to use map_size couse map coordinates can be negative
 var map_size = 5
+
 
 #all directions to chceck for dfs and bfs search
 const DIRECTIONS = [Vector3(0, 0, 1), Vector3(0, 0, -1), Vector3(1, 0, 0), Vector3(-1, 0, 0)]
@@ -62,6 +65,7 @@ var all_tetris_blocks = [tetris_blocks_L, tetris_blocks_sqr, tetris_blocks_J, te
 var current_block = all_tetris_blocks[block_index] #current tetris block
 var current_shape = current_block[index] #current exact block shape (rotation)
 var tile_state = [] #We will call this array tileset. It holds current state of map but in 2D. 0-nothing 1-temp block 2-tetris block 3-tetris block with tower on
+var castle_state = [] #Same but with the left side of map
 
 var shortest_path = [] #Array that will hold fastest route from start to finish
 
@@ -73,8 +77,13 @@ var block_type = block_color[0] #current block color
 func _ready() -> void:
 	#print_used_tiles()
 	randomize_block()
+	for i in range(map_size*2):
+		var row = []
+		for j in range(map_size * 2):
+			row.append(0)
+		tile_state.append(row)
 	for i in range(10):
-		tile_state.append([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+		castle_state.append([0,0,0,0])
 	generate_start_end_points()
 	shortest_path = find_shortest_path(start_point, end_point)
 	convert_path_to_grid_map()
@@ -83,7 +92,6 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
-	
 	
 func rotate_block_forward():
 	index += 1
@@ -193,7 +201,10 @@ func does_path_exist(start: Vector3, end: Vector3) -> bool:
 
 	var visited = []
 	for i in range(map_size*2):
-		visited.append([false, false, false, false, false, false, false, false, false, false])
+		var row = []
+		for j in range (map_size*2):
+			row.append(false)
+		visited.append(row)
 	
 	return dfs_search(start_pos, end_pos, visited)
 	
@@ -303,8 +314,8 @@ func convert_path_to_grid_map():
 func mark_shortest_path():
 	for pos in shortest_path:
 		self.set_cell_item(pos, 6)
-	for i in range(-5,5):
-		for j in range(-5, 5):
+	for i in range(-map_size, map_size):
+		for j in range(-map_size, map_size):
 			var grid_pos = Vector3(i ,0 ,j)
 			if grid_pos not in shortest_path:
 				self.set_cell_item(grid_pos, 0)
@@ -312,6 +323,7 @@ func mark_shortest_path():
 #function checking if tower can be placed on top of tetris block
 func can_place_tower(col_point: Vector3)->bool:
 	var grid_pos = self.local_to_map(col_point)
+	grid_pos.y=1
 	if is_within_bounds(grid_pos):
 		var tile_pos = Vector3(grid_pos.x+map_size, grid_pos.y, grid_pos.z+map_size)
 		if tile_state[tile_pos.z][tile_pos.x]==2:
@@ -327,3 +339,26 @@ func place_tower_in_tilemap(col_point: Vector3)->void:
 	var tile_pos = Vector3(grid_pos.x+map_size, grid_pos.y, grid_pos.z+map_size)
 	if tile_state[tile_pos.z][tile_pos.x]==2:
 		tile_state[tile_pos.z][tile_pos.x]=3
+
+func is_within_castle(vector_pos: Vector3)->bool:
+	return vector_pos.x>=-10 and vector_pos.x<=-7 and vector_pos.z>=-5 and vector_pos.z<=4
+
+func can_place_resource(grid_pos: Vector3, shape)->bool:
+	var flag = true
+	for pos in shape:
+		var new_pos = grid_pos + pos
+		var tile_pos = Vector3(new_pos.x+10, new_pos.y, new_pos.z+5)
+		#print(tile_pos)
+		if not is_within_castle(new_pos):
+			flag = false
+		elif castle_state[tile_pos.z][tile_pos.x] == 1:
+			flag = false
+	return flag
+
+func place_resource_in_tilemap(col_point: Vector3)->void:
+	var grid_pos = self.local_to_map(col_point)
+	var tile_pos = Vector3(grid_pos.x+10, grid_pos.y, grid_pos.z+5)
+	castle_state[tile_pos.z][tile_pos.x] = 1
+	castle_state[tile_pos.z+1][tile_pos.x] = 1
+	castle_state[tile_pos.z+1][tile_pos.x+1] = 1
+	castle_state[tile_pos.z][tile_pos.x+1] = 1
