@@ -289,8 +289,9 @@ func place_resource_on_click():
 			var lumbermill = Lumbermill.instantiate()
 			var place_pos = grid_map.map_to_local(grid_pos)
 			place_pos.y=2.5
-			place_pos.x+=1.5
-			place_pos.z+=1.5
+			place_pos.x+=1
+			place_pos.z+=1
+			#print(place_pos)
 			lumbermill.position=place_pos
 			grid_map.place_resource_in_tilemap(collision_point)
 			get_node("Resource Holder").add_child(lumbermill)
@@ -312,8 +313,8 @@ func hover_resource():
 		var place_pos = grid_map.map_to_local(grid_pos)
 		#print(grid_pos)
 		place_pos.y=2.5
-		place_pos.x+=1.5
-		place_pos.z+=1.5
+		place_pos.x+=1
+		place_pos.z+=1
 		resource_hover_holder.position=place_pos
 	else:
 		#print("nie dziala raycast")
