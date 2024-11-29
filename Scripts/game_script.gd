@@ -102,6 +102,8 @@ func _process(delta: float) -> void:
 	if resource_build:
 		coordinates_check_mode = false
 		hover_resource()
+	elif resource_hover_holder != null:
+		resource_hover_holder.queue_free()
 	if is_build_phase:
 		update_label_build_time()
 
@@ -307,15 +309,16 @@ func hover_resource():
 		get_node("Resource Holder").add_child(resource_hover_holder)
 	resource_hover_holder.generates_wood = false
 	if collision_point != null:
-		#print(collision_point)
-		resource_hover_holder.visible = true
 		var grid_pos = grid_map.local_to_map(collision_point)
-		var place_pos = grid_map.map_to_local(grid_pos)
-		#print(grid_pos)
-		place_pos.y=2.5
-		place_pos.x+=1
-		place_pos.z+=1
-		resource_hover_holder.position=place_pos
+		if grid_map.can_place_resource(grid_pos, grid_map.lumber_shape):
+			#print(collision_point)
+			resource_hover_holder.visible = true
+			var place_pos = grid_map.map_to_local(grid_pos)
+			#print(grid_pos)
+			place_pos.y=2.5
+			place_pos.x+=1
+			place_pos.z+=1
+			resource_hover_holder.position=place_pos
 	else:
 		#print("nie dziala raycast")
 		resource_hover_holder.visible = false
