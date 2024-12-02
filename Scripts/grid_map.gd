@@ -128,17 +128,17 @@ func is_within_tile_bounds(pos_vector: Vector3) -> bool:
 func can_place_block(pos_vector: Vector3) -> bool:
 	#checks if block is within bounds
 	if not is_within_bounds(pos_vector):
-		print("Place is out of bounds")
+		#print("Place is out of bounds")
 		return false
 		
 	#checks if there is already block in pos_vector place 
 	if self.get_cell_item(pos_vector)!=-1:
-		print("Place is taken")
+		#print("Place is taken")
 		return false
 	
 	#Checks if start/finish path exist upon placing block
 	if not does_path_exist(start_point, end_point):
-		print("Path not found")
+		#print("Path not found")
 		return false
 		
 	return true
@@ -154,8 +154,7 @@ func place_block_in_tilemap_temp(position: Vector3):
 func place_block_in_tilemap_permanent(position: Vector3):
 	if is_within_bounds(position):
 		var tile_pos = Vector3(position.x+map_size, position.y, position.z+map_size)
-		if(tile_state[tile_pos.z][tile_pos.x]==1):
-			tile_state[tile_pos.z][tile_pos.x] = 2
+		tile_state[tile_pos.z][tile_pos.x] = 2
 
 #removes invalid block from tilemap	
 func remove_block_from_tilemap(position: Vector3):
@@ -179,14 +178,13 @@ func can_place_tetris_block(grid_pos: Vector3, shape):
 		var new_pos = grid_pos + pos
 		place_block_in_tilemap_temp(new_pos)
 		if not (can_place_block(new_pos)):
-			print("Can't place Tetris block here")
+			#print("Can't place Tetris block here")
 			flag = false
 			break
 			
-	if not flag:
-		for pos in shape:
-			var new_pos = grid_pos + pos
-			remove_block_from_tilemap(new_pos)
+	for pos in shape:
+		var new_pos = grid_pos + pos
+		remove_block_from_tilemap(new_pos)
 	
 	return flag
 	
