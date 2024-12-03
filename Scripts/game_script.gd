@@ -297,6 +297,7 @@ func color_transparent_mesh_instance(object, color):#1 - transparent, 2 - red/tr
 					mat_dupe.albedo_color = Color(1,0,0,0.5)
 				3:
 					mat_dupe.albedo_color = Color(1,1,1,1)
+					mat_dupe.transparency=BaseMaterial3D.TRANSPARENCY_DISABLED
 			object.set_surface_override_material(i,mat_dupe)
 
 func update_resource_timers():
@@ -305,7 +306,10 @@ func update_resource_timers():
 		if child.generator_on == true:
 			child.get_node("Timer").start()
 			child.generator_on = false
-			game_resources[child.resource_type] += 1
+			if child.generation_depleted:
+				game_resources[child.resource_type] += 0.5#polowa wartosci
+			else:
+				game_resources[child.resource_type] += 1
 
 
 func place_resource_on_click(resource_type:int):
@@ -328,7 +332,8 @@ func place_resource_on_click(resource_type:int):
 			place_pos.z+=1
 			#print(place_pos)
 			building.position=place_pos
-			grid_map.place_resource_in_tilemap(collision_point)
+			if grid_map.place_resource_in_tilemap(collision_point, hovering_resource):
+				building.generation_depleted = true
 			get_node("Resource Holder").add_child(building)
 			color_transparent_mesh_instance(building,3)
 			
