@@ -1,0 +1,26 @@
+[gd_scene load_steps=6 format=3 uid="uid://dcy4ms3a60lxw"]
+
+[ext_resource type="ArrayMesh" uid="uid://yyxxxln1hx6l" path="res://Resources/Resource_buildings/building_mine_blue.obj" id="1_71aqv"]
+[ext_resource type="Texture2D" uid="uid://b1ms4h5mcmjd0" path="res://Resources/Towers/hexagons_medieval.png" id="2_2qvdo"]
+[ext_resource type="Script" path="res://Scenes/mine.gd" id="3_uqrls"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fru3p"]
+albedo_texture = ExtResource("2_2qvdo")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_xm7q8"]
+
+[node name="Mine" type="MeshInstance3D"]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
+mesh = ExtResource("1_71aqv")
+surface_material_override/0 = SubResource("StandardMaterial3D_fru3p")
+script = ExtResource("3_uqrls")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("BoxShape3D_xm7q8")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 3.0
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

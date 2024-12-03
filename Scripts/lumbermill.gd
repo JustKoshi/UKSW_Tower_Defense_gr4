@@ -1,8 +1,8 @@
 extends MeshInstance3D
 var game_script
 
-var generates_wood = true
-
+var generator_on = true
+var resource_type = "wood"
 
 
 # Called when the node enters the scene tree for the first time.
@@ -16,4 +16,4 @@ func _process(delta: float) -> void:
 
 
 func _on_timer_timeout() -> void:
-	generates_wood=true
+	generator_on=true

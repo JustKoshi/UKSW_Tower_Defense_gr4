@@ -13,6 +13,8 @@ extends Node3D
 @onready var freeze_tower_button = $"Control/Freeze Tower button"
 @onready var normal_tower_button = $"Control/Normal Tower button"
 @onready var resource_button = $"Control/Resource build button"
+@onready var lumbermill_button = $"Control/Lumbermill button"
+@onready var mine_button = $"Control/Mine button"
 
 #variables to contain build time logoic and ui label informing about build time
 @onready var build_timer = $"Build Timer"
@@ -28,15 +30,22 @@ extends Node3D
 var NormalTowerScene = preload("res://Scenes/normal_tower_lvl_1.tscn")
 var FreezeTowerScene = preload("res://Scenes/Freeze_tower_lvl_1.tscn")
 var Lumbermill = preload("res://Scenes/lumbermill.tscn")
+var Mine = preload("res://Scenes/mine.tscn")
 
 var build_ui = false
 var tower_build = false
 var tetris_build_mode = false
 var tower_mode = false
 var resource_build = false
+var resource_mode = false
 
 var hovering_tower = 0
 var tower_to_hover = 0#Which tower is picked with button 0-none 1-normal 2-freeze 3-aoe
+
+var hovering_resource = 0
+var resource_to_hover = 0#0 for none, 1 for lumbermill, 2 for mine
+
+
 var current_cam_index = 0
 var coordinates_check_mode = false
 var hover = [null, null, null, null] #array that holds blocks for hover. 4 couse very tetris block size = 4
@@ -47,9 +56,13 @@ var resource_hover_holder:MeshInstance3D = null
 
 
 @onready var label = $"Control/Resource count label"
-@onready var lumbermill = $"Resource Holder"/resource_hover_holder
+
 #resource counter:
-var wood=0
+var game_resources = {
+	"wood": 0,
+	"stone": 0
+}
+
 
 var wave_number = 1
 var is_build_phase = true
@@ -74,7 +87,7 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	wood_timers()
+	update_resource_timers()
 	if Input.is_action_just_pressed("Camera_F1"):
 		if current_cam_index >0 :
 			current_cam_index -= 1
@@ -101,7 +114,7 @@ func _process(delta: float) -> void:
 		tower_hover_holder.queue_free()
 	if resource_build:
 		coordinates_check_mode = false
-		hover_resource()
+		hover_resource(resource_to_hover)
 	elif resource_hover_holder != null:
 		resource_hover_holder.queue_free()
 	if is_build_phase:
@@ -125,7 +138,7 @@ func _input(event: InputEvent) -> void:
 			place_tower_on_click(hovering_tower)
 	if resource_build and event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
-			place_resource_on_click()
+			place_resource_on_click(hovering_resource)
 			
 
 #Disables all camera except one with current cam index
@@ -272,53 +285,99 @@ func check_coordinates():
 		print(grid_pos)
 		
 
-func wood_timers():
-	for i in get_node("Resource Holder").get_child_count():
-		if get_node("Resource Holder").get_child(i).generates_wood==true:
-			get_node("Resource Holder").get_child(i).get_node("Timer").start()
-			get_node("Resource Holder").get_child(i).generates_wood=false
-			wood = wood + 1
-			#print("Timer ", i)
+func transparent_mesh_instance(object):
+	for i in range(object.get_surface_override_material_count()):
+			var mat = object.get_surface_override_material(i)
+			mat.flags_transparent = true
+			mat.albedo_color = Color(1,1,1,0.5)
+			object.set_surface_override_material(i,mat)
+			
+func red_transparent_mesh_instance(object):
+	for i in range(object.get_surface_override_material_count()):
+			var mat = object.get_surface_override_material(i)
+			mat.flags_transparent = true
+			mat.albedo_color = Color(1,0,0,0.5)
+			object.set_surface_override_material(i,mat)
 
-func place_resource_on_click():
+func not_transparent_mesh_instance(object):
+	for i in range(object.get_surface_override_material_count()):
+		var mat = object.get_surface_override_material(i)
+		mat.flags_transparent = true
+		mat.albedo_color = Color(1,1,1,1)
+		object.set_surface_override_material(i,mat)
+		
+		
+func update_resource_timers():
+	for i in range(get_node("Resource Holder").get_child_count()):
+		var child = get_node("Resource Holder").get_child(i)
+		if child.generator_on == true:
+			child.get_node("Timer").start()
+			child.generator_on = false
+			game_resources[child.resource_type] += 1
+
+
+func place_resource_on_click(resource_type:int):
 	resource_hover_holder.free()
 	var collision_point = get_collision_point()
-	
+	var shape = grid_map.lumber_shape
+	var building
 	#checking if raycast detected any block if so place block on gridmap
 	if collision_point != null:
 		var grid_pos = grid_map.local_to_map(collision_point)
-		if grid_map.can_place_resource(grid_pos, grid_map.lumber_shape):
-			var lumbermill = Lumbermill.instantiate()
+		if grid_map.can_place_resource(grid_pos, shape):
+			if hovering_resource == 1:
+				building = Lumbermill.instantiate()
+			elif hovering_resource == 2:
+				building = Mine.instantiate() 
+			else:
+				return
 			var place_pos = grid_map.map_to_local(grid_pos)
 			place_pos.y=2.5
 			place_pos.x+=1
 			place_pos.z+=1
 			#print(place_pos)
-			lumbermill.position=place_pos
+			building.position=place_pos
 			grid_map.place_resource_in_tilemap(collision_point)
-			get_node("Resource Holder").add_child(lumbermill)
-			print("Added lumbermill in position: ",grid_pos)
+			get_node("Resource Holder").add_child(building)
+			not_transparent_mesh_instance(building)
+			
+			#print("Added lumbermill in position: ",grid_pos)
 			resource_hover_holder=null
+			hovering_resource = 0
 	
-func hover_resource():
+
+	
+func hover_resource(resource_type:int):
 	var collision_point = get_collision_point()
-	
+	var shape=0
 	if resource_hover_holder == null:
-		resource_hover_holder = Lumbermill.instantiate()
+		if resource_type==1:
+			resource_hover_holder = Lumbermill.instantiate()
+			shape = grid_map.lumber_shape
+			hovering_resource = 1
+		elif resource_type == 2:
+			resource_hover_holder = Mine.instantiate()
+			shape = grid_map.lumber_shape
+			hovering_resource = 2
+		else:
+			return
 		resource_hover_holder.game_script = self
+		
 		get_node("Resource Holder").add_child(resource_hover_holder)
-	resource_hover_holder.generates_wood = false
+	resource_hover_holder.generator_on = false
 	if collision_point != null:
 		var grid_pos = grid_map.local_to_map(collision_point)
-		if grid_map.can_place_resource(grid_pos, grid_map.lumber_shape):
-			#print(collision_point)
-			resource_hover_holder.visible = true
-			var place_pos = grid_map.map_to_local(grid_pos)
-			#print(grid_pos)
-			place_pos.y=2.5
-			place_pos.x+=1
-			place_pos.z+=1
-			resource_hover_holder.position=place_pos
+		resource_hover_holder.visible = true
+		if grid_map.can_place_resource(grid_pos, shape):
+			transparent_mesh_instance(resource_hover_holder)
+		else:
+			red_transparent_mesh_instance(resource_hover_holder)
+		var place_pos = grid_map.map_to_local(grid_pos)
+		#print(grid_pos)
+		place_pos.y=2.5
+		place_pos.x+=1
+		place_pos.z+=1
+		resource_hover_holder.position=place_pos
 	else:
 		#print("nie dziala raycast")
 		resource_hover_holder.visible = false
@@ -416,19 +475,55 @@ func _on_tower_build_button_pressed() -> void:
 			tower_to_hover = 0
 
 func _on_resource_build_button_pressed() -> void:
-	if not resource_build:
+	if not resource_mode:
 		current_cam_index = 3
-		resource_build = true
+		resource_mode = true
 		build_ui_button.disabled = true
 		tetris_button.disabled = true
+		lumbermill_button.visible = true
+		lumbermill_button.disabled = false
+		mine_button.visible = true
+		mine_button.disabled = false
 		tower_button.disabled = true
 	else:
 		current_cam_index = 1
-		resource_build = false
+		resource_mode = false
 		build_ui_button.disabled = false
 		tetris_button.disabled = false
+		lumbermill_button.visible = false
+		lumbermill_button.disabled = true
+		mine_button.visible = false
+		mine_button.disabled = true
 		tower_button.disabled = false
+		if lumbermill_button.button_pressed:
+			lumbermill_button.button_pressed = false
+			resource_mode = false
+			resource_to_hover = 0
+		if mine_button.button_pressed:
+			mine_button.button_pressed = false
+			resource_mode = false
+			resource_to_hover = false
 	set_camera()
+	
+func _on_lumbermill_button_pressed() ->void:
+	if !resource_build:
+		resource_build = true
+		resource_to_hover = 1
+		mine_button.disabled = true
+	else:
+		resource_build = false
+		resource_to_hover = 0
+		mine_button.disabled = false
+
+func _on_mine_button_pressed() -> void:
+	if !resource_build:
+		resource_build = true
+		resource_to_hover = 2
+		lumbermill_button.disabled = true
+	else:
+		resource_build = false
+		resource_to_hover = 0
+		lumbermill_button.disabled = false
 
 func _on_normal_tower_button_pressed() -> void:
 	if !tower_build:
@@ -484,6 +579,12 @@ func turn_off_build_mode():
 	build_ui_button.disabled = true
 	resource_button.disabled = true
 	resource_button.visible = false
+	lumbermill_button.disabled = true
+	lumbermill_button.visible = false
+	mine_button.disabled = true
+	mine_button.visible = false
+	
+	resource_mode = false
 	resource_build = false
 
 
@@ -504,6 +605,8 @@ func reset_build_timer():
 	resource_button.disabled = false
 	normal_tower_button.disabled = false
 	freeze_tower_button.disabled = false
+	lumbermill_button.disabled = false
+	mine_button.disabled = false
 	
 	build_timer.start()
 
