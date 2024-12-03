@@ -168,7 +168,7 @@ func place_block(position_vec: Vector3):
 	
 	if can_place_block(position_vec):
 		set_cell_item(position_vec,block_type)
-		print("Bloczek postawiony na pozycji: ", position_vec)
+		print("Bloczek typu:",block_type ," postawiony na pozycji: ", position_vec)
 
 #function checks if tetris block can be placed in desirable spot
 #Places temporary block in tilemap and checks if position is valid

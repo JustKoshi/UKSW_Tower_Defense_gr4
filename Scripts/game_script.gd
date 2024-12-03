@@ -160,7 +160,6 @@ func place_block_on_click():
 	if collision_point != null:
 		var grid_pos = grid_map.local_to_map(collision_point)
 		grid_map.place_tetris_block(grid_pos, grid_map.current_shape)
-		update_hover_mesh(true)
 		convert_path_to_local()
 		enemy_spawner.set_path(short_path)
 
@@ -355,8 +354,8 @@ func update_hover_mesh(good_place:bool) -> void:
 		return  # Upewnij się, że mesh_library istnieje
 	for i in range(hover.size()):
 		if hover[i] and good_place:
-			hover[i].mesh = mesh_lib.get_item_mesh(grid_map.block_type)
-		elif not good_place:
+			hover[i].mesh = mesh_lib.get_item_mesh(11)
+		elif hover[i] and not good_place:
 			hover[i].mesh = mesh_lib.get_item_mesh(9)
 
 #transforms shortest_path from gridmap placement to local 
