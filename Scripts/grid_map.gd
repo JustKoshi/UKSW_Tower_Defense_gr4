@@ -46,7 +46,7 @@ var tetris_blocks_S = [
 	[Vector3(0,0,0), Vector3(0,0,-1), Vector3(1,0,-1), Vector3(1,0,-2)]  # Czwarta rotacja (taka sama jak druga)
 ]
 
-var lumber_shape = [Vector3(0,0,0), Vector3(1,0,0), Vector3(1,0,1), Vector3(0,0,1)]
+
 
 var start_point = Vector3(5,0,0)
 var end_point = Vector3(-6,0,0)

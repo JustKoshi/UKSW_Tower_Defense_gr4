@@ -44,7 +44,7 @@ var tower_to_hover = 0#Which tower is picked with button 0-none 1-normal 2-freez
 
 var hovering_resource = 0
 var resource_to_hover = 0#0 for none, 1 for lumbermill, 2 for mine
-
+var resource_shape
 
 var current_cam_index = 0
 var coordinates_check_mode = false
@@ -285,28 +285,20 @@ func check_coordinates():
 		print(grid_pos)
 		
 
-func transparent_mesh_instance(object):
+func color_transparent_mesh_instance(object, color):#1 - transparent, 2 - red/transparent, 3 - normal
 	for i in range(object.get_surface_override_material_count()):
 			var mat = object.get_surface_override_material(i)
-			mat.flags_transparent = true
-			mat.albedo_color = Color(1,1,1,0.5)
-			object.set_surface_override_material(i,mat)
-			
-func red_transparent_mesh_instance(object):
-	for i in range(object.get_surface_override_material_count()):
-			var mat = object.get_surface_override_material(i)
-			mat.flags_transparent = true
-			mat.albedo_color = Color(1,0,0,0.5)
-			object.set_surface_override_material(i,mat)
+			var mat_dupe = mat.duplicate()
+			mat_dupe.flags_transparent = true
+			match color:
+				1:
+					mat_dupe.albedo_color = Color(1,1,1,0.5)
+				2:
+					mat_dupe.albedo_color = Color(1,0,0,0.5)
+				3:
+					mat_dupe.albedo_color = Color(1,1,1,1)
+			object.set_surface_override_material(i,mat_dupe)
 
-func not_transparent_mesh_instance(object):
-	for i in range(object.get_surface_override_material_count()):
-		var mat = object.get_surface_override_material(i)
-		mat.flags_transparent = true
-		mat.albedo_color = Color(1,1,1,1)
-		object.set_surface_override_material(i,mat)
-		
-		
 func update_resource_timers():
 	for i in range(get_node("Resource Holder").get_child_count()):
 		var child = get_node("Resource Holder").get_child(i)
@@ -319,12 +311,11 @@ func update_resource_timers():
 func place_resource_on_click(resource_type:int):
 	resource_hover_holder.free()
 	var collision_point = get_collision_point()
-	var shape = grid_map.lumber_shape
 	var building
 	#checking if raycast detected any block if so place block on gridmap
 	if collision_point != null:
 		var grid_pos = grid_map.local_to_map(collision_point)
-		if grid_map.can_place_resource(grid_pos, shape):
+		if grid_map.can_place_resource(grid_pos, resource_shape):
 			if hovering_resource == 1:
 				building = Lumbermill.instantiate()
 			elif hovering_resource == 2:
@@ -339,7 +330,7 @@ func place_resource_on_click(resource_type:int):
 			building.position=place_pos
 			grid_map.place_resource_in_tilemap(collision_point)
 			get_node("Resource Holder").add_child(building)
-			not_transparent_mesh_instance(building)
+			color_transparent_mesh_instance(building,3)
 			
 			#print("Added lumbermill in position: ",grid_pos)
 			resource_hover_holder=null
@@ -349,29 +340,33 @@ func place_resource_on_click(resource_type:int):
 	
 func hover_resource(resource_type:int):
 	var collision_point = get_collision_point()
-	var shape=0
+	
 	if resource_hover_holder == null:
 		if resource_type==1:
 			resource_hover_holder = Lumbermill.instantiate()
-			shape = grid_map.lumber_shape
 			hovering_resource = 1
+			resource_shape = resource_hover_holder.shape
+			resource_hover_holder.generator_on = false
 		elif resource_type == 2:
 			resource_hover_holder = Mine.instantiate()
-			shape = grid_map.lumber_shape
 			hovering_resource = 2
+			resource_shape = resource_hover_holder.shape
+			resource_hover_holder.generator_on = false
 		else:
 			return
 		resource_hover_holder.game_script = self
 		
 		get_node("Resource Holder").add_child(resource_hover_holder)
-	resource_hover_holder.generator_on = false
+	
 	if collision_point != null:
 		var grid_pos = grid_map.local_to_map(collision_point)
 		resource_hover_holder.visible = true
-		if grid_map.can_place_resource(grid_pos, shape):
-			transparent_mesh_instance(resource_hover_holder)
+		if grid_map.can_place_resource(grid_pos, resource_hover_holder.shape):
+			color_transparent_mesh_instance(resource_hover_holder, 1)
+			print("dziala")
 		else:
-			red_transparent_mesh_instance(resource_hover_holder)
+			print("nie dziala")
+			color_transparent_mesh_instance(resource_hover_holder, 2)
 		var place_pos = grid_map.map_to_local(grid_pos)
 		#print(grid_pos)
 		place_pos.y=2.5

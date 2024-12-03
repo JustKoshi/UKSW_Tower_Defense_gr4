@@ -2,7 +2,7 @@
 
 [ext_resource type="ArrayMesh" uid="uid://yyxxxln1hx6l" path="res://Resources/Resource_buildings/building_mine_blue.obj" id="1_71aqv"]
 [ext_resource type="Texture2D" uid="uid://b1ms4h5mcmjd0" path="res://Resources/Towers/hexagons_medieval.png" id="2_2qvdo"]
-[ext_resource type="Script" path="res://Scenes/mine.gd" id="3_uqrls"]
+[ext_resource type="Script" path="res://Scripts/mine.gd" id="3_uqrls"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fru3p"]
 albedo_texture = ExtResource("2_2qvdo")
