@@ -6,14 +6,17 @@ extends Node3D
 #variable to contain main GridMap
 @onready var grid_map = $GridMap
 
+<<<<<<< Updated upstream
 #variables holding buttons inside build ui
 @onready var tetris_button = $"Control/Walls build button"
 @onready var tower_button = $"Control/Tower build button"
 @onready var build_ui_button = $"Control/Build UI button"
 
+=======
+>>>>>>> Stashed changes
 #variables to contain build time logoic and ui label informing about build time
 @onready var build_timer = $"Build Timer"
-@onready var build_time_label = $"Control/Build time Label"
+@onready var build_time_label = $"CanvasLayer/UI/Build time Label"
 @onready var switch_label_timer = $"Switch Label Timer"
 
 #variable to contain raycast to detect clicks in build mode
@@ -22,17 +25,46 @@ extends Node3D
 #variable to contain Enemy Path Spawner
 @onready var enemy_spawner = $"Enemy Spawner"
 
+@onready var UI = $CanvasLayer/UI
+
 var NormalTowerScene = preload("res://Scenes/normal_tower_lvl_1.tscn")
 
-var build_ui = false
 var tower_build = false
 var tetris_build_mode = false
 
+<<<<<<< Updated upstream
+=======
+var wood_build = false
+var wheat_build = false
+var stone_build = false
+var beer_build = false
+
+var walls_build = false
+var normal_tower_build = false
+var freeze_tower_build = false
+var aoe_tower_build = false
+
+
+var hovering_tower = 0
+var tower_to_hover = 0 #Which tower is picked with button 0-none 1-normal 2-freeze 3-aoe
+>>>>>>> Stashed changes
 var current_cam_index = 0
 var coordinates_check_mode = false
 var hover = [null, null, null, null] #array that holds blocks for hover. 4 couse very tetris block size = 4
 var short_path = [] #array that holds shortest path converted to local
+<<<<<<< Updated upstream
 var tower_hover_holder:Object = null#Object that holds tower instance that is now currently selected and might be placed
+=======
+
+var tower_hover_holder:MeshInstance3D = null#Object that holds tower instance that is now currently selected and might be placed
+var resource_hover_holder:MeshInstance3D = null
+
+
+@onready var label = $"CanvasLayer/UI/PanelContainer/MarginContainer/GridContainer/Wood count label"
+@onready var lumbermill = $"Resource Holder"/resource_hover_holder
+#resource counter:
+var wood=0
+>>>>>>> Stashed changes
 
 var wave_number = 1
 var is_build_phase = true
@@ -51,7 +83,13 @@ func _ready() -> void:
 	
 	convert_path_to_local()
 	enemy_spawner.set_path(short_path)
+<<<<<<< Updated upstream
 	
+=======
+	UI.update_enemy_count_labels(enemy_spawner.basic_enemies_per_wave, enemy_spawner.fast_enemies_per_wave, 0)
+
+
+>>>>>>> Stashed changes
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	if Input.is_action_just_pressed("Camera_F1"):
@@ -59,15 +97,16 @@ func _process(delta: float) -> void:
 			current_cam_index -= 1
 		current_cam_index = current_cam_index%3
 		set_camera()
-		coordinates_check_mode = false	
+		
 	elif Input.is_action_just_pressed("Camera_F2"):
 		current_cam_index += 1
 		current_cam_index = current_cam_index%3
 		set_camera()
-		coordinates_check_mode = false	
+		
 	elif Input.is_action_just_pressed("Camera_F9"):
 		current_cam_index = 1
 		set_camera()
+<<<<<<< Updated upstream
 		coordinates_check_mode = true
 		tetris_build_mode = false
 		
@@ -85,23 +124,65 @@ func _process(delta: float) -> void:
 	if is_build_phase:
 		update_label_build_time()
 		
+=======
+		if !coordinates_check_mode:
+			coordinates_check_mode = true
+		else:
+			coordinates_check_mode = false
+		
+	update_hover_tetris()#Poza ifem mechanizm wylaczania jest w srodku funkcji!!!
+	if normal_tower_build:
+		tower_to_hover = 1
+		hover_tower(tower_to_hover)
+	elif tower_hover_holder != null:
+		tower_hover_holder.queue_free()
+	
+	if freeze_tower_build:
+		tower_to_hover = 2
+		hover_tower(tower_to_hover)
+	if not normal_tower_build and not freeze_tower_build:
+		tower_to_hover = 0
+	if wood_build:
+		coordinates_check_mode = false
+		hover_resource()
+		
+	if is_build_phase:
+		update_label_build_time()
+	
+	#print("wood build: " + str(wood_build))
+	#print("wheat build: " + str(wheat_build))
+	#print("stone build: "+ str(stone_build))
+	#print("beer build: " + str(beer_build))
+	#print("walls build: " + str(walls_build))
+	#print("normal tower: " + str(normal_tower_build))
+	#print("freeze tower: " + str(freeze_tower_build))
+	#print("aoe tower: " + str(aoe_tower_build))
+
+>>>>>>> Stashed changes
 func _input(event: InputEvent) -> void:
-	if tetris_build_mode and event is InputEventMouseButton:
+	if walls_build and event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
 			place_block_on_click()
-	if tetris_build_mode and event is InputEventKey:
+	if walls_build and event is InputEventKey:
 		if event.keycode == KEY_Q and event.is_pressed():
 			grid_map.rotate_block_backwards()
-	if tetris_build_mode and event is InputEventKey:
+	if walls_build and event is InputEventKey:
 		if event.keycode == KEY_E and event.is_pressed():
 			grid_map.rotate_block_forward()
 	if coordinates_check_mode and event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
 			check_coordinates()
-	if tower_build and event is InputEventMouseButton:
+	if normal_tower_build or freeze_tower_build and event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
+<<<<<<< Updated upstream
 			place_tower_on_click()
 			
+=======
+			place_tower_on_click(hovering_tower)
+	if wood_build and event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
+			place_resource_on_click()
+>>>>>>> Stashed changes
 			
 #Disables all camera except one with current cam index
 func set_camera():
@@ -212,7 +293,7 @@ func hover_tower():
 #function creates block hover on raycast position
 func update_hover_tetris():
 	var collision_point = get_collision_point()
-	if collision_point != null and tetris_build_mode:
+	if collision_point != null and walls_build:
 		var grid_pos = grid_map.local_to_map(collision_point)
 		var grid_pos_f = Vector3(grid_pos.x, grid_pos.y, grid_pos.z)
 		for i in range(grid_map.current_shape.size()):
@@ -236,6 +317,7 @@ func check_coordinates():
 
 #Signal to enter build mode
 func _on_tetris_build_button_pressed() -> void:
+<<<<<<< Updated upstream
 	if not tetris_build_mode:
 		tetris_build_mode = true
 		build_ui_button.disabled = true
@@ -244,6 +326,13 @@ func _on_tetris_build_button_pressed() -> void:
 		tetris_build_mode = false
 		build_ui_button.disabled = false
 		tower_button.disabled = false
+=======
+	if walls_build:
+		walls_build = false
+	else:
+		walls_build = true
+		
+>>>>>>> Stashed changes
 
 #called in _progress updates mesh that is hover for block placement
 func update_hover_mesh() -> void:
@@ -273,6 +362,7 @@ func convert_path_to_local()-> void:
 			short_path.append(grid_map.map_to_local(vect))
 	short_path.append(grid_map.map_to_local(path_end))
 
+<<<<<<< Updated upstream
 #build ui button enables other buttons used to buy and place walls and towers
 func _on_build_ui_button_pressed() -> void:
 	if not build_ui:
@@ -300,11 +390,15 @@ func _on_tower_build_button_pressed() -> void:
 		tower_build = false
 		build_ui_button.disabled = false
 		tetris_button.disabled = false
+=======
+
+>>>>>>> Stashed changes
 
 func update_label_build_time():
-	build_time_label.text = "Czas na budowanie: " + str(ceil(build_timer.time_left)) + "s"
+	build_time_label.text = "Time for building: " + str(ceil(build_timer.time_left)) + "s"
 
 func turn_off_build_mode():
+<<<<<<< Updated upstream
 	if build_ui:
 		tower_button.disabled = true
 		tower_button.visible = false
@@ -325,17 +419,26 @@ func turn_off_build_mode():
 	
 	
 		
+=======
+	if wood_build:
+		current_cam_index = 0
+		set_camera()
+
+
+>>>>>>> Stashed changes
 func _on_build_timer_timeout() -> void:
 	is_build_phase = false
-	build_time_label.text = "Faza budowania zakończona!"
+	build_time_label.text = "Build phase ended!"
 	switch_label_timer.start()
-	turn_off_build_mode()
 	if !enemy_spawner.wave_in_progress:
 		enemy_spawner.start_wave()
+		UI.bottom_panel.visible = false
+		UI.unpress_all_buttons()
 
 #resets build timer and enables buttons
 func reset_build_timer():
 	is_build_phase = true
+<<<<<<< Updated upstream
 	tower_button.disabled = false
 	build_ui_button.disabled = false
 	tetris_button.disabled = false
@@ -344,9 +447,20 @@ func reset_build_timer():
 
 #when end wave signal is recived resets build timer
 func _on_enemy_spawner_wave_ended(wave_number: Variant) -> void:
+=======
+	UI.show_first_panel()
+	UI.bottom_panel.visible = true
+	build_timer.start()
+
+#when end wave signal is recived resets build timer
+func _on_enemy_spawner_wave_ended() -> void:
+	#print("Przekazano sygnal")
+>>>>>>> Stashed changes
 	enemy_spawner.current_wave+=1
+	enemy_spawner.update_wave_enemy_count()
+	UI.update_enemy_count_labels(enemy_spawner.basic_enemies_per_wave, enemy_spawner.fast_enemies_per_wave, 0)
 	reset_build_timer()
 
 #changes label 2 s after wave started
 func _on_switch_label_timer_timeout() -> void:
-	build_time_label.text = "Fala: " + str(enemy_spawner.current_wave)
+	build_time_label.text = "Current wave: " + str(enemy_spawner.current_wave)
