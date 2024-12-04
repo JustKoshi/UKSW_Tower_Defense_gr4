@@ -140,7 +140,7 @@ func _input(event: InputEvent) -> void:
 	if coordinates_check_mode and event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
 			check_coordinates()
-	if normal_tower_build or freeze_tower_build and event is InputEventMouseButton:
+	if (normal_tower_build or freeze_tower_build) and event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
 			place_tower_on_click(hovering_tower)
 	if wood_build and event is InputEventMouseButton:
