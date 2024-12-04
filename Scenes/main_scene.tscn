@@ -1,12 +1,31 @@
-[gd_scene load_steps=21 format=3 uid="uid://chdc08c7ct8xv"]
+[gd_scene load_steps=43 format=3 uid="uid://chdc08c7ct8xv"]
 
 [ext_resource type="Script" path="res://Scripts/game_script.gd" id="1_wclms"]
 [ext_resource type="MeshLibrary" uid="uid://746jf5hii373" path="res://mesh_lib.tres" id="2_5f8px"]
 [ext_resource type="Script" path="res://Scripts/grid_map.gd" id="3_u8xi5"]
 [ext_resource type="Script" path="res://Scripts/Camera3D.gd" id="4_km4am"]
 [ext_resource type="Script" path="res://Scripts/label.gd" id="5_6gjld"]
+[ext_resource type="Script" path="res://Scripts/ui.gd" id="6_5mynr"]
 [ext_resource type="Script" path="res://Scripts/resource_count_label.gd" id="6_7ej5e"]
 [ext_resource type="Script" path="res://Scripts/path_spawner.gd" id="6_p3rev"]
+[ext_resource type="Theme" uid="uid://bsgc4pitu4gax" path="res://Resources/Themes/UI_Enemy_theme.tres" id="7_dqtye"]
+[ext_resource type="Texture2D" uid="uid://b3vdmx7qxicu5" path="res://Resources/Icons/wood.png" id="7_juwof"]
+[ext_resource type="Theme" uid="uid://lj74u8ff7f5f" path="res://Resources/Themes/UI_Resource_theme.tres" id="7_utis6"]
+[ext_resource type="Texture2D" uid="uid://dffvsvd3mlbeh" path="res://Resources/Icons/wheat.png" id="9_tvx0g"]
+[ext_resource type="Texture2D" uid="uid://cgo3w8pokxeen" path="res://Resources/Icons/stone.png" id="10_kc5up"]
+[ext_resource type="Texture2D" uid="uid://irc84uh4ceqx" path="res://Resources/Icons/beer.png" id="10_xkq1o"]
+[ext_resource type="Texture2D" uid="uid://bn8dy1n7d2eb5" path="res://Resources/Icons/basic head.png" id="14_tqguo"]
+[ext_resource type="Texture2D" uid="uid://caqpa1w1c6083" path="res://Resources/Icons/Hood head.png" id="15_2podv"]
+[ext_resource type="Texture2D" uid="uid://ceyur06fyam64" path="res://Resources/Icons/boss head.png" id="16_1vtdw"]
+[ext_resource type="FontFile" uid="uid://b0sbud2angi6h" path="res://Resources/Fonts/buddychampionexpand.ttf" id="18_18u4r"]
+[ext_resource type="Theme" uid="uid://bk4rbmthy5fx8" path="res://Resources/Themes/UI_buttom_panel.tres" id="18_tdln6"]
+[ext_resource type="Texture2D" uid="uid://uesnqfipiql6" path="res://Resources/UI/UI board Small  stone.png" id="19_15ryl"]
+[ext_resource type="Texture2D" uid="uid://b0kndl2r5na8v" path="res://Resources/Icons/Tetris.png" id="21_eu6v8"]
+[ext_resource type="Texture2D" uid="uid://p8bjhb8fenuq" path="res://Resources/Icons/arrow.png" id="22_si6jt"]
+[ext_resource type="Texture2D" uid="uid://b7i53w4037ub2" path="res://Resources/Icons/snowflake.png" id="23_f26j8"]
+[ext_resource type="Texture2D" uid="uid://ca876e85ge85a" path="res://Resources/UI/pusty przycisk.png" id="24_dpvka"]
+[ext_resource type="Texture2D" uid="uid://bo48g54sntmyh" path="res://Resources/UI/pusty przycisk_pressed.png" id="25_jsuok"]
+[ext_resource type="Texture2D" uid="uid://hbu7q72dq5ji" path="res://Resources/UI/pusty przycisk_hover.png" id="26_123qh"]
 
 [sub_resource type="Gradient" id="Gradient_lq3fq"]
 offsets = PackedFloat32Array(0.438819, 0.810127)
@@ -40,54 +59,40 @@ fog_light_energy = 0.2
 fog_density = 0.005
 volumetric_fog_density = 0.0001
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u8m2w"]
-bg_color = Color(0, 0, 0, 1)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.00784314, 0.8, 0.027451, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oalbl"]
-bg_color = Color(0, 0, 0, 1)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.94, 0.1504, 0.33464, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o4bqs"]
-bg_color = Color(0, 0, 0, 1)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.819608, 0.839216, 0, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bhpen"]
-bg_color = Color(0, 0, 0, 1)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.854526, 0.635006, 3.85046e-07, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vybfh"]
-bg_color = Color(0, 0, 0, 1)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.201015, 0.698134, 0.698237, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rx7pr"]
-bg_color = Color(0.196078, 0.196078, 0.196078, 0.682353)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-
 [sub_resource type="Curve3D" id="Curve3D_xbv8h"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_y58hb"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mwxa0"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1a7p5"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_pkn5g"]
+texture = ExtResource("19_15ryl")
+texture_margin_left = 40.0
+texture_margin_top = 30.0
+texture_margin_right = 40.0
+texture_margin_bottom = 30.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_k77h7"]
+texture = ExtResource("26_123qh")
+texture_margin_left = 99.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_h8koa"]
+texture = ExtResource("25_jsuok")
+texture_margin_left = 99.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_na0bh"]
+texture = ExtResource("24_dpvka")
+texture_margin_left = 99.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_osomm"]
+texture = ExtResource("26_123qh")
+texture_margin_left = 99.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tux7q"]
+texture = ExtResource("25_jsuok")
+texture_margin_left = 99.0
 
 [node name="Main_Scene" type="Node3D"]
 script = ExtResource("1_wclms")
@@ -112,140 +117,10 @@ transform = Transform3D(0.889288, -0.257098, 0.378242, -0.00714836, 0.819121, 0.
 script = ExtResource("4_km4am")
 
 [node name="Top Camera" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 22, 0)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 23, 1)
 
 [node name="RayCast3D" type="RayCast3D" parent="Top Camera"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 7.86805e-07, -18)
-
-[node name="Control" type="Control" parent="."]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Build UI button" type="Button" parent="Control"]
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -132.0
-offset_top = 9.0
-offset_right = -9.0
-offset_bottom = 68.0
-grow_horizontal = 0
-theme_override_styles/pressed = SubResource("StyleBoxFlat_u8m2w")
-toggle_mode = true
-action_mode = 0
-text = "Build mode"
-
-[node name="Walls build button" type="Button" parent="Control"]
-visible = false
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -264.0
-offset_top = 9.0
-offset_right = -141.0
-offset_bottom = 68.0
-grow_horizontal = 0
-theme_override_styles/pressed = SubResource("StyleBoxFlat_oalbl")
-disabled = true
-toggle_mode = true
-action_mode = 0
-text = "Walls building"
-
-[node name="Tower build button" type="Button" parent="Control"]
-visible = false
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -396.0
-offset_top = 9.0
-offset_right = -273.0
-offset_bottom = 68.0
-grow_horizontal = 0
-theme_override_styles/pressed = SubResource("StyleBoxFlat_o4bqs")
-disabled = true
-toggle_mode = true
-action_mode = 0
-text = "Tower building"
-
-[node name="FPS_label" type="Label" parent="Control"]
-layout_mode = 0
-offset_left = 5.0
-offset_right = 148.0
-offset_bottom = 28.0
-theme_override_font_sizes/font_size = 20
-script = ExtResource("5_6gjld")
-
-[node name="Normal Tower button" type="Button" parent="Control"]
-visible = false
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -132.0
-offset_top = -68.0
-offset_right = -9.0
-offset_bottom = -9.0
-grow_horizontal = 0
-grow_vertical = 0
-theme_override_styles/pressed = SubResource("StyleBoxFlat_bhpen")
-disabled = true
-toggle_mode = true
-text = "Normal Tower"
-
-[node name="Freeze Tower button" type="Button" parent="Control"]
-visible = false
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -264.0
-offset_top = -68.0
-offset_right = -141.0
-offset_bottom = -9.0
-grow_horizontal = 0
-grow_vertical = 0
-theme_override_styles/pressed = SubResource("StyleBoxFlat_vybfh")
-disabled = true
-toggle_mode = true
-text = "Freeze Tower"
-
-[node name="Resource build button" type="Button" parent="Control"]
-visible = false
-layout_mode = 0
-offset_left = 600.0
-offset_top = 9.0
-offset_right = 746.0
-offset_bottom = 68.0
-text = "Resource building"
-
-[node name="Resource count label" type="Label" parent="Control"]
-layout_mode = 0
-offset_left = 7.0
-offset_top = 95.0
-offset_right = 92.0
-offset_bottom = 130.0
-vertical_alignment = 1
-script = ExtResource("6_7ej5e")
-
-[node name="Build time Label" type="Label" parent="Control"]
-layout_mode = 0
-offset_left = 5.0
-offset_top = 28.0
-offset_right = 35.0
-offset_bottom = 56.0
-theme_override_font_sizes/font_size = 20
-theme_override_styles/normal = SubResource("StyleBoxFlat_rx7pr")
 
 [node name="Enemy Spawner" type="Path3D" parent="."]
 curve = SubResource("Curve3D_xbv8h")
@@ -265,19 +140,539 @@ transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 
 [node name="Resource Holder" type="Node" parent="."]
 
 [node name="Build Timer" type="Timer" parent="."]
-wait_time = 10.0
+wait_time = 30.0
 one_shot = true
 autostart = true
 
 [node name="Switch Label Timer" type="Timer" parent="."]
 wait_time = 2.0
+one_shot = true
 
-[connection signal="pressed" from="Control/Build UI button" to="." method="_on_build_ui_button_pressed"]
-[connection signal="pressed" from="Control/Walls build button" to="." method="_on_tetris_build_button_pressed"]
-[connection signal="pressed" from="Control/Tower build button" to="." method="_on_tower_build_button_pressed"]
-[connection signal="pressed" from="Control/Normal Tower button" to="." method="_on_normal_tower_button_pressed"]
-[connection signal="pressed" from="Control/Freeze Tower button" to="." method="_on_freeze_tower_button_pressed"]
-[connection signal="pressed" from="Control/Resource build button" to="." method="_on_resource_build_button_pressed"]
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="UI" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("6_5mynr")
+
+[node name="FPS_label" type="Label" parent="CanvasLayer/UI"]
+layout_mode = 0
+offset_left = 5.0
+offset_right = 148.0
+offset_bottom = 28.0
+theme_override_font_sizes/font_size = 20
+script = ExtResource("5_6gjld")
+
+[node name="Build time Label" type="Label" parent="CanvasLayer/UI"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -112.5
+offset_right = 112.5
+offset_bottom = 99.0
+grow_horizontal = 2
+theme = ExtResource("7_dqtye")
+
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/UI"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -163.0
+offset_top = -6.0
+offset_right = 2.0
+offset_bottom = 252.0
+grow_horizontal = 0
+theme = ExtResource("7_utis6")
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="GridContainer" type="GridContainer" parent="CanvasLayer/UI/PanelContainer/MarginContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="Wood" type="TextureRect" parent="CanvasLayer/UI/PanelContainer/MarginContainer/GridContainer"]
+layout_mode = 2
+texture = ExtResource("7_juwof")
+expand_mode = 2
+
+[node name="Wood count label" type="Label" parent="CanvasLayer/UI/PanelContainer/MarginContainer/GridContainer"]
+layout_mode = 2
+text = "100
+"
+vertical_alignment = 1
+script = ExtResource("6_7ej5e")
+
+[node name="Wheat" type="TextureRect" parent="CanvasLayer/UI/PanelContainer/MarginContainer/GridContainer"]
+layout_mode = 2
+texture = ExtResource("9_tvx0g")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="Wheat count label" type="Label" parent="CanvasLayer/UI/PanelContainer/MarginContainer/GridContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 38
+text = "100"
+
+[node name="Stone" type="TextureRect" parent="CanvasLayer/UI/PanelContainer/MarginContainer/GridContainer"]
+layout_mode = 2
+texture = ExtResource("10_kc5up")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="Stone count label" type="Label" parent="CanvasLayer/UI/PanelContainer/MarginContainer/GridContainer"]
+layout_mode = 2
+text = "100"
+
+[node name="Beer" type="TextureRect" parent="CanvasLayer/UI/PanelContainer/MarginContainer/GridContainer"]
+layout_mode = 2
+texture = ExtResource("10_xkq1o")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="Beer count label" type="Label" parent="CanvasLayer/UI/PanelContainer/MarginContainer/GridContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 38
+text = "100"
+
+[node name="EnemyPanelContainer" type="PanelContainer" parent="CanvasLayer/UI"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -344.0
+offset_top = 30.0
+offset_right = -181.0
+offset_bottom = 251.0
+grow_horizontal = 0
+theme = ExtResource("7_dqtye")
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI/EnemyPanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 25
+
+[node name="GridContainer" type="GridContainer" parent="CanvasLayer/UI/EnemyPanelContainer/MarginContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="Basic enemy" type="TextureRect" parent="CanvasLayer/UI/EnemyPanelContainer/MarginContainer/GridContainer"]
+layout_mode = 2
+texture = ExtResource("14_tqguo")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="BE count Label" type="Label" parent="CanvasLayer/UI/EnemyPanelContainer/MarginContainer/GridContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+theme_override_styles/normal = SubResource("StyleBoxEmpty_y58hb")
+text = "00
+"
+
+[node name="Fast enemy" type="TextureRect" parent="CanvasLayer/UI/EnemyPanelContainer/MarginContainer/GridContainer"]
+layout_mode = 2
+texture = ExtResource("15_2podv")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="FE count Label" type="Label" parent="CanvasLayer/UI/EnemyPanelContainer/MarginContainer/GridContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+theme_override_styles/normal = SubResource("StyleBoxEmpty_mwxa0")
+text = "0"
+
+[node name="Boss" type="TextureRect" parent="CanvasLayer/UI/EnemyPanelContainer/MarginContainer/GridContainer"]
+layout_mode = 2
+texture = ExtResource("16_1vtdw")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="Boss count Label" type="Label" parent="CanvasLayer/UI/EnemyPanelContainer/MarginContainer/GridContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = SubResource("StyleBoxEmpty_1a7p5")
+text = "0"
+vertical_alignment = 2
+
+[node name="Info Label" type="Label" parent="CanvasLayer/UI"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -377.0
+offset_top = -5.0
+offset_right = -153.0
+offset_bottom = 75.0
+grow_horizontal = 0
+theme_override_fonts/font = ExtResource("18_18u4r")
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("StyleBoxTexture_pkn5g")
+text = "Current wave:"
+
+[node name="Bottom_panel" type="PanelContainer" parent="CanvasLayer/UI"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -768.0
+offset_top = -191.0
+offset_right = 769.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 0
+theme = ExtResource("18_tdln6")
+
+[node name="Main panel" type="MarginContainer" parent="CanvasLayer/UI/Bottom_panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 200
+theme_override_constants/margin_right = 200
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/UI/Bottom_panel/Main panel"]
+layout_mode = 2
+
+[node name="Resource build button" type="Button" parent="CanvasLayer/UI/Bottom_panel/Main panel/HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "Resource building"
+
+[node name="spring" type="Control" parent="CanvasLayer/UI/Bottom_panel/Main panel/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Defence build" type="Button" parent="CanvasLayer/UI/Bottom_panel/Main panel/HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+action_mode = 0
+text = "Defence building"
+
+[node name="Defence buildings" type="MarginContainer" parent="CanvasLayer/UI/Bottom_panel"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 70
+theme_override_constants/margin_right = 50
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/UI/Bottom_panel/Defence buildings"]
+layout_mode = 2
+
+[node name="Walls build button" type="Button" parent="CanvasLayer/UI/Bottom_panel/Defence buildings/HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+toggle_mode = true
+action_mode = 0
+text = "Walls building"
+
+[node name="tetris" type="TextureRect" parent="CanvasLayer/UI/Bottom_panel/Defence buildings/HBoxContainer/Walls build button"]
+layout_mode = 2
+anchor_left = 0.5
+anchor_top = 0.398
+anchor_right = 0.5
+anchor_bottom = 0.398
+offset_left = 144.5
+offset_top = -21.014
+offset_right = 2144.5
+offset_bottom = 1322.99
+rotation = 1.5708
+scale = Vector2(0.018, 0.018)
+texture = ExtResource("21_eu6v8")
+
+[node name="tetris2" type="TextureRect" parent="CanvasLayer/UI/Bottom_panel/Defence buildings/HBoxContainer/Walls build button"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.398
+anchor_right = 0.5
+anchor_bottom = 0.398
+offset_left = -121.5
+offset_top = -21.014
+offset_right = 1878.5
+offset_bottom = 1322.99
+rotation = 1.5708
+scale = Vector2(0.018, 0.018)
+texture = ExtResource("21_eu6v8")
+
+[node name="spring2" type="Control" parent="CanvasLayer/UI/Bottom_panel/Defence buildings/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Normal Tower button" type="Button" parent="CanvasLayer/UI/Bottom_panel/Defence buildings/HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+toggle_mode = true
+text = "Normal Tower"
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/UI/Bottom_panel/Defence buildings/HBoxContainer/Normal Tower button"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.366
+anchor_right = 0.5
+anchor_bottom = 0.366
+offset_left = -145.5
+offset_top = -24.038
+offset_right = -105.5
+offset_bottom = 15.962
+texture = ExtResource("22_si6jt")
+expand_mode = 1
+
+[node name="TextureRect2" type="TextureRect" parent="CanvasLayer/UI/Bottom_panel/Defence buildings/HBoxContainer/Normal Tower button"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.366
+anchor_right = 0.5
+anchor_bottom = 0.366
+offset_left = 105.5
+offset_top = 15.962
+offset_right = 145.5
+offset_bottom = 55.962
+rotation = -1.5708
+texture = ExtResource("22_si6jt")
+expand_mode = 1
+
+[node name="spring" type="Control" parent="CanvasLayer/UI/Bottom_panel/Defence buildings/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Freeze Tower button" type="Button" parent="CanvasLayer/UI/Bottom_panel/Defence buildings/HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+toggle_mode = true
+text = "Freeze Tower"
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/UI/Bottom_panel/Defence buildings/HBoxContainer/Freeze Tower button"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.366
+anchor_right = 0.5
+anchor_bottom = 0.366
+offset_left = -148.0
+offset_top = -20.038
+offset_right = -108.0
+offset_bottom = 19.962
+texture = ExtResource("23_f26j8")
+expand_mode = 1
+
+[node name="TextureRect2" type="TextureRect" parent="CanvasLayer/UI/Bottom_panel/Defence buildings/HBoxContainer/Freeze Tower button"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.366
+anchor_right = 0.5
+anchor_bottom = 0.366
+offset_left = 109.0
+offset_top = -18.038
+offset_right = 149.0
+offset_bottom = 21.962
+texture = ExtResource("23_f26j8")
+expand_mode = 1
+
+[node name="spring3" type="Control" parent="CanvasLayer/UI/Bottom_panel/Defence buildings/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="AOE Tower" type="Button" parent="CanvasLayer/UI/Bottom_panel/Defence buildings/HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+toggle_mode = true
+text = "AOE TOWER"
+
+[node name="spring4" type="Control" parent="CanvasLayer/UI/Bottom_panel/Defence buildings/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Back Button2" type="Button" parent="CanvasLayer/UI/Bottom_panel/Defence buildings/HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+theme_override_styles/hover = SubResource("StyleBoxTexture_k77h7")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_h8koa")
+theme_override_styles/normal = SubResource("StyleBoxTexture_na0bh")
+
+[node name="Resource buildings" type="MarginContainer" parent="CanvasLayer/UI/Bottom_panel"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 150
+theme_override_constants/margin_right = 100
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/UI/Bottom_panel/Resource buildings"]
+layout_mode = 2
+
+[node name="Wood building" type="Button" parent="CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+toggle_mode = true
+text = "Sawmill"
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Wood building"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.376
+anchor_right = 0.5
+anchor_bottom = 0.376
+offset_left = -93.5
+offset_top = -13.968
+offset_right = -65.5
+offset_bottom = 14.032
+texture = ExtResource("7_juwof")
+expand_mode = 1
+
+[node name="TextureRect2" type="TextureRect" parent="CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Wood building"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.387
+anchor_right = 0.5
+anchor_bottom = 0.387
+offset_left = 64.5
+offset_top = -13.991
+offset_right = 92.5
+offset_bottom = 14.009
+texture = ExtResource("7_juwof")
+expand_mode = 1
+
+[node name="spring" type="Control" parent="CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Wheat building" type="Button" parent="CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+toggle_mode = true
+text = "wheat fields"
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Wheat building"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.333
+anchor_right = 0.5
+anchor_bottom = 0.333
+offset_left = -134.5
+offset_top = -13.969
+offset_right = -102.5
+offset_bottom = 18.031
+texture = ExtResource("9_tvx0g")
+expand_mode = 1
+
+[node name="TextureRect2" type="TextureRect" parent="CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Wheat building"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.333
+anchor_right = 0.5
+anchor_bottom = 0.333
+offset_left = 103.5
+offset_top = -11.969
+offset_right = 135.5
+offset_bottom = 20.031
+texture = ExtResource("9_tvx0g")
+expand_mode = 1
+
+[node name="spring2" type="Control" parent="CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Stone building" type="Button" parent="CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+toggle_mode = true
+text = "Quarry"
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Stone building"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.43
+anchor_right = 0.5
+anchor_bottom = 0.43
+offset_left = -92.0
+offset_top = -22.99
+offset_right = -59.0
+offset_bottom = 10.01
+texture = ExtResource("10_kc5up")
+expand_mode = 1
+
+[node name="TextureRect2" type="TextureRect" parent="CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Stone building"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.43
+anchor_right = 0.5
+anchor_bottom = 0.43
+offset_left = 58.0
+offset_top = -20.99
+offset_right = 91.0
+offset_bottom = 12.01
+texture = ExtResource("10_kc5up")
+expand_mode = 1
+
+[node name="spring3" type="Control" parent="CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Beer building" type="Button" parent="CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+toggle_mode = true
+text = "Brewery
+"
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Beer building"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.376
+anchor_right = 0.5
+anchor_bottom = 0.376
+offset_left = -92.5
+offset_top = -12.968
+offset_right = -67.5
+offset_bottom = 12.032
+texture = ExtResource("10_xkq1o")
+expand_mode = 1
+
+[node name="TextureRect2" type="TextureRect" parent="CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Beer building"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.376
+anchor_right = 0.5
+anchor_bottom = 0.376
+offset_left = 72.5
+offset_top = -11.968
+offset_right = 97.5
+offset_bottom = 13.032
+texture = ExtResource("10_xkq1o")
+expand_mode = 1
+
+[node name="spring4" type="Control" parent="CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Back Button" type="Button" parent="CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+theme_override_styles/hover = SubResource("StyleBoxTexture_osomm")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_tux7q")
+theme_override_styles/normal = SubResource("StyleBoxTexture_na0bh")
+
 [connection signal="wave_ended" from="Enemy Spawner" to="." method="_on_enemy_spawner_wave_ended"]
 [connection signal="timeout" from="Build Timer" to="." method="_on_build_timer_timeout"]
 [connection signal="timeout" from="Switch Label Timer" to="." method="_on_switch_label_timer_timeout"]
+[connection signal="pressed" from="CanvasLayer/UI/Bottom_panel/Main panel/HBoxContainer/Resource build button" to="CanvasLayer/UI" method="_on_resource_build_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/UI/Bottom_panel/Main panel/HBoxContainer/Defence build" to="CanvasLayer/UI" method="_on_defence_build_pressed"]
+[connection signal="pressed" from="CanvasLayer/UI/Bottom_panel/Defence buildings/HBoxContainer/Back Button2" to="CanvasLayer/UI" method="_on_back_button_2_pressed"]
+[connection signal="pressed" from="CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Back Button" to="CanvasLayer/UI" method="_on_back_button_pressed"]

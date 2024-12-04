@@ -22,4 +22,3 @@ func _process(delta: float) -> void:
 func delete_object()->void:
 	get_parent_node_3d().delete_enemy()
 	queue_free()
-

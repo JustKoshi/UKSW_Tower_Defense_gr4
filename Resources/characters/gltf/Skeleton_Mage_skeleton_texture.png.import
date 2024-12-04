@@ -2,14 +2,11 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b8cw8k53p55ao"
+uid="uid://drvn0rjrh8d4s"
 path.s3tc="res://.godot/imported/Skeleton_Mage_skeleton_texture.png-09494ee72d02bd4b01210590b437c556.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
-}
-generator_parameters={
-"md5": "661544b1e8ba10b5a0c98b638eae6d0b"
 }
 
 [deps]
