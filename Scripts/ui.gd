@@ -47,14 +47,17 @@ func _on_back_button_pressed() -> void:
 	main_panel.visible = true
 	for button in resource_buttons:
 		button.button_pressed = false
-
+	game_script.current_cam_index = 0
+	game_script.set_camera()
 
 func _on_back_button_2_pressed() -> void:
 	defence_buildings.visible = false
 	main_panel.visible = true
 	for button in defence_buttons:
 		button.button_pressed = false
-
+	game_script.current_cam_index = 0
+	game_script.set_camera()
+	
 func _on_resource_build_button_pressed() -> void:
 	main_panel.visible = false
 	resource_buildings.visible = true

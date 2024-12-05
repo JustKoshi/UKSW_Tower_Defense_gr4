@@ -98,20 +98,24 @@ func _process(delta: float) -> void:
 			coordinates_check_mode = true
 		else:
 			coordinates_check_mode = false
-		
+	if walls_build:
+		set_build_cam()
 	update_hover_tetris()#Poza ifem mechanizm wylaczania jest w srodku funkcji!!!
 	if normal_tower_build:
 		tower_to_hover = 1
 		hover_tower(tower_to_hover)
+		set_build_cam()
 	elif tower_hover_holder != null:
 		tower_hover_holder.queue_free()
 	
 	if freeze_tower_build:
 		tower_to_hover = 2
 		hover_tower(tower_to_hover)
+		set_build_cam()
 	if not normal_tower_build and not freeze_tower_build:
 		tower_to_hover = 0
 	if wood_build:
+		set_resource_cam()
 		coordinates_check_mode = false
 		hover_resource()
 		
@@ -153,6 +157,13 @@ func set_camera():
 	for i in range (cameras.size()):
 			cameras[i].current = (i == current_cam_index)
 
+func set_build_cam():
+	current_cam_index = 1
+	set_camera()
+
+func set_resource_cam():
+	current_cam_index = 3
+	set_camera()
 
 func get_collision_point(): #returns raycast collision point with map
 	#variable to hold mouse position
@@ -187,7 +198,8 @@ func place_block_on_click():
 
 #function places tower on raycast position
 func place_tower_on_click(tower_type:int):
-	tower_hover_holder.free()#deleting hover tower before getting collision point
+	if tower_hover_holder != null:
+		tower_hover_holder.free()#deleting hover tower before getting collision point
 	var collision_point = get_collision_point()
 	#checking if raycast detected any block if so place block on gridmap
 	if collision_point != null and grid_map.can_place_tower(collision_point):
