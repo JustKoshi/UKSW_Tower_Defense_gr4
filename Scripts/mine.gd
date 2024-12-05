@@ -1,6 +1,12 @@
-extends Label
-
+extends MeshInstance3D
 var game_script
+
+var generator_on = true
+var resource_type = "stone"
+
+var generation_depleted = false
+
+var shape = [Vector3(0,0,0), Vector3(1,0,0), Vector3(1,0,1), Vector3(0,0,1)]
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -9,4 +15,7 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	set_text("Wood: %f\nStone: %f" % [game_script.game_resources["wood"], game_script.game_resources["stone"]])
+	pass
+
+func _on_timer_timeout() ->void:
+	generator_on = true
