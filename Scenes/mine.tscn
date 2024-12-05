@@ -5,6 +5,7 @@
 [ext_resource type="Script" path="res://Scripts/mine.gd" id="3_uqrls"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fru3p"]
+render_priority = 1
 albedo_texture = ExtResource("2_2qvdo")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_xm7q8"]

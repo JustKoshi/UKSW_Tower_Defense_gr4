@@ -5,21 +5,27 @@
 [ext_resource type="Texture2D" uid="uid://b1ms4h5mcmjd0" path="res://Resources/Towers/hexagons_medieval.png" id="2_hbsqb"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6vy3w"]
+render_priority = 1
 albedo_texture = ExtResource("2_hbsqb")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1r58r"]
+render_priority = 1
 albedo_texture = ExtResource("2_hbsqb")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vr11o"]
+render_priority = 1
 albedo_texture = ExtResource("2_hbsqb")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7jpuc"]
+render_priority = 1
 albedo_texture = ExtResource("2_hbsqb")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cx25w"]
+render_priority = 1
 albedo_texture = ExtResource("2_hbsqb")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gkjt5"]
+render_priority = 1
 albedo_texture = ExtResource("2_hbsqb")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_cw6o8"]
