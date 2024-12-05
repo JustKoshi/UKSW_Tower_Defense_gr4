@@ -173,7 +173,6 @@ func place_block_on_click():
 	if collision_point != null:
 		var grid_pos = grid_map.local_to_map(collision_point)
 		grid_map.place_tetris_block(grid_pos, grid_map.current_shape)
-		update_hover_mesh()
 		convert_path_to_local()
 		enemy_spawner.set_path(short_path)
 
@@ -266,13 +265,24 @@ func update_hover_tetris():
 	if collision_point != null and tetris_build_mode:
 		var grid_pos = grid_map.local_to_map(collision_point)
 		var grid_pos_f = Vector3(grid_pos.x, grid_pos.y, grid_pos.z)
-		for i in range(grid_map.current_shape.size()):
-			pass
-			var block_pos = grid_pos_f + grid_map.current_shape[i]
-			var world_pos = grid_map.map_to_local(block_pos)
-			world_pos.y = 3.5
-			hover[i].global_transform.origin = world_pos
-			hover[i].visible = true  # We make sure that hover is visible
+		if grid_map.can_place_tetris_block(grid_pos,grid_map.current_shape):
+			#print("mozna")
+			update_hover_mesh(true)
+			for i in range(grid_map.current_shape.size()):
+				var block_pos = grid_pos_f + grid_map.current_shape[i]
+				var world_pos = grid_map.map_to_local(block_pos)
+				world_pos.y = 3.5
+				hover[i].global_transform.origin = world_pos
+				hover[i].visible = true  # We make sure that hover is visible
+		else:
+			#print("NIE")
+			update_hover_mesh(false)
+			for i in range(grid_map.current_shape.size()):
+				var block_pos = grid_pos_f + grid_map.current_shape[i]
+				var world_pos = grid_map.map_to_local(block_pos)
+				world_pos.y = 3.5
+				hover[i].global_transform.origin = world_pos
+				hover[i].visible = true 
 	else:
 		for h in hover:
 			h.visible = false  #Hides hover if it doesnt collide with grid
@@ -397,13 +407,15 @@ func _on_tetris_build_button_pressed() -> void:
 		resource_button.disabled = false
 
 #called in _progress updates mesh that is hover for block placement
-func update_hover_mesh() -> void:
+func update_hover_mesh(good_place:bool) -> void:
 	var mesh_lib = grid_map.mesh_library
 	if not mesh_lib:
 		return  # Upewnij się, że mesh_library istnieje
 	for i in range(hover.size()):
-		if hover[i]:
-			hover[i].mesh = mesh_lib.get_item_mesh(grid_map.block_type)
+		if hover[i] and good_place:
+			hover[i].mesh = mesh_lib.get_item_mesh(11)
+		elif hover[i] and not good_place:
+			hover[i].mesh = mesh_lib.get_item_mesh(9)
 
 #transforms shortest_path from gridmap placement to local 
 func convert_path_to_local()-> void:
