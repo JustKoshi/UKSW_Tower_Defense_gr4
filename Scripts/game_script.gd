@@ -244,7 +244,7 @@ func hover_tower(tower_type:int):
 		get_node("Tower Holder").add_child(tower_hover_holder)
 		var mat = tower_hover_holder.get_active_material(0)
 		var mat_duplicate = mat.duplicate()
-		mat_duplicate.albedo_color = Color(1,1,1,0.5)
+		mat_duplicate.albedo_color = Color(1,1,1,0.55)
 		tower_hover_holder.set_surface_override_material(0,mat_duplicate)
 		tower_hover_holder.set_surface_override_material(1,mat_duplicate)
 	if collision_point != null:
@@ -259,8 +259,8 @@ func hover_tower(tower_type:int):
 			var mat = tower_hover_holder.get_active_material(0)
 			var mat_duplicate = mat.duplicate()
 			var mat_range_duplicate = mat_range.duplicate()
-			mat_range_duplicate.albedo_color = Color(0,0,0,0.54)
-			mat_duplicate.albedo_color = Color(1,1,1,0.5)
+			mat_range_duplicate.albedo_color = Color(0,0,0,0.55)
+			mat_duplicate.albedo_color = Color(1,1,1,0.55)
 			tower_hover_holder.get_node("MobDetector").get_child(1).set_surface_override_material(0,mat_range_duplicate)
 			tower_hover_holder.set_surface_override_material(0,mat_duplicate)
 			tower_hover_holder.set_surface_override_material(1,mat_duplicate)
@@ -270,8 +270,8 @@ func hover_tower(tower_type:int):
 			var mat = tower_hover_holder.get_active_material(0)
 			var mat_duplicate = mat.duplicate()
 			var mat_range_duplicate = mat_range.duplicate()
-			mat_range_duplicate.albedo_color = Color(1,0,0,0.54)
-			mat_duplicate.albedo_color = Color(1,0,0,0.5)
+			mat_range_duplicate.albedo_color = Color(1,0,0,0.55)
+			mat_duplicate.albedo_color = Color(1,0,0,0.55)
 			tower_hover_holder.get_node("MobDetector").get_child(1).set_surface_override_material(0,mat_range_duplicate)
 			tower_hover_holder.set_surface_override_material(0,mat_duplicate)
 			tower_hover_holder.set_surface_override_material(1,mat_duplicate)
@@ -404,6 +404,8 @@ func turn_off_build_mode():
 func _on_build_timer_timeout() -> void:
 	is_build_phase = false
 	build_time_label.text = "Build phase ended!"
+	current_cam_index = 0
+	set_camera()
 	switch_label_timer.start()
 	if !enemy_spawner.wave_in_progress:
 		enemy_spawner.start_wave()
