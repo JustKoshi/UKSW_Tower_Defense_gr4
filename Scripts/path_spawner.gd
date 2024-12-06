@@ -35,26 +35,26 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	if wave_in_progress:
 		timer += delta
-		
 	#spawn basic enemy:
-	if timer > basic_enemy_spawn_cd  and basic_enemy_count < basic_enemies_per_wave:
+	if timer > basic_enemy_spawn_cd  and basic_enemy_count < basic_enemies_per_wave and wave_in_progress:
 		timer = 0
 		basic_enemy_count+=1
 		spawn_enemy(follower)
 		randomize_basic_enemy_cd()
 		
 	# delay before spawning first fast enemy for it to not die in 1 second
-	if not fast_enemy_spawn_started:
-		fast_timer+=delta
+	if not fast_enemy_spawn_started and wave_in_progress:
+		
 		if fast_timer >= fast_enemy_initial_delay:
 			fast_timer = 0
 			fast_enemy_spawn_started = true
 			print("Fast enemy spawn started!")
-	else:
-		fast_timer += delta
+	
+	if fast_enemies_per_wave > 0:
+		fast_timer+=delta
 	
 	#spawn fast fast enemy and randomize it's spawn cd if fast enemy can be spawned
-	if fast_enemy_spawn_started and fast_timer > fast_enemy_spawn_cd and fast_enemy_count < fast_enemies_per_wave:
+	if fast_enemy_spawn_started and fast_timer > fast_enemy_spawn_cd and fast_enemy_count < fast_enemies_per_wave and wave_in_progress:
 		fast_enemy_count += 1
 		fast_timer = 0
 		spawn_enemy(fast_follower)
@@ -92,7 +92,7 @@ func spawn_enemy(enemy_scene):
 #starts wave and resets all variables	
 func start_wave():
 	print("Fala: " + str(current_wave))
-	update_wave_enemy_count()
+	
 	wave_in_progress = true
 	enemy_count = 0
 	spawned_enemy_count = 0
@@ -107,8 +107,8 @@ func start_wave():
 func end_wave():
 	print("Fala " + str(current_wave) + " zakonczona!")
 	wave_in_progress = false
-	emit_signal("wave_ended", current_wave)
-
+	emit_signal("wave_ended")
+	
 #here updates each of enemy count based on current wave
 func update_wave_enemy_count():
 	basic_enemies_per_wave = 4 + (current_wave-1)*basic_enemy_increment

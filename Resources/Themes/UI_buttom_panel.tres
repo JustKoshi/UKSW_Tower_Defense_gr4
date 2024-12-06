@@ -1,0 +1,55 @@
+[gd_resource type="Theme" load_steps=10 format=3 uid="uid://bk4rbmthy5fx8"]
+
+[ext_resource type="Texture2D" uid="uid://g3ghmhe5tjh5" path="res://Resources/UI/UI board Small  combined.png" id="1_bvm1t"]
+[ext_resource type="FontFile" uid="uid://b0sbud2angi6h" path="res://Resources/Fonts/buddychampionexpand.ttf" id="1_sn2vh"]
+[ext_resource type="Texture2D" uid="uid://bwolp3soooh34" path="res://Resources/UI/TextBTN_Medium.png" id="2_yce25"]
+[ext_resource type="Texture2D" uid="uid://co3tawrxxg8ie" path="res://Resources/UI/TextBTN_Medium_Pressed.png" id="3_ss11v"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_nje5g"]
+texture = ExtResource("3_ss11v")
+texture_margin_left = 24.0
+texture_margin_top = 40.0
+texture_margin_right = 24.0
+texture_margin_bottom = 26.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_056yk"]
+texture = ExtResource("2_yce25")
+texture_margin_left = 41.0
+texture_margin_top = 24.0
+texture_margin_right = 41.0
+texture_margin_bottom = 38.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_n3rl0"]
+texture = ExtResource("2_yce25")
+texture_margin_left = 41.0
+texture_margin_top = 21.0
+texture_margin_right = 41.0
+texture_margin_bottom = 40.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_6vpcq"]
+texture = ExtResource("3_ss11v")
+texture_margin_left = 41.0
+texture_margin_top = 40.0
+texture_margin_right = 41.0
+texture_margin_bottom = 26.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_x5na0"]
+texture = ExtResource("1_bvm1t")
+texture_margin_left = 40.0
+texture_margin_top = 50.0
+texture_margin_right = 40.0
+texture_margin_bottom = 50.0
+
+[resource]
+Button/colors/font_color = Color(0.875, 0.875, 0.875, 1)
+Button/colors/font_disabled_color = Color(1, 0, 0, 0.709804)
+Button/colors/font_hover_color = Color(0.341176, 0.701961, 0.52549, 1)
+Button/colors/font_outline_color = Color(0, 0, 0, 1)
+Button/colors/font_pressed_color = Color(0, 1, 0, 1)
+Button/font_sizes/font_size = 35
+Button/fonts/font = ExtResource("1_sn2vh")
+Button/styles/disabled = SubResource("StyleBoxTexture_nje5g")
+Button/styles/hover = SubResource("StyleBoxTexture_056yk")
+Button/styles/normal = SubResource("StyleBoxTexture_n3rl0")
+Button/styles/pressed = SubResource("StyleBoxTexture_6vpcq")
+PanelContainer/styles/panel = SubResource("StyleBoxTexture_x5na0")

@@ -9,4 +9,5 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	set_text("Wood: %f\nStone: %f" % [game_script.game_resources["wood"], game_script.game_resources["stone"]])
+	set_text("%d" % game_script.wood)
+
