@@ -60,7 +60,6 @@ var resource_hover_holder:MeshInstance3D = null
 
 
 @onready var label = $"CanvasLayer/UI/PanelContainer/MarginContainer/GridContainer/Wood count label"
-@onready var lumbermill = $"Resource Holder"/resource_hover_holder
 
 #resource counter:
 var game_resources = {
@@ -72,10 +71,23 @@ var game_resources = {
 var wave_number = 1
 var is_build_phase = true
 
-
+var texture_png = load("res://Resources/Towers/hexagons_medieval.png")
+var red_mat = StandardMaterial3D.new()
+var normal_mat = StandardMaterial3D.new()
+var red_mat_range = StandardMaterial3D.new()
+var normal_mat_range = StandardMaterial3D.new()
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	label.game_script = self
+	red_mat.albedo_color = Color(1,0,0,0.55)
+	normal_mat.albedo_color = Color(1,1,1,0.55)
+	normal_mat_range.albedo_color = Color(0,0,0,0.55)
+	red_mat_range.albedo_color = Color(1,0,0,0.55)
+	red_mat.albedo_texture = texture_png
+	normal_mat.albedo_texture = texture_png
+	red_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	normal_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	normal_mat_range.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	red_mat_range.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	set_camera()
 	update_label_build_time()
 	var mesh_lib = grid_map.mesh_library
@@ -92,7 +104,7 @@ func _ready() -> void:
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	update_resource_timers()
 	if Input.is_action_just_pressed("Camera_F1"):
 		if current_cam_index >0 :
@@ -221,10 +233,10 @@ func place_tower_on_click(tower_type:int):
 	if collision_point != null and grid_map.can_place_tower(collision_point):
 	#if tower can be placed instantiate tower and change its cordinates and turn off range and turning of hover transparency
 		var tower
-		if(tower_to_hover==1):
+		if(tower_type==1):
 			tower = NormalTowerScene.instantiate()
 			tower.can_shoot=true
-		elif(tower_to_hover==2):
+		elif(tower_type==2):
 			tower = FreezeTowerScene.instantiate()
 			tower.can_dmg = true
 			tower.get_node("MobDetector").get_child(0).disabled=false
@@ -236,16 +248,17 @@ func place_tower_on_click(tower_type:int):
 		var mat_dup = mat.duplicate()
 		mat_dup.transparency=BaseMaterial3D.TRANSPARENCY_DISABLED
 		tower.set_surface_override_material(0,mat_dup)
-		tower.set_surface_override_material(1,mat_dup)		
+		if tower_type == 1:
+			tower.set_surface_override_material(1,mat_dup)
 		tower.get_node("MobDetector").visible=false
 		grid_map.place_tower_in_tilemap(collision_point)
 		self.get_node("Tower Holder").add_child(tower)
 		print("Added tower in position: ",grid_pos)
-		tower_hover_holder=null
+		tower_hover_holder = null
 		hovering_tower = 0
 
 #function that hover towers over the map showing where it can be placed and its range
-func hover_tower(tower_type:int):
+func hover_tower(_tower_type:int):
 	var collision_point = get_collision_point()
 	if tower_hover_holder==null or tower_to_hover!=hovering_tower:
 		#if there was no hover instantiate 1 hover tower and making its opacity = 0.5
@@ -258,11 +271,11 @@ func hover_tower(tower_type:int):
 			tower_hover_holder.can_dmg = false
 			hovering_tower=2
 		get_node("Tower Holder").add_child(tower_hover_holder)
-		var mat = tower_hover_holder.get_active_material(0)
-		var mat_duplicate = mat.duplicate()
-		mat_duplicate.albedo_color = Color(1,1,1,0.55)
-		tower_hover_holder.set_surface_override_material(0,mat_duplicate)
-		tower_hover_holder.set_surface_override_material(1,mat_duplicate)
+		tower_hover_holder.set_surface_override_material(0,normal_mat)
+		if tower_to_hover == 1:
+			tower_hover_holder.set_surface_override_material(1,normal_mat)
+		if tower_to_hover == 2:
+			tower_hover_holder.get_node("Mage").visible = false
 	if collision_point != null:
 		tower_hover_holder.visible=true
 		var grid_pos = grid_map.local_to_map(collision_point)
@@ -271,26 +284,16 @@ func hover_tower(tower_type:int):
 		tower_hover_holder.position=place_pos#changing tower position after cursor
 		if grid_map.can_place_tower(collision_point):
 			#if tower can be placed change its color to normal
-			var mat_range = tower_hover_holder.get_node("MobDetector").get_child(1).get_active_material(0)
-			var mat = tower_hover_holder.get_active_material(0)
-			var mat_duplicate = mat.duplicate()
-			var mat_range_duplicate = mat_range.duplicate()
-			mat_range_duplicate.albedo_color = Color(0,0,0,0.55)
-			mat_duplicate.albedo_color = Color(1,1,1,0.55)
-			tower_hover_holder.get_node("MobDetector").get_child(1).set_surface_override_material(0,mat_range_duplicate)
-			tower_hover_holder.set_surface_override_material(0,mat_duplicate)
-			tower_hover_holder.set_surface_override_material(1,mat_duplicate)
+			tower_hover_holder.get_node("MobDetector").get_child(1).set_surface_override_material(0,normal_mat_range)
+			tower_hover_holder.set_surface_override_material(0,normal_mat)
+			if tower_to_hover == 1:
+				tower_hover_holder.set_surface_override_material(1,normal_mat)
 		else:
 			#if it cant be placed change its color to red
-			var mat_range = tower_hover_holder.get_node("MobDetector").get_child(1).get_active_material(0)
-			var mat = tower_hover_holder.get_active_material(0)
-			var mat_duplicate = mat.duplicate()
-			var mat_range_duplicate = mat_range.duplicate()
-			mat_range_duplicate.albedo_color = Color(1,0,0,0.55)
-			mat_duplicate.albedo_color = Color(1,0,0,0.55)
-			tower_hover_holder.get_node("MobDetector").get_child(1).set_surface_override_material(0,mat_range_duplicate)
-			tower_hover_holder.set_surface_override_material(0,mat_duplicate)
-			tower_hover_holder.set_surface_override_material(1,mat_duplicate)
+			tower_hover_holder.get_node("MobDetector").get_child(1).set_surface_override_material(0,red_mat_range)
+			tower_hover_holder.set_surface_override_material(0,red_mat)
+			if tower_to_hover == 1:
+				tower_hover_holder.set_surface_override_material(1,red_mat)
 	else:
 		#hide hover if cursor is out of gridmap
 		tower_hover_holder.visible=false

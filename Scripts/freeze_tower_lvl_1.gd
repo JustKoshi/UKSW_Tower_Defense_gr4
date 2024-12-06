@@ -25,7 +25,7 @@ func deal_dmg():
 	for e in enemies:
 		e.take_damage(damage)
 	
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if !enemies.is_empty():
 		if can_dmg:
 			deal_dmg()

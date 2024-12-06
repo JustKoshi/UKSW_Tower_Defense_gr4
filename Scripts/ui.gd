@@ -18,6 +18,11 @@ var defence_group = ButtonGroup.new()
 
 @onready var game_script = get_parent().get_parent()
 
+@onready var wood_count_label: Label = $"PanelContainer/MarginContainer/GridContainer/Wood count label"
+@onready var wheat_count_label: Label = $"PanelContainer/MarginContainer/GridContainer/Wheat count label"
+@onready var stone_count_label: Label = $"PanelContainer/MarginContainer/GridContainer/Stone count label"
+@onready var beer_count_label: Label = $"PanelContainer/MarginContainer/GridContainer/Beer count label"
+
 var original_positions = {}
 
 func _ready() -> void:
@@ -33,8 +38,9 @@ func _ready() -> void:
 		button.toggled.connect(_on_defence_button_toggled.bind(button))
 		
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta: float) -> void:
-	#pass
+func _process(_delta: float) -> void:
+	wood_count_label.set_text("%d" % game_script.game_resources.wood)
+	stone_count_label.set_text("%d" % game_script.game_resources.stone)
 
 func update_enemy_count_labels(basic_enemy_num , fast_enemy_num, boss_num):
 	basic_enemy_count.text = str(basic_enemy_num)

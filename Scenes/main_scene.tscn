@@ -1,4 +1,4 @@
-[gd_scene load_steps=43 format=3 uid="uid://chdc08c7ct8xv"]
+[gd_scene load_steps=42 format=3 uid="uid://chdc08c7ct8xv"]
 
 [ext_resource type="Script" path="res://Scripts/game_script.gd" id="1_wclms"]
 [ext_resource type="MeshLibrary" uid="uid://746jf5hii373" path="res://mesh_lib.tres" id="2_5f8px"]
@@ -6,7 +6,6 @@
 [ext_resource type="Script" path="res://Scripts/Camera3D.gd" id="4_km4am"]
 [ext_resource type="Script" path="res://Scripts/label.gd" id="5_6gjld"]
 [ext_resource type="Script" path="res://Scripts/ui.gd" id="6_5mynr"]
-[ext_resource type="Script" path="res://Scripts/resource_count_label.gd" id="6_7ej5e"]
 [ext_resource type="Script" path="res://Scripts/path_spawner.gd" id="6_p3rev"]
 [ext_resource type="Theme" uid="uid://bsgc4pitu4gax" path="res://Resources/Themes/UI_Enemy_theme.tres" id="7_dqtye"]
 [ext_resource type="Texture2D" uid="uid://b3vdmx7qxicu5" path="res://Resources/Icons/wood.png" id="7_juwof"]
@@ -211,7 +210,6 @@ layout_mode = 2
 text = "100
 "
 vertical_alignment = 1
-script = ExtResource("6_7ej5e")
 
 [node name="Wheat" type="TextureRect" parent="CanvasLayer/UI/PanelContainer/MarginContainer/GridContainer"]
 layout_mode = 2

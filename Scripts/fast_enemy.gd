@@ -6,7 +6,7 @@ var can_attack = true
 var freezing = false
 @onready var animation_player = $AnimationPlayer
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	# Dodaj grawitacje do osi Y predkosci
 	if finished_walk:
 		play_attack_animation()
@@ -15,7 +15,8 @@ func _physics_process(delta):
 			$"Attack CD".start()
 	else:
 		play_run_animation()
-		
+	
+	
 	
 
 func play_attack_animation():
