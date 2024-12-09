@@ -1,4 +1,4 @@
-[gd_scene load_steps=44 format=3 uid="uid://chdc08c7ct8xv"]
+[gd_scene load_steps=45 format=3 uid="uid://chdc08c7ct8xv"]
 
 [ext_resource type="Script" path="res://Scripts/game_script.gd" id="1_wclms"]
 [ext_resource type="MeshLibrary" uid="uid://746jf5hii373" path="res://mesh_lib.tres" id="2_5f8px"]
@@ -27,6 +27,7 @@
 [ext_resource type="Texture2D" uid="uid://bo48g54sntmyh" path="res://Resources/UI/pusty przycisk_pressed.png" id="25_jsuok"]
 [ext_resource type="Texture2D" uid="uid://hbu7q72dq5ji" path="res://Resources/UI/pusty przycisk_hover.png" id="26_123qh"]
 [ext_resource type="Texture2D" uid="uid://dmga3xf4bw28n" path="res://Resources/Icons/gate.png" id="27_gu03x"]
+[ext_resource type="Theme" uid="uid://lg8ungoidciu" path="res://Resources/Themes/UI_Game_Over_theme.tres" id="28_j1bde"]
 
 [sub_resource type="Gradient" id="Gradient_lq3fq"]
 offsets = PackedFloat32Array(0.438819, 0.810127)
@@ -68,13 +69,6 @@ volumetric_fog_density = 0.0001
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1a7p5"]
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_pkn5g"]
-texture = ExtResource("19_15ryl")
-texture_margin_left = 40.0
-texture_margin_top = 30.0
-texture_margin_right = 40.0
-texture_margin_bottom = 30.0
-
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_k77h7"]
 texture = ExtResource("26_123qh")
 texture_margin_left = 99.0
@@ -94,6 +88,13 @@ texture_margin_left = 99.0
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tux7q"]
 texture = ExtResource("25_jsuok")
 texture_margin_left = 99.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_pkn5g"]
+texture = ExtResource("19_15ryl")
+texture_margin_left = 40.0
+texture_margin_top = 30.0
+texture_margin_right = 40.0
+texture_margin_bottom = 30.0
 
 [node name="Main_Scene" type="Node3D"]
 script = ExtResource("1_wclms")
@@ -159,31 +160,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("6_5mynr")
-
-[node name="FPS_label" type="Label" parent="CanvasLayer/UI"]
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -143.0
-offset_top = -28.0
-grow_horizontal = 0
-grow_vertical = 0
-theme_override_font_sizes/font_size = 20
-script = ExtResource("5_6gjld")
-
-[node name="Build time Label" type="Label" parent="CanvasLayer/UI"]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -112.5
-offset_right = 112.5
-offset_bottom = 99.0
-grow_horizontal = 2
-theme = ExtResource("7_dqtye")
 
 [node name="EQ container" type="PanelContainer" parent="CanvasLayer/UI"]
 layout_mode = 1
@@ -309,21 +285,6 @@ theme_override_font_sizes/font_size = 40
 theme_override_styles/normal = SubResource("StyleBoxEmpty_1a7p5")
 text = "0"
 vertical_alignment = 2
-
-[node name="Info Label" type="Label" parent="CanvasLayer/UI"]
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -377.0
-offset_top = -5.0
-offset_right = -153.0
-offset_bottom = 75.0
-grow_horizontal = 0
-theme_override_fonts/font = ExtResource("18_18u4r")
-theme_override_font_sizes/font_size = 22
-theme_override_styles/normal = SubResource("StyleBoxTexture_pkn5g")
-text = "Current wave:"
 
 [node name="Bottom_panel" type="PanelContainer" parent="CanvasLayer/UI"]
 layout_mode = 1
@@ -696,6 +657,96 @@ layout_mode = 2
 layout_mode = 2
 texture = ExtResource("27_gu03x")
 expand_mode = 2
+
+[node name="Build time Label" type="Label" parent="CanvasLayer/UI"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -112.5
+offset_right = 112.5
+offset_bottom = 103.0
+grow_horizontal = 2
+theme = ExtResource("7_dqtye")
+
+[node name="FPS_label" type="Label" parent="CanvasLayer/UI"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -94.0
+offset_top = -28.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 20
+script = ExtResource("5_6gjld")
+
+[node name="Info Label" type="Label" parent="CanvasLayer/UI"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -377.0
+offset_top = -5.0
+offset_right = -153.0
+offset_bottom = 75.0
+grow_horizontal = 0
+theme_override_fonts/font = ExtResource("18_18u4r")
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("StyleBoxTexture_pkn5g")
+text = "Current wave:"
+
+[node name="GameOverScreen" type="PanelContainer" parent="CanvasLayer/UI"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -259.5
+offset_top = -300.0
+offset_right = 140.5
+offset_bottom = 300.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("28_j1bde")
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI/GameOverScreen"]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/GameOverScreen"]
+layout_mode = 2
+
+[node name="GameOverText" type="Label" parent="CanvasLayer/UI/GameOverScreen/VBoxContainer"]
+layout_mode = 2
+text = "Game Over!
+You failed at 
+wave number
+%d"
+horizontal_alignment = 1
+
+[node name="spring2" type="Control" parent="CanvasLayer/UI/GameOverScreen/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PlayAgain_button" type="Button" parent="CanvasLayer/UI/GameOverScreen/VBoxContainer"]
+layout_mode = 2
+text = "Play Again"
+
+[node name="spring" type="Control" parent="CanvasLayer/UI/GameOverScreen/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MainMenu_button" type="Button" parent="CanvasLayer/UI/GameOverScreen/VBoxContainer"]
+layout_mode = 2
+text = "Main Menu"
 
 [connection signal="wave_ended" from="Enemy Spawner" to="." method="_on_enemy_spawner_wave_ended"]
 [connection signal="timeout" from="Build Timer" to="." method="_on_build_timer_timeout"]

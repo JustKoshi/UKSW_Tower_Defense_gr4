@@ -18,6 +18,7 @@ extends Node3D
 @onready var enemy_spawner = $"Enemy Spawner"
 
 @onready var UI = $CanvasLayer/UI
+@onready var GameOver = $CanvasLayer/UI/GameOverScreen
 
 var NormalTowerScene = preload("res://Scenes/normal_tower_lvl_1.tscn")
 var FreezeTowerScene = preload("res://Scenes/Freeze_tower_lvl_1.tscn")
@@ -58,9 +59,6 @@ var tower_hover_holder:MeshInstance3D = null#Object that holds tower instance th
 var resource_hover_holder:MeshInstance3D = null
 
 
-
-#@onready var label = $"CanvasLayer/UI/PanelContainer/MarginContainer/GridContainer/Wood count label"
-
 #resource counter:
 var game_resources = {
 	"wood": 0,
@@ -70,7 +68,7 @@ var game_resources = {
 }
 var max_health = 15
 var current_health
-
+var game = true
 
 var wave_number = 1
 var is_build_phase = true
@@ -80,9 +78,15 @@ var red_mat = StandardMaterial3D.new()
 var normal_mat = StandardMaterial3D.new()
 var red_mat_range = StandardMaterial3D.new()
 var normal_mat_range = StandardMaterial3D.new()
+
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	current_health = max_health
+	game = true
+	GameOver.visible = false
+	$CanvasLayer/UI/GameOverScreen/VBoxContainer/MainMenu_button.disabled = true
+	$CanvasLayer/UI/GameOverScreen/VBoxContainer/PlayAgain_button.disabled = true
 	red_mat.albedo_color = Color(1,0,0,0.55)
 	normal_mat.albedo_color = Color(1,1,1,0.55)
 	normal_mat_range.albedo_color = Color(0,0,0,0.55)
@@ -102,14 +106,13 @@ func _ready() -> void:
 			hover[i].mesh = mesh_lib.get_item_mesh(grid_map.block_type)
 			add_child(hover[i])
 			hover[i].visible = false
-	
 	convert_path_to_local()
 	enemy_spawner.set_path(short_path)
 	UI.update_enemy_count_labels(enemy_spawner.basic_enemies_per_wave, enemy_spawner.fast_enemies_per_wave, 0)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	update_resource_timers()
 	if Input.is_action_just_pressed("Camera_F1"):
 		if current_cam_index >0 :
@@ -129,9 +132,10 @@ func _process(_delta: float) -> void:
 			coordinates_check_mode = true
 		else:
 			coordinates_check_mode = false
+	
 	if walls_build:
 		set_build_cam()
-		update_hover_tetris()#Poza ifem mechanizm wylaczania jest w srodku funkcji!!!
+		update_hover_tetris()
 	if normal_tower_build:
 		tower_to_hover = 1
 		hover_tower(tower_to_hover)
@@ -152,9 +156,13 @@ func _process(_delta: float) -> void:
 		coordinates_check_mode = false
 		resource_to_hover = 2
 		hover_resource(resource_to_hover)
+	if not wood_build and not stone_build:
+		resource_to_hover = 0
 	if is_build_phase:
 		update_label_build_time()
 	
+	if not game:
+		get_node("Main Camera").angle += 0.1 * delta
 	#print("wood build: " + str(wood_build))
 	#print("wheat build: " + str(wheat_build))
 	#print("stone build: "+ str(stone_build))
@@ -171,8 +179,7 @@ func _input(event: InputEvent) -> void:
 	if walls_build and event is InputEventKey:
 		if event.keycode == KEY_Q and event.is_pressed():
 			grid_map.rotate_block_backwards()
-	if walls_build and event is InputEventKey:
-		if event.keycode == KEY_E and event.is_pressed():
+		elif event.keycode == KEY_E and event.is_pressed():
 			grid_map.rotate_block_forward()
 	if coordinates_check_mode and event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
@@ -180,10 +187,7 @@ func _input(event: InputEvent) -> void:
 	if (normal_tower_build or freeze_tower_build) and event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
 			place_tower_on_click(hovering_tower)
-	if wood_build and event is InputEventMouseButton:
-		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
-			place_resource_on_click(hovering_resource)
-	if stone_build and event is InputEventMouseButton:
+	if (wood_build or stone_build) and event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
 			place_resource_on_click(hovering_resource)
 			
@@ -242,11 +246,10 @@ func place_tower_on_click(tower_type:int):
 		var tower
 		if(tower_type==1):
 			tower = NormalTowerScene.instantiate()
-			tower.can_shoot=true
 		elif(tower_type==2):
 			tower = FreezeTowerScene.instantiate()
-			tower.can_dmg = true
 			tower.get_node("MobDetector").get_child(0).disabled=false
+		tower.can_shoot = true
 		var grid_pos = grid_map.local_to_map(collision_point)
 		var place_pos = grid_map.map_to_local(grid_pos)
 		place_pos.y+=1.5
@@ -271,12 +274,11 @@ func hover_tower(_tower_type:int):
 		#if there was no hover instantiate 1 hover tower and making its opacity = 0.5
 		if(tower_to_hover==1):
 			tower_hover_holder = NormalTowerScene.instantiate()
-			tower_hover_holder.can_shoot=false
 			hovering_tower=1
 		elif(tower_to_hover==2):
 			tower_hover_holder = FreezeTowerScene.instantiate()
-			tower_hover_holder.can_dmg = false
 			hovering_tower=2
+		tower_hover_holder.can_shoot=false
 		get_node("Tower Holder").add_child(tower_hover_holder)
 		tower_hover_holder.set_surface_override_material(0,normal_mat)
 		if tower_to_hover == 1:
@@ -413,17 +415,15 @@ func hover_resource(resource_type:int):
 		else:
 			return
 		resource_hover_holder.game_script = self
-		
 		get_node("Resource Holder").add_child(resource_hover_holder)
-	
 	if collision_point != null:
 		var grid_pos = grid_map.local_to_map(collision_point)
 		resource_hover_holder.visible = true
 		if grid_map.can_place_resource(grid_pos, resource_hover_holder.shape):
 			color_transparent_mesh_instance(resource_hover_holder, 1)
-			print("dziala")
+			#print("dziala")
 		else:
-			print("nie dziala")
+			#print("nie dziala")
 			color_transparent_mesh_instance(resource_hover_holder, 2)
 		var place_pos = grid_map.map_to_local(grid_pos)
 		#print(grid_pos)
@@ -478,11 +478,6 @@ func convert_path_to_local()-> void:
 func update_label_build_time():
 	build_time_label.text = "Time for building: " + str(ceil(build_timer.time_left)) + "s"
 
-func turn_off_build_mode():
-	if wood_build:
-		current_cam_index = 0
-		set_camera()
-
 
 func _on_build_timer_timeout() -> void:
 	is_build_phase = false
@@ -490,6 +485,10 @@ func _on_build_timer_timeout() -> void:
 	current_cam_index = 0
 	set_camera()
 	switch_label_timer.start()
+	if tower_hover_holder:
+		tower_hover_holder.free()
+	if resource_hover_holder:
+		resource_hover_holder.free()
 	if !enemy_spawner.wave_in_progress:
 		enemy_spawner.start_wave()
 		UI.bottom_panel.visible = false
@@ -500,10 +499,8 @@ func _on_build_timer_timeout() -> void:
 #resets build timer and enables buttons
 func reset_build_timer():
 	is_build_phase = true
-
 	UI.show_first_panel()
 	UI.bottom_panel.visible = true
-
 	build_timer.start()
 
 #when end wave signal is recived resets build timer
@@ -512,7 +509,8 @@ func _on_enemy_spawner_wave_ended() -> void:
 	enemy_spawner.current_wave+=1
 	enemy_spawner.update_wave_enemy_count()
 	UI.update_enemy_count_labels(enemy_spawner.basic_enemies_per_wave, enemy_spawner.fast_enemies_per_wave, 0)
-	reset_build_timer()
+	if game:
+		reset_build_timer()
 
 #changes label 2 s after wave started
 func _on_switch_label_timer_timeout() -> void:
@@ -521,6 +519,20 @@ func _on_switch_label_timer_timeout() -> void:
 func take_damage(dmg) -> void:
 	current_health = current_health-dmg
 	#print("Current health z maina:",current_health)
-	get_node("CanvasLayer/UI").update_hearts()
+	UI.update_hearts()
 	if current_health <= 0:
 		print("GAMEOVER GG")
+		game = false
+		GameOver.visible = true
+		$CanvasLayer/UI/GameOverScreen/VBoxContainer/GameOverText.text = "Game Over!\nYou failed at\n wave number\n %d." % wave_number
+		$CanvasLayer/UI/GameOverScreen/VBoxContainer/MainMenu_button.disabled = false
+		$CanvasLayer/UI/GameOverScreen/VBoxContainer/PlayAgain_button.disabled = false
+		for i in range(get_node("Tower Holder").get_child_count()):
+			var tower = get_node("Tower Holder").get_child(i)
+			tower.get_node("MobDetector").get_child(0).disabled=true
+			tower.can_shoot = false
+		for i in range(get_node("Resource Holder").get_child_count()):
+			var building = get_node("Resource Holder").get_child(i)
+			building.get_node("Timer").stop()
+			building.generator_on = false
+			

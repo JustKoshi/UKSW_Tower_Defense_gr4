@@ -17,5 +17,5 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	pass
 
-func _on_timer_timeout() ->void:
+func _on_timer_timeout() -> void:
 	generator_on = true
