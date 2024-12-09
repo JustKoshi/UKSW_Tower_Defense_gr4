@@ -59,13 +59,17 @@ var resource_hover_holder:MeshInstance3D = null
 
 
 
-@onready var label = $"CanvasLayer/UI/PanelContainer/MarginContainer/GridContainer/Wood count label"
+#@onready var label = $"CanvasLayer/UI/PanelContainer/MarginContainer/GridContainer/Wood count label"
 
 #resource counter:
 var game_resources = {
 	"wood": 0,
-	"stone": 0
+	"stone": 0,
+	"wheat": 0,
+	"beer": 0
 }
+var max_health = 15
+var current_health
 
 
 var wave_number = 1
@@ -78,6 +82,7 @@ var red_mat_range = StandardMaterial3D.new()
 var normal_mat_range = StandardMaterial3D.new()
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	current_health = max_health
 	red_mat.albedo_color = Color(1,0,0,0.55)
 	normal_mat.albedo_color = Color(1,1,1,0.55)
 	normal_mat_range.albedo_color = Color(0,0,0,0.55)
@@ -126,14 +131,11 @@ func _process(_delta: float) -> void:
 			coordinates_check_mode = false
 	if walls_build:
 		set_build_cam()
-	update_hover_tetris()#Poza ifem mechanizm wylaczania jest w srodku funkcji!!!
+		update_hover_tetris()#Poza ifem mechanizm wylaczania jest w srodku funkcji!!!
 	if normal_tower_build:
 		tower_to_hover = 1
 		hover_tower(tower_to_hover)
 		set_build_cam()
-	elif tower_hover_holder != null:
-		tower_hover_holder.queue_free()
-	
 	if freeze_tower_build:
 		tower_to_hover = 2
 		hover_tower(tower_to_hover)
@@ -143,11 +145,13 @@ func _process(_delta: float) -> void:
 	if wood_build:
 		set_resource_cam()
 		coordinates_check_mode = false
-
+		resource_to_hover = 1
 		hover_resource(resource_to_hover)
-	elif resource_hover_holder != null:
-		resource_hover_holder.queue_free()
-
+	if stone_build:
+		set_resource_cam()
+		coordinates_check_mode = false
+		resource_to_hover = 2
+		hover_resource(resource_to_hover)
 	if is_build_phase:
 		update_label_build_time()
 	
@@ -177,6 +181,9 @@ func _input(event: InputEvent) -> void:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
 			place_tower_on_click(hovering_tower)
 	if wood_build and event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
+			place_resource_on_click(hovering_resource)
+	if stone_build and event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
 			place_resource_on_click(hovering_resource)
 			
@@ -369,9 +376,9 @@ func place_resource_on_click(resource_type:int):
 	if collision_point != null:
 		var grid_pos = grid_map.local_to_map(collision_point)
 		if grid_map.can_place_resource(grid_pos, resource_shape):
-			if hovering_resource == 1:
+			if resource_type == 1:
 				building = Lumbermill.instantiate()
-			elif hovering_resource == 2:
+			elif resource_type == 2:
 				building = Mine.instantiate() 
 			else:
 				return
@@ -385,17 +392,14 @@ func place_resource_on_click(resource_type:int):
 				building.generation_depleted = true
 			get_node("Resource Holder").add_child(building)
 			color_transparent_mesh_instance(building,3)
-			
 			#print("Added lumbermill in position: ",grid_pos)
 			resource_hover_holder=null
 			hovering_resource = 0
-	
 
 	
 func hover_resource(resource_type:int):
 	var collision_point = get_collision_point()
-	
-	if resource_hover_holder == null:
+	if resource_hover_holder == null or hovering_resource != resource_type:
 		if resource_type==1:
 			resource_hover_holder = Lumbermill.instantiate()
 			hovering_resource = 1
@@ -490,6 +494,8 @@ func _on_build_timer_timeout() -> void:
 		enemy_spawner.start_wave()
 		UI.bottom_panel.visible = false
 		UI.unpress_all_buttons()
+		for h in hover:
+			h.visible = false
 
 #resets build timer and enables buttons
 func reset_build_timer():
@@ -511,3 +517,10 @@ func _on_enemy_spawner_wave_ended() -> void:
 #changes label 2 s after wave started
 func _on_switch_label_timer_timeout() -> void:
 	build_time_label.text = "Current wave: " + str(enemy_spawner.current_wave)
+	
+func take_damage(dmg) -> void:
+	current_health = current_health-dmg
+	#print("Current health z maina:",current_health)
+	get_node("CanvasLayer/UI").update_hearts()
+	if current_health <= 0:
+		print("GAMEOVER GG")

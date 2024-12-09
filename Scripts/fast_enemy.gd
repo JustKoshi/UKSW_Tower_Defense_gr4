@@ -1,6 +1,7 @@
 extends CharacterBody3D
 
 var health=50
+var damage = 3
 var finished_walk = false
 var can_attack = true
 var freezing = false
@@ -15,8 +16,6 @@ func _physics_process(_delta):
 			$"Attack CD".start()
 	else:
 		play_run_animation()
-	
-	
 	
 
 func play_attack_animation():
@@ -46,4 +45,5 @@ func take_damage(damage: int) -> void:
 #Resetting attacking 
 func _on_attack_cd_timeout() -> void:
 	take_damage(50)
+	get_parent_node_3d().get_parent_node_3d().get_parent_node_3d().take_damage(damage)
 	can_attack=true

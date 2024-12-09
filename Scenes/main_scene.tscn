@@ -1,4 +1,4 @@
-[gd_scene load_steps=42 format=3 uid="uid://chdc08c7ct8xv"]
+[gd_scene load_steps=44 format=3 uid="uid://chdc08c7ct8xv"]
 
 [ext_resource type="Script" path="res://Scripts/game_script.gd" id="1_wclms"]
 [ext_resource type="MeshLibrary" uid="uid://746jf5hii373" path="res://mesh_lib.tres" id="2_5f8px"]
@@ -11,6 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://b3vdmx7qxicu5" path="res://Resources/Icons/wood.png" id="7_juwof"]
 [ext_resource type="Theme" uid="uid://lj74u8ff7f5f" path="res://Resources/Themes/UI_Resource_theme.tres" id="7_utis6"]
 [ext_resource type="Texture2D" uid="uid://dffvsvd3mlbeh" path="res://Resources/Icons/wheat.png" id="9_tvx0g"]
+[ext_resource type="Theme" uid="uid://d1yp0vmlk8jtb" path="res://Resources/Themes/UI_hp_theme.tres" id="9_xr12o"]
 [ext_resource type="Texture2D" uid="uid://cgo3w8pokxeen" path="res://Resources/Icons/stone.png" id="10_kc5up"]
 [ext_resource type="Texture2D" uid="uid://irc84uh4ceqx" path="res://Resources/Icons/beer.png" id="10_xkq1o"]
 [ext_resource type="Texture2D" uid="uid://bn8dy1n7d2eb5" path="res://Resources/Icons/basic head.png" id="14_tqguo"]
@@ -25,6 +26,7 @@
 [ext_resource type="Texture2D" uid="uid://ca876e85ge85a" path="res://Resources/UI/pusty przycisk.png" id="24_dpvka"]
 [ext_resource type="Texture2D" uid="uid://bo48g54sntmyh" path="res://Resources/UI/pusty przycisk_pressed.png" id="25_jsuok"]
 [ext_resource type="Texture2D" uid="uid://hbu7q72dq5ji" path="res://Resources/UI/pusty przycisk_hover.png" id="26_123qh"]
+[ext_resource type="Texture2D" uid="uid://dmga3xf4bw28n" path="res://Resources/Icons/gate.png" id="27_gu03x"]
 
 [sub_resource type="Gradient" id="Gradient_lq3fq"]
 offsets = PackedFloat32Array(0.438819, 0.810127)
@@ -159,10 +161,16 @@ grow_vertical = 2
 script = ExtResource("6_5mynr")
 
 [node name="FPS_label" type="Label" parent="CanvasLayer/UI"]
-layout_mode = 0
-offset_left = 5.0
-offset_right = 148.0
-offset_bottom = 28.0
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -143.0
+offset_top = -28.0
+grow_horizontal = 0
+grow_vertical = 0
 theme_override_font_sizes/font_size = 20
 script = ExtResource("5_6gjld")
 
@@ -177,68 +185,68 @@ offset_bottom = 99.0
 grow_horizontal = 2
 theme = ExtResource("7_dqtye")
 
-[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/UI"]
+[node name="EQ container" type="PanelContainer" parent="CanvasLayer/UI"]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -163.0
+offset_left = -161.0
 offset_top = -6.0
-offset_right = 2.0
+offset_right = 4.0
 offset_bottom = 252.0
 grow_horizontal = 0
 theme = ExtResource("7_utis6")
 
-[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI/PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI/EQ container"]
 layout_mode = 2
 theme_override_constants/margin_left = 4
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="GridContainer" type="GridContainer" parent="CanvasLayer/UI/PanelContainer/MarginContainer"]
+[node name="GridContainer" type="GridContainer" parent="CanvasLayer/UI/EQ container/MarginContainer"]
 layout_mode = 2
 columns = 2
 
-[node name="Wood" type="TextureRect" parent="CanvasLayer/UI/PanelContainer/MarginContainer/GridContainer"]
+[node name="Wood" type="TextureRect" parent="CanvasLayer/UI/EQ container/MarginContainer/GridContainer"]
 layout_mode = 2
 texture = ExtResource("7_juwof")
 expand_mode = 2
 
-[node name="Wood count label" type="Label" parent="CanvasLayer/UI/PanelContainer/MarginContainer/GridContainer"]
+[node name="Wood count label" type="Label" parent="CanvasLayer/UI/EQ container/MarginContainer/GridContainer"]
 layout_mode = 2
 text = "100
 "
 vertical_alignment = 1
 
-[node name="Wheat" type="TextureRect" parent="CanvasLayer/UI/PanelContainer/MarginContainer/GridContainer"]
+[node name="Wheat" type="TextureRect" parent="CanvasLayer/UI/EQ container/MarginContainer/GridContainer"]
 layout_mode = 2
 texture = ExtResource("9_tvx0g")
 expand_mode = 2
 stretch_mode = 5
 
-[node name="Wheat count label" type="Label" parent="CanvasLayer/UI/PanelContainer/MarginContainer/GridContainer"]
+[node name="Wheat count label" type="Label" parent="CanvasLayer/UI/EQ container/MarginContainer/GridContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 38
 text = "100"
 
-[node name="Stone" type="TextureRect" parent="CanvasLayer/UI/PanelContainer/MarginContainer/GridContainer"]
+[node name="Stone" type="TextureRect" parent="CanvasLayer/UI/EQ container/MarginContainer/GridContainer"]
 layout_mode = 2
 texture = ExtResource("10_kc5up")
 expand_mode = 2
 stretch_mode = 5
 
-[node name="Stone count label" type="Label" parent="CanvasLayer/UI/PanelContainer/MarginContainer/GridContainer"]
+[node name="Stone count label" type="Label" parent="CanvasLayer/UI/EQ container/MarginContainer/GridContainer"]
 layout_mode = 2
 text = "100"
 
-[node name="Beer" type="TextureRect" parent="CanvasLayer/UI/PanelContainer/MarginContainer/GridContainer"]
+[node name="Beer" type="TextureRect" parent="CanvasLayer/UI/EQ container/MarginContainer/GridContainer"]
 layout_mode = 2
 texture = ExtResource("10_xkq1o")
 expand_mode = 2
 stretch_mode = 5
 
-[node name="Beer count label" type="Label" parent="CanvasLayer/UI/PanelContainer/MarginContainer/GridContainer"]
+[node name="Beer count label" type="Label" parent="CanvasLayer/UI/EQ container/MarginContainer/GridContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 38
 text = "100"
@@ -666,6 +674,28 @@ focus_mode = 0
 theme_override_styles/hover = SubResource("StyleBoxTexture_osomm")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_tux7q")
 theme_override_styles/normal = SubResource("StyleBoxTexture_na0bh")
+
+[node name="HP container" type="PanelContainer" parent="CanvasLayer/UI"]
+layout_mode = 1
+offset_top = -6.0
+offset_right = 355.0
+offset_bottom = 84.0
+theme = ExtResource("9_xr12o")
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI/HP container"]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/UI/HP container/MarginContainer"]
+layout_mode = 2
+
+[node name="Gate" type="TextureRect" parent="CanvasLayer/UI/HP container/MarginContainer/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("27_gu03x")
+expand_mode = 2
 
 [connection signal="wave_ended" from="Enemy Spawner" to="." method="_on_enemy_spawner_wave_ended"]
 [connection signal="timeout" from="Build Timer" to="." method="_on_build_timer_timeout"]
