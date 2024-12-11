@@ -699,7 +699,6 @@ theme_override_styles/normal = SubResource("StyleBoxTexture_pkn5g")
 text = "Current wave:"
 
 [node name="GameOverScreen" type="PanelContainer" parent="CanvasLayer/UI"]
-visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -738,6 +737,7 @@ size_flags_vertical = 3
 
 [node name="PlayAgain_button" type="Button" parent="CanvasLayer/UI/GameOverScreen/VBoxContainer"]
 layout_mode = 2
+focus_mode = 0
 text = "Play Again"
 
 [node name="spring" type="Control" parent="CanvasLayer/UI/GameOverScreen/VBoxContainer"]
@@ -746,6 +746,7 @@ size_flags_vertical = 3
 
 [node name="MainMenu_button" type="Button" parent="CanvasLayer/UI/GameOverScreen/VBoxContainer"]
 layout_mode = 2
+focus_mode = 0
 text = "Main Menu"
 
 [connection signal="wave_ended" from="Enemy Spawner" to="." method="_on_enemy_spawner_wave_ended"]

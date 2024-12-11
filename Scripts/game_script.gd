@@ -485,9 +485,9 @@ func _on_build_timer_timeout() -> void:
 	current_cam_index = 0
 	set_camera()
 	switch_label_timer.start()
-	if tower_hover_holder:
+	if tower_hover_holder != null:
 		tower_hover_holder.free()
-	if resource_hover_holder:
+	if resource_hover_holder != null:
 		resource_hover_holder.free()
 	if !enemy_spawner.wave_in_progress:
 		enemy_spawner.start_wave()
@@ -524,7 +524,7 @@ func take_damage(dmg) -> void:
 		print("GAMEOVER GG")
 		game = false
 		GameOver.visible = true
-		$CanvasLayer/UI/GameOverScreen/VBoxContainer/GameOverText.text = "Game Over!\nYou failed at\n wave number\n %d." % wave_number
+		$CanvasLayer/UI/GameOverScreen/VBoxContainer/GameOverText.text = "Game Over!\nYou failed at\n wave number\n %d." % enemy_spawner.current_wave
 		$CanvasLayer/UI/GameOverScreen/VBoxContainer/MainMenu_button.disabled = false
 		$CanvasLayer/UI/GameOverScreen/VBoxContainer/PlayAgain_button.disabled = false
 		for i in range(get_node("Tower Holder").get_child_count()):
