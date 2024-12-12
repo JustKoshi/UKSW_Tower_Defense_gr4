@@ -3,7 +3,7 @@ extends MeshInstance3D
 var slow = 0.75
 var damage = 3
 var enemies = []
-var can_dmg = true
+var can_shoot = true
 
 
 func _on_mob_detector_body_entered(body: Node3D) -> void:
@@ -25,13 +25,13 @@ func deal_dmg():
 	for e in enemies:
 		e.take_damage(damage)
 	
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if !enemies.is_empty():
-		if can_dmg:
+		if can_shoot:
 			deal_dmg()
-			can_dmg=false
+			can_shoot=false
 			$"Damage CD".start()
 	
 #Resetting can_dmg after CD passed
 func _on_damage_cd_timeout() -> void:
-	can_dmg=true
+	can_shoot=true

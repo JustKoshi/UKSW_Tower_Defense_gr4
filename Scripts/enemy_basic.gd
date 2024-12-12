@@ -1,12 +1,13 @@
 extends CharacterBody3D
 
 var health=100
+var damage = 1
 var finished_walk = false
 var can_attack = true
 var freezing = false
 @onready var animation_player = $AnimationPlayer
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	
 	if finished_walk:
 		play_attack_animation()
@@ -39,4 +40,5 @@ func take_damage(damage: int) -> void:
 #Resetting attacking 
 func _on_attack_cd_timeout() -> void:
 	take_damage(50)
+	get_parent_node_3d().get_parent_node_3d().get_parent_node_3d().take_damage(damage)
 	can_attack=true

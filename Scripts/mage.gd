@@ -3,7 +3,7 @@ extends Node3D
 var particles:bool = true
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if !get_parent_node_3d().enemies.is_empty():
 		if particles:
 			$GPUParticles3D.emitting = true
