@@ -26,9 +26,14 @@ var defence_group = ButtonGroup.new()
 var full_heart = load("res://Resources/Icons/Heart.png")
 var empty_heart = load("res://Resources/Icons/black_heart.png")
 
+var info_panels = preload("res://Scenes/buttons_info_panels.tscn")
+var panel_info_holder
+
 var original_positions = {}
+var panel_number
 
 func _ready() -> void:
+	panel_info_holder = null
 	
 	for button in resource_buttons:
 		button.button_group = resource_group
@@ -68,6 +73,9 @@ func _on_back_button_pressed() -> void:
 		button.button_pressed = false
 	game_script.current_cam_index = 0
 	game_script.set_camera()
+	if panel_info_holder != null:
+			panel_info_holder.free()
+			panel_info_holder = null
 
 func _on_back_button_2_pressed() -> void:
 	defence_buildings.visible = false
@@ -76,6 +84,9 @@ func _on_back_button_2_pressed() -> void:
 		button.button_pressed = false
 	game_script.current_cam_index = 0
 	game_script.set_camera()
+	if panel_info_holder != null:
+			panel_info_holder.free()
+			panel_info_holder = null
 	
 func _on_resource_build_button_pressed() -> void:
 	main_panel.visible = false
@@ -114,27 +125,68 @@ func unpress_all_buttons():
 		button.button_pressed = false
 	for button in defence_buttons:
 		button.button_pressed = false
+	if panel_info_holder != null:
+			panel_info_holder.free()
+			panel_info_holder = null
 
 func _on_resource_button_toggled(is_pressed: bool, button):
 	match button.name:
 		"Wood building":
 			game_script.wood_build = is_pressed
+			panel_number = 3
 		"Wheat building":
 			game_script.wheat_build = is_pressed
+			panel_number = 4
 		"Stone building":
 			game_script.stone_build = is_pressed
+			panel_number = 5
 		"Beer building":
 			game_script.beer_build = is_pressed
+			panel_number = 6
+	if panel_number >= 0:
+		if panel_info_holder != null:
+			panel_info_holder.free()
+		panel_info_holder = info_panels.instantiate()
+		add_child(panel_info_holder)
+		for i in panel_info_holder.get_child_count():
+			if i == panel_number:
+				panel_info_holder.get_child(i).visible = true
+			else:
+				panel_info_holder.get_child(i).visible = false
+	else:
+		if panel_info_holder != null:
+			panel_info_holder.free()
+			panel_info_holder = null
+			
+
 func _on_defence_button_toggled(is_pressed: bool, button):
 	match button.name:
 		"Walls build button":
 			game_script.walls_build = is_pressed
+			panel_number = -1
 		"Normal Tower button":
 			game_script.normal_tower_build = is_pressed
+			panel_number=0
 		"Freeze Tower button":
 			game_script.freeze_tower_build = is_pressed
+			panel_number=1
 		"AOE Tower":
 			game_script.aoe_tower_build = is_pressed
+			panel_number=2
+	if panel_number >= 0:
+		if panel_info_holder != null:
+			panel_info_holder.free()
+		panel_info_holder = info_panels.instantiate()
+		add_child(panel_info_holder)
+		for i in panel_info_holder.get_child_count():
+			if i == panel_number:
+				panel_info_holder.get_child(i).visible = true
+			else:
+				panel_info_holder.get_child(i).visible = false
+	else:
+		if panel_info_holder != null:
+			panel_info_holder.free()
+			panel_info_holder = null
 
 func update_hearts() -> void:
 	for i in range(game_script.max_health):

@@ -2,6 +2,7 @@ extends MeshInstance3D
 
 var bullet = preload("res://Scenes/bullet.tscn")
 var damage = 30
+var health = 5
 var enemies = []
 var current_enemy
 var can_shoot = true

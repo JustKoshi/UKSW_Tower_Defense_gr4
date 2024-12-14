@@ -2,6 +2,7 @@ extends MeshInstance3D
 
 var slow = 0.75
 var damage = 3
+var health = 3
 var enemies = []
 var can_shoot = true
 

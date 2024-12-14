@@ -218,8 +218,8 @@ func get_collision_point(): #returns raycast collision point with map
 	var query = PhysicsRayQueryParameters3D.create(from, to)
 	var result = space_state.intersect_ray(query)
 	
-	if result.size() > 0:
 		#print("Collision point: ", result)
+	if result.size() > 0:
 		return result.position  # Return collision point
 	else:
 		return null  #No collison

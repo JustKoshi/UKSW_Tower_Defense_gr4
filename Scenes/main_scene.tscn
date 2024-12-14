@@ -1,4 +1,4 @@
-[gd_scene load_steps=45 format=3 uid="uid://chdc08c7ct8xv"]
+[gd_scene load_steps=46 format=3 uid="uid://chdc08c7ct8xv"]
 
 [ext_resource type="Script" path="res://Scripts/game_script.gd" id="1_wclms"]
 [ext_resource type="MeshLibrary" uid="uid://746jf5hii373" path="res://mesh_lib.tres" id="2_5f8px"]
@@ -20,6 +20,7 @@
 [ext_resource type="FontFile" uid="uid://b0sbud2angi6h" path="res://Resources/Fonts/buddychampionexpand.ttf" id="18_18u4r"]
 [ext_resource type="Theme" uid="uid://bk4rbmthy5fx8" path="res://Resources/Themes/UI_buttom_panel.tres" id="18_tdln6"]
 [ext_resource type="Texture2D" uid="uid://uesnqfipiql6" path="res://Resources/UI/UI board Small  stone.png" id="19_15ryl"]
+[ext_resource type="Texture2D" uid="uid://4v5jwxcl5ofb" path="res://Resources/Icons/catapult.png" id="20_7ex20"]
 [ext_resource type="Texture2D" uid="uid://b0kndl2r5na8v" path="res://Resources/Icons/Tetris.png" id="21_eu6v8"]
 [ext_resource type="Texture2D" uid="uid://p8bjhb8fenuq" path="res://Resources/Icons/arrow.png" id="22_si6jt"]
 [ext_resource type="Texture2D" uid="uid://b7i53w4037ub2" path="res://Resources/Icons/snowflake.png" id="23_f26j8"]
@@ -456,6 +457,34 @@ focus_mode = 0
 toggle_mode = true
 text = "AOE TOWER"
 
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/UI/Bottom_panel/Defence buildings/HBoxContainer/AOE Tower"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.366
+anchor_right = 1.0
+anchor_bottom = 0.366
+offset_left = -120.5
+offset_top = -14.038
+offset_right = -217.0
+offset_bottom = 17.962
+texture = ExtResource("20_7ex20")
+expand_mode = 1
+
+[node name="TextureRect2" type="TextureRect" parent="CanvasLayer/UI/Bottom_panel/Defence buildings/HBoxContainer/AOE Tower"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.366
+anchor_right = 0.5
+anchor_bottom = 0.366
+offset_left = 85.5
+offset_top = -14.038
+offset_right = 117.5
+offset_bottom = 17.962
+texture = ExtResource("20_7ex20")
+expand_mode = 1
+
 [node name="spring4" type="Control" parent="CanvasLayer/UI/Bottom_panel/Defence buildings/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -699,6 +728,7 @@ theme_override_styles/normal = SubResource("StyleBoxTexture_pkn5g")
 text = "Current wave:"
 
 [node name="GameOverScreen" type="PanelContainer" parent="CanvasLayer/UI"]
+visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5

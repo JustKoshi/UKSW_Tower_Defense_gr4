@@ -47,6 +47,7 @@ mesh = SubResource("SphereMesh_irljf")
 surface_material_override/0 = SubResource("StandardMaterial3D_vtmmk")
 
 [node name="Damage CD" type="Timer" parent="."]
+wait_time = 2.4
 
 [connection signal="body_entered" from="MobDetector" to="." method="_on_mob_detector_body_entered"]
 [connection signal="body_exited" from="MobDetector" to="." method="_on_mob_detector_body_exited"]
