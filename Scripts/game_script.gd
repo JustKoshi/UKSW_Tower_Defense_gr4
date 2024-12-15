@@ -171,6 +171,9 @@ func _process(delta: float) -> void:
 	#print("normal tower: " + str(normal_tower_build))
 	#print("freeze tower: " + str(freeze_tower_build))
 	#print("aoe tower: " + str(aoe_tower_build))
+	#for i in get_node("Resource Holder").get_child_count():
+	#	var child = get_node("Resource Holder").get_child(i)
+	#	print(child.generation_depleted)
 
 func _input(event: InputEvent) -> void:
 	if walls_build and event is InputEventMouseButton:
@@ -371,7 +374,8 @@ func update_resource_timers():
 
 
 func place_resource_on_click(resource_type:int):
-	resource_hover_holder.free()
+	if resource_hover_holder!=null:
+		resource_hover_holder.free()
 	var collision_point = get_collision_point()
 	var building
 	#checking if raycast detected any block if so place block on gridmap
@@ -390,15 +394,35 @@ func place_resource_on_click(resource_type:int):
 			place_pos.z+=1
 			#print(place_pos)
 			building.position=place_pos
-			if grid_map.place_resource_in_tilemap(collision_point, hovering_resource):
-				building.generation_depleted = true
+			#if grid_map.place_resource_in_tilemap(collision_point, hovering_resource):
+			#	building.generation_depleted = true
 			get_node("Resource Holder").add_child(building)
 			color_transparent_mesh_instance(building,3)
+			check_resource_generation_req()
 			#print("Added lumbermill in position: ",grid_pos)
 			resource_hover_holder=null
 			hovering_resource = 0
 
-	
+func check_resource_generation_req():
+	var shifts = [Vector3(-4,0,0),Vector3(4,0,0),Vector3(0,0,-4),Vector3(0,0,4)]
+	var node = get_node("Resource Holder")
+	for r in node.get_child_count():
+		var resource = node.get_child(r)
+		for r2 in node.get_child_count():
+			var resource2 = node.get_child(r2)
+			if resource==resource2:
+				continue
+			for i in shifts:
+				if resource is Lumbermill:
+					if resource.transform.origin+i==resource2.transform.origin and resource2 is not Lumbermill:
+						resource.generation_depleted = true
+						resource2.generation_depleted = true
+				if resource is Mine:
+					if resource.transform.origin+i==resource2.transform.origin and resource2 is not Mine:
+						resource.generation_depleted = true
+						resource2.generation_depleted = true
+
+
 func hover_resource(resource_type:int):
 	var collision_point = get_collision_point()
 	if resource_hover_holder == null or hovering_resource != resource_type:
@@ -433,7 +457,8 @@ func hover_resource(resource_type:int):
 		resource_hover_holder.position=place_pos
 	else:
 		#print("nie dziala raycast")
-		resource_hover_holder.visible = false
+		resource_hover_holder.queue_free()
+		resource_hover_holder = null
 
 
 #Signal to enter build mode

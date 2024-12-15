@@ -353,8 +353,7 @@ func can_place_resource(grid_pos: Vector3, shape)->bool:
 			flag = false
 	return flag
 
-func place_resource_in_tilemap(col_point: Vector3, resource_type)->bool:#zwraca true gdy jest adjacent rival
-	var flag = false
+func place_resource_in_tilemap(col_point: Vector3, resource_type):
 	var grid_pos = self.local_to_map(col_point)
 	var tile_pos = Vector3(grid_pos.x+10, grid_pos.y, grid_pos.z+5)
 
@@ -362,18 +361,3 @@ func place_resource_in_tilemap(col_point: Vector3, resource_type)->bool:#zwraca 
 	castle_state[tile_pos.z+1][tile_pos.x] = resource_type
 	castle_state[tile_pos.z+1][tile_pos.x+1] = resource_type
 	castle_state[tile_pos.z][tile_pos.x+1] = resource_type
-	
-	if tile_pos.z-1>=0:
-		if not (castle_state[tile_pos.z-1][tile_pos.x] in [0,resource_type] and castle_state[tile_pos.z-1][tile_pos.x+1] in [0,resource_type]):
-			flag = true
-	if tile_pos.z+2<=9:
-		if not (castle_state[tile_pos.z+2][tile_pos.x] in [0,resource_type] and castle_state[tile_pos.z+2][tile_pos.x+1] in [0,resource_type]):
-			flag = true
-	if tile_pos.x-1>=0:
-		if not (castle_state[tile_pos.z][tile_pos.x-1] in [0,resource_type] and castle_state[tile_pos.z+1][tile_pos.x-1] in [0, resource_type]):
-			flag = true
-	if tile_pos.x+2<=3:
-		if not (castle_state[tile_pos.z][tile_pos.x+2] in [0,resource_type] and castle_state[tile_pos.z+1][tile_pos.x+2] in [0,resource_type]):
-			flag = true
-
-	return flag

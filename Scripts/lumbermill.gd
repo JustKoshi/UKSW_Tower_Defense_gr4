@@ -1,3 +1,4 @@
+class_name Lumbermill
 extends MeshInstance3D
 var game_script
 
