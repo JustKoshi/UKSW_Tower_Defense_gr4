@@ -19,6 +19,9 @@ extends Node3D
 
 @onready var UI = $CanvasLayer/UI
 @onready var GameOver = $CanvasLayer/UI/GameOverScreen
+var ui_tower_panel
+var slow_png = load("res://Resources/Icons/snowflake.png")
+var aoe_png = load("res://Resources/Icons/catapult.png")
 
 var NormalTowerScene = preload("res://Scenes/normal_tower_lvl_1.tscn")
 var FreezeTowerScene = preload("res://Scenes/Freeze_tower_lvl_1.tscn")
@@ -43,7 +46,6 @@ var aoe_tower_build = false
 
 
 var hovering_tower = 0
-
 var tower_to_hover = 0#Which tower is picked with button 0-none 1-normal 2-freeze 3-aoe
 
 var hovering_resource = 0
@@ -87,6 +89,7 @@ func _ready() -> void:
 	GameOver.visible = false
 	$CanvasLayer/UI/GameOverScreen/VBoxContainer/MainMenu_button.disabled = true
 	$CanvasLayer/UI/GameOverScreen/VBoxContainer/PlayAgain_button.disabled = true
+	ui_tower_panel = null
 	red_mat.albedo_color = Color(1,0,0,0.55)
 	normal_mat.albedo_color = Color(1,1,1,0.55)
 	normal_mat_range.albedo_color = Color(0,0,0,0.55)
@@ -163,14 +166,7 @@ func _process(delta: float) -> void:
 	
 	if not game:
 		get_node("Main Camera").angle += 0.1 * delta
-	#print("wood build: " + str(wood_build))
-	#print("wheat build: " + str(wheat_build))
-	#print("stone build: "+ str(stone_build))
-	#print("beer build: " + str(beer_build))
-	#print("walls build: " + str(walls_build))
-	#print("normal tower: " + str(normal_tower_build))
-	#print("freeze tower: " + str(freeze_tower_build))
-	#print("aoe tower: " + str(aoe_tower_build))
+
 
 func _input(event: InputEvent) -> void:
 	if walls_build and event is InputEventMouseButton:
@@ -261,6 +257,7 @@ func place_tower_on_click(tower_type:int):
 		if tower_type == 1:
 			tower.set_surface_override_material(1,mat_dup)
 		tower.get_node("MobDetector").visible=false
+		tower.connect("tower_info",self._on_normal_tower_lvl_1_tower_info)
 		grid_map.place_tower_in_tilemap(collision_point)
 		self.get_node("Tower Holder").add_child(tower)
 		print("Added tower in position: ",grid_pos)
@@ -279,6 +276,7 @@ func hover_tower(_tower_type:int):
 			tower_hover_holder = FreezeTowerScene.instantiate()
 			hovering_tower=2
 		tower_hover_holder.can_shoot=false
+		tower_hover_holder.get_node("MobDetector").visible = true
 		get_node("Tower Holder").add_child(tower_hover_holder)
 		tower_hover_holder.set_surface_override_material(0,normal_mat)
 		if tower_to_hover == 1:
@@ -304,8 +302,9 @@ func hover_tower(_tower_type:int):
 			if tower_to_hover == 1:
 				tower_hover_holder.set_surface_override_material(1,red_mat)
 	else:
-		#hide hover if cursor is out of gridmap
-		tower_hover_holder.visible=false
+		#free hover if cursor is out of gridmap
+		tower_hover_holder.queue_free()
+		tower_hover_holder = null
 	
 #function creates block hover on raycast position
 func update_hover_tetris():
@@ -371,7 +370,8 @@ func update_resource_timers():
 
 
 func place_resource_on_click(resource_type:int):
-	resource_hover_holder.free()
+	if resource_hover_holder != null:
+		resource_hover_holder.free()
 	var collision_point = get_collision_point()
 	var building
 	#checking if raycast detected any block if so place block on gridmap
@@ -493,6 +493,7 @@ func _on_build_timer_timeout() -> void:
 		enemy_spawner.start_wave()
 		UI.bottom_panel.visible = false
 		UI.unpress_all_buttons()
+		_on_X_button()
 		for h in hover:
 			h.visible = false
 
@@ -512,15 +513,71 @@ func _on_enemy_spawner_wave_ended() -> void:
 	if game:
 		reset_build_timer()
 
+#when clicked on tower signal is recieved and pops up the ui for stats/upgrade/destroy
+func _on_normal_tower_lvl_1_tower_info(obj) -> void:
+	print("Signal recieved from: ",obj.name)
+	if not normal_tower_build and not freeze_tower_build and not aoe_tower_build and not wood_build and not stone_build and not wheat_build and not beer_build and is_build_phase:
+		if ui_tower_panel == null:
+			ui_tower_panel = UI.tower_info.instantiate()
+			get_node("CanvasLayer/UI").add_child(ui_tower_panel)
+			var help_panel
+			help_panel = ui_tower_panel.get_child(0)
+			help_panel.visible = true
+			help_panel.size.x-=10
+			help_panel.connect("X_button_pressed",self._on_X_button)
+			help_panel.get_child(1).get_child(0).get_child(0).text = str(obj.title)
+			help_panel.get_child(1).get_child(1).get_node("Dmg").text = str(obj.damage)
+			help_panel.get_child(1).get_child(1).get_node("Range").text = str(obj.range)
+			help_panel.get_child(1).get_child(1).get_node("Lvl").text = str(obj.level)
+			help_panel.get_child(1).get_child(1).get_node("Health").text = str(obj.health)
+			help_panel.get_child(1).get_child(1).get_node("FireRate").text = str(obj.firerate)+"/sec"
+			help_panel.get_child(1).get_child(1).get_child(0).get_child(0).size.x = help_panel.size.x/2 + 25
+			if obj.title == "Normal Tower":
+				help_panel.get_child(1).get_child(1).get_node("Special thing").visible = false
+				help_panel.get_child(1).get_child(1).get_node("Special thing_png").visible = false
+				help_panel.get_child(1).get_child(1).get_child(0).get_child(0).get_child(0).get_node("Name6").visible = false
+			if obj.title == "Freeze Tower":
+				help_panel.get_child(1).get_child(1).get_node("Special thing").text = str(obj.slow*100)+"%"
+				help_panel.get_child(1).get_child(1).get_node("Special thing_png").texture = slow_png
+				help_panel.get_child(1).get_child(1).get_child(0).get_child(0).get_child(0).get_node("Name6").text = "slow"
+			if obj.title == "AOE Tower":
+				help_panel.get_child(1).get_child(1).get_node("Special thing").text = str(obj.aoe*100)+"%"
+				help_panel.get_child(1).get_child(1).get_node("Special thing_png").texture = aoe_png
+				help_panel.get_child(1).get_child(1).get_child(0).get_child(0).get_child(0).get_node("Name6").text = "AOE dmg"
+			if obj.level == 1:
+					help_panel.get_child(1).get_child(2).get_node("Wood").text = str(obj.wood_to_upgrade_lvl2)
+					help_panel.get_child(1).get_child(2).get_node("Stone").text = str(obj.stone_to_upgrade_lvl2)
+					help_panel.get_child(1).get_child(2).get_node("Wheat").text = str(obj.wheat_to_upgrade_lvl2)
+			elif obj.level == 2:
+				help_panel.get_child(1).get_child(2).get_node("Wood").text = str(obj.wood_to_upgrade_lvl3)
+				help_panel.get_child(1).get_child(2).get_node("Stone").text = str(obj.stone_to_upgrade_lvl3)
+				help_panel.get_child(1).get_child(2).get_node("Wheat").text = str(obj.wheat_to_upgrade_lvl3)
+			else:
+				help_panel.get_child(1).get_child(2).get_node("Label").text = "MAX LEVEL!"
+				for i in help_panel.get_child(1).get_child(2).get_child_count():
+					if i>0:
+						help_panel.get_child(1).get_child(2).get_child(i).visible = false
+			help_panel.get_child(1).get_child(4).get_node("Wood").text = "+"+str(obj.return_wood * obj.level)
+			help_panel.get_child(1).get_child(4).get_node("Stone").text = "+"+str(obj.return_stone * obj.level)
+		else:
+			print("One panel already opened")
+
+
+#Signal recived when X_button on tower_panel is clicked
+func _on_X_button() ->void:
+	ui_tower_panel.queue_free()
+	ui_tower_panel = null
+	
 #changes label 2 s after wave started
 func _on_switch_label_timer_timeout() -> void:
 	build_time_label.text = "Current wave: " + str(enemy_spawner.current_wave)
 	
+#Function that happens when enemies deal damage to our gate and checks for game_over possibility
 func take_damage(dmg) -> void:
 	current_health = current_health-dmg
 	#print("Current health z maina:",current_health)
 	UI.update_hearts()
-	if current_health <= 0:
+	if current_health <= 0 and game:
 		print("GAMEOVER GG")
 		game = false
 		GameOver.visible = true

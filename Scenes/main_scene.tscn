@@ -36,7 +36,7 @@ offsets = PackedFloat32Array(0.438819, 0.810127)
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_dr3hc"]
 seed = 3
 
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_sldny"]
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_atrpq"]
 seamless = true
 color_ramp = SubResource("Gradient_lq3fq")
 noise = SubResource("FastNoiseLite_dr3hc")
@@ -45,18 +45,18 @@ noise = SubResource("FastNoiseLite_dr3hc")
 sky_top_color = Color(0.368627, 0.490196, 0.709804, 1)
 sky_horizon_color = Color(0.484983, 0.59755, 0.753083, 1)
 sky_curve = 0.0247406
-sky_cover = SubResource("NoiseTexture2D_sldny")
+sky_cover = SubResource("NoiseTexture2D_atrpq")
 ground_bottom_color = Color(0.0784314, 0.607843, 1, 1)
 ground_horizon_color = Color(0.350571, 0.48282, 0.98942, 1)
 ground_curve = 0.0127456
 sun_curve = 0.0699775
 
-[sub_resource type="Sky" id="Sky_62k22"]
+[sub_resource type="Sky" id="Sky_376uu"]
 sky_material = SubResource("ProceduralSkyMaterial_vssjk")
 
 [sub_resource type="Environment" id="Environment_vognj"]
 background_mode = 2
-sky = SubResource("Sky_62k22")
+sky = SubResource("Sky_376uu")
 fog_light_color = Color(0.462538, 0.644657, 0.882591, 1)
 fog_light_energy = 0.2
 fog_density = 0.005
@@ -160,6 +160,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 script = ExtResource("6_5mynr")
 
 [node name="EQ container" type="PanelContainer" parent="CanvasLayer/UI"]

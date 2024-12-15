@@ -10,7 +10,7 @@ transparency = 1
 albedo_texture = ExtResource("2_prlpv")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_nptjh"]
-size = Vector3(1, 0.2, 1)
+size = Vector3(0.919067, 1.57929, 1)
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_j4ndu"]
 radius = 3.0
@@ -23,7 +23,7 @@ height = 0.001
 transparency = 1
 albedo_color = Color(0, 0, 0, 0.537255)
 
-[node name="MeshInstance3D" type="MeshInstance3D"]
+[node name="Freeze_tower" type="MeshInstance3D"]
 mesh = ExtResource("1_r4xco")
 surface_material_override/0 = SubResource("StandardMaterial3D_lf0sh")
 script = ExtResource("3_veq11")
@@ -31,6 +31,7 @@ script = ExtResource("3_veq11")
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00775146, 0.718155, 0)
 shape = SubResource("BoxShape3D_nptjh")
 
 [node name="Mage" parent="." instance=ExtResource("4_sl6ly")]
@@ -49,6 +50,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_vtmmk")
 [node name="Damage CD" type="Timer" parent="."]
 wait_time = 2.4
 
+[connection signal="input_event" from="StaticBody3D" to="." method="_on_static_body_3d_input_event"]
 [connection signal="body_entered" from="MobDetector" to="." method="_on_mob_detector_body_entered"]
 [connection signal="body_exited" from="MobDetector" to="." method="_on_mob_detector_body_exited"]
 [connection signal="timeout" from="Damage CD" to="." method="_on_damage_cd_timeout"]

@@ -30,7 +30,6 @@ offset_bottom = -5.0
 grow_vertical = 0
 
 [node name="Normal tower panel" type="PanelContainer" parent="."]
-visible = false
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0

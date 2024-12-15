@@ -27,6 +27,7 @@ var full_heart = load("res://Resources/Icons/Heart.png")
 var empty_heart = load("res://Resources/Icons/black_heart.png")
 
 var info_panels = preload("res://Scenes/buttons_info_panels.tscn")
+var tower_info = preload("res://Scenes/towers_info_panels.tscn")
 var panel_info_holder
 
 var original_positions = {}
