@@ -480,21 +480,7 @@ func update_label_build_time():
 
 
 func _on_build_timer_timeout() -> void:
-	is_build_phase = false
-	build_time_label.text = "Build phase ended!"
-	current_cam_index = 0
-	set_camera()
-	switch_label_timer.start()
-	if tower_hover_holder != null:
-		tower_hover_holder.free()
-	if resource_hover_holder != null:
-		resource_hover_holder.free()
-	if !enemy_spawner.wave_in_progress:
-		enemy_spawner.start_wave()
-		UI.bottom_panel.visible = false
-		UI.unpress_all_buttons()
-		for h in hover:
-			h.visible = false
+	prepare_wave()
 
 #resets build timer and enables buttons
 func reset_build_timer():
@@ -508,9 +494,10 @@ func _on_enemy_spawner_wave_ended() -> void:
 	#print("Przekazano sygnal")
 	enemy_spawner.current_wave+=1
 	enemy_spawner.update_wave_enemy_count()
-	UI.update_enemy_count_labels(enemy_spawner.basic_enemies_per_wave, enemy_spawner.fast_enemies_per_wave, 0)
+	UI.update_enemy_count_labels(enemy_spawner.basic_enemies_per_wave, enemy_spawner.fast_enemies_per_wave, enemy_spawner.boss_enemies_per_wave)
 	if game:
 		reset_build_timer()
+		UI.switch_skip_button_visiblity()
 
 #changes label 2 s after wave started
 func _on_switch_label_timer_timeout() -> void:
@@ -536,3 +523,26 @@ func take_damage(dmg) -> void:
 			building.get_node("Timer").stop()
 			building.generator_on = false
 			
+
+func prepare_wave() -> void:
+	is_build_phase = false
+	build_time_label.text = "Build phase ended!"
+	current_cam_index = 0
+	set_camera()
+	switch_label_timer.start()
+	if tower_hover_holder != null:
+		tower_hover_holder.free()
+	if resource_hover_holder != null:
+		resource_hover_holder.free()
+	if !enemy_spawner.wave_in_progress:
+		enemy_spawner.start_wave()
+		UI.bottom_panel.visible = false
+		UI.unpress_all_buttons()
+		for h in hover:
+			h.visible = false
+	UI.switch_skip_button_visiblity()
+
+func _on_skip_button_pressed() -> void:
+	build_timer.stop()
+	prepare_wave()
+	

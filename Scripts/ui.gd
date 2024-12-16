@@ -23,6 +23,8 @@ var defence_group = ButtonGroup.new()
 @onready var stone_count_label: Label = $"EQ container/MarginContainer/GridContainer/Stone count label"
 @onready var beer_count_label: Label = $"EQ container/MarginContainer/GridContainer/Beer count label"
 
+@onready var skip_button: Button = $skip_button
+
 var full_heart = load("res://Resources/Icons/Heart.png")
 var empty_heart = load("res://Resources/Icons/black_heart.png")
 
@@ -143,3 +145,9 @@ func update_hearts() -> void:
 			heart.texture = full_heart
 		else:
 			heart.texture = empty_heart
+
+func switch_skip_button_visiblity() -> void:
+	if skip_button.visible == true:
+		skip_button.visible = false
+	else:
+		skip_button.visible = true

@@ -1,4 +1,4 @@
-[gd_scene load_steps=45 format=3 uid="uid://chdc08c7ct8xv"]
+[gd_scene load_steps=50 format=3 uid="uid://chdc08c7ct8xv"]
 
 [ext_resource type="Script" path="res://Scripts/game_script.gd" id="1_wclms"]
 [ext_resource type="MeshLibrary" uid="uid://746jf5hii373" path="res://mesh_lib.tres" id="2_5f8px"]
@@ -28,6 +28,8 @@
 [ext_resource type="Texture2D" uid="uid://hbu7q72dq5ji" path="res://Resources/UI/pusty przycisk_hover.png" id="26_123qh"]
 [ext_resource type="Texture2D" uid="uid://dmga3xf4bw28n" path="res://Resources/Icons/gate.png" id="27_gu03x"]
 [ext_resource type="Theme" uid="uid://lg8ungoidciu" path="res://Resources/Themes/UI_Game_Over_theme.tres" id="28_j1bde"]
+[ext_resource type="Texture2D" uid="uid://bwolp3soooh34" path="res://Resources/UI/TextBTN_Medium.png" id="29_d05gk"]
+[ext_resource type="Texture2D" uid="uid://co3tawrxxg8ie" path="res://Resources/UI/TextBTN_Medium_Pressed.png" id="30_5vlt2"]
 
 [sub_resource type="Gradient" id="Gradient_lq3fq"]
 offsets = PackedFloat32Array(0.438819, 0.810127)
@@ -96,6 +98,27 @@ texture_margin_top = 30.0
 texture_margin_right = 40.0
 texture_margin_bottom = 30.0
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kg0tk"]
+texture = ExtResource("29_d05gk")
+texture_margin_left = 15.0
+texture_margin_top = 10.0
+texture_margin_right = 15.0
+texture_margin_bottom = 30.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_vcb7g"]
+texture = ExtResource("30_5vlt2")
+texture_margin_left = 15.0
+texture_margin_top = 44.0
+texture_margin_right = 15.0
+texture_margin_bottom = 31.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dr3oo"]
+texture = ExtResource("29_d05gk")
+texture_margin_left = 15.0
+texture_margin_top = 10.0
+texture_margin_right = 15.0
+texture_margin_bottom = 30.0
+
 [node name="Main_Scene" type="Node3D"]
 script = ExtResource("1_wclms")
 
@@ -157,6 +180,10 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = -22.0
+offset_top = -3.0
+offset_right = -22.0
+offset_bottom = -3.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("6_5mynr")
@@ -638,9 +665,10 @@ theme_override_styles/normal = SubResource("StyleBoxTexture_na0bh")
 
 [node name="HP container" type="PanelContainer" parent="CanvasLayer/UI"]
 layout_mode = 1
-offset_top = -6.0
-offset_right = 355.0
-offset_bottom = 84.0
+offset_left = -3.0
+offset_top = -5.0
+offset_right = 352.0
+offset_bottom = 85.0
 theme = ExtResource("9_xr12o")
 
 [node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI/HP container"]
@@ -705,10 +733,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -259.5
-offset_top = -300.0
-offset_right = 140.5
-offset_bottom = 300.0
+offset_left = -209.0
+offset_top = -328.0
+offset_right = 191.0
+offset_bottom = 272.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("28_j1bde")
@@ -749,6 +777,22 @@ layout_mode = 2
 focus_mode = 0
 text = "Main Menu"
 
+[node name="skip_button" type="Button" parent="CanvasLayer/UI"]
+layout_mode = 2
+offset_left = 1408.0
+offset_top = 7.0
+offset_right = 1543.0
+offset_bottom = 71.0
+focus_mode = 0
+theme = ExtResource("18_tdln6")
+theme_override_colors/font_hover_color = Color(0, 0.560784, 0.368627, 1)
+theme_override_colors/font_pressed_color = Color(0, 0.927874, 0, 1)
+theme_override_font_sizes/font_size = 26
+theme_override_styles/hover = SubResource("StyleBoxTexture_kg0tk")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_vcb7g")
+theme_override_styles/normal = SubResource("StyleBoxTexture_dr3oo")
+text = "SKIP"
+
 [connection signal="wave_ended" from="Enemy Spawner" to="." method="_on_enemy_spawner_wave_ended"]
 [connection signal="timeout" from="Build Timer" to="." method="_on_build_timer_timeout"]
 [connection signal="timeout" from="Switch Label Timer" to="." method="_on_switch_label_timer_timeout"]
@@ -756,3 +800,4 @@ text = "Main Menu"
 [connection signal="pressed" from="CanvasLayer/UI/Bottom_panel/Main panel/HBoxContainer/Defence build" to="CanvasLayer/UI" method="_on_defence_build_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/Bottom_panel/Defence buildings/HBoxContainer/Back Button2" to="CanvasLayer/UI" method="_on_back_button_2_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Back Button" to="CanvasLayer/UI" method="_on_back_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/UI/skip_button" to="." method="_on_skip_button_pressed"]
