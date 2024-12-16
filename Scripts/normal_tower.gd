@@ -41,7 +41,7 @@ func _on_shooting_cd_timeout() -> void:
 	can_shoot=true
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	set_target(enemies)
 	if is_instance_valid(current_enemy):
 		if can_shoot:

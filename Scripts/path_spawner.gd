@@ -33,7 +33,6 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	
 	if wave_in_progress:
 		timer += delta
 	#spawn basic enemy:
@@ -68,10 +67,12 @@ func _process(delta: float) -> void:
 func set_path(points: Array) -> void:
 	#delete previous curve points
 	curve.clear_points()
+
 	#add new curve points
 	for point in points:
 		point.y -= 0.5
 		curve.add_point(point)
+
 	#length of path follower has to follow - important to understand 	
 	curve_length = curve.get_baked_length()
 
@@ -93,7 +94,6 @@ func start_wave():
 	print("Fala: " + str(current_wave))
 	
 	wave_in_progress = true
-	
 	enemy_count = 0
 	spawned_enemy_count = 0
 	
@@ -101,12 +101,11 @@ func start_wave():
 	fast_enemy_spawn_started = false
 	fast_enemy_spawn_cd = 3.0
 	fast_enemy_count = 0
-	
 	basic_enemy_count = 0
 	
 #ends wave and emits signal to main scene	
 func end_wave():
-	print("Fala " + str(current_wave) + " zakończona!")
+	print("Fala " + str(current_wave) + " zakonczona!")
 	wave_in_progress = false
 	emit_signal("wave_ended")
 	

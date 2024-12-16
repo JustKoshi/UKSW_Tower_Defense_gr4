@@ -1,0 +1,52 @@
+[gd_scene load_steps=11 format=3 uid="uid://dt23d5ipegngd"]
+
+[ext_resource type="ArrayMesh" uid="uid://cwa7glwnajxsr" path="res://Resources/Resource_buildings/lumbermill_v2.obj" id="1_dddwa"]
+[ext_resource type="Script" path="res://Scripts/lumbermill.gd" id="2_6bixp"]
+[ext_resource type="Texture2D" uid="uid://b1ms4h5mcmjd0" path="res://Resources/Towers/hexagons_medieval.png" id="2_hbsqb"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6vy3w"]
+render_priority = 1
+albedo_texture = ExtResource("2_hbsqb")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1r58r"]
+render_priority = 1
+albedo_texture = ExtResource("2_hbsqb")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vr11o"]
+render_priority = 1
+albedo_texture = ExtResource("2_hbsqb")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7jpuc"]
+render_priority = 1
+albedo_texture = ExtResource("2_hbsqb")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cx25w"]
+render_priority = 1
+albedo_texture = ExtResource("2_hbsqb")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gkjt5"]
+render_priority = 1
+albedo_texture = ExtResource("2_hbsqb")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_cw6o8"]
+
+[node name="lumbermill" type="MeshInstance3D"]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
+mesh = ExtResource("1_dddwa")
+surface_material_override/0 = SubResource("StandardMaterial3D_6vy3w")
+surface_material_override/1 = SubResource("StandardMaterial3D_1r58r")
+surface_material_override/2 = SubResource("StandardMaterial3D_vr11o")
+surface_material_override/3 = SubResource("StandardMaterial3D_7jpuc")
+surface_material_override/4 = SubResource("StandardMaterial3D_cx25w")
+surface_material_override/5 = SubResource("StandardMaterial3D_gkjt5")
+script = ExtResource("2_6bixp")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("BoxShape3D_cw6o8")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 3.0
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

@@ -4,7 +4,7 @@ var target
 var speed = 20
 var arrow_damage
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	if is_instance_valid(target):
 		#making bullet follow the target with speed = to var set in the beginning of the script and facing it
 		velocity=global_position.direction_to(target.global_position)*speed

@@ -18,6 +18,14 @@ var defence_group = ButtonGroup.new()
 
 @onready var game_script = get_parent().get_parent()
 
+@onready var wood_count_label: Label = $"EQ container/MarginContainer/GridContainer/Wood count label"
+@onready var wheat_count_label: Label = $"EQ container/MarginContainer/GridContainer/Wheat count label"
+@onready var stone_count_label: Label = $"EQ container/MarginContainer/GridContainer/Stone count label"
+@onready var beer_count_label: Label = $"EQ container/MarginContainer/GridContainer/Beer count label"
+
+var full_heart = load("res://Resources/Icons/Heart.png")
+var empty_heart = load("res://Resources/Icons/black_heart.png")
+
 var original_positions = {}
 
 func _ready() -> void:
@@ -31,10 +39,21 @@ func _ready() -> void:
 		button.button_group = defence_group
 		button.toggled.connect(_on_toggled.bind(button))
 		button.toggled.connect(_on_defence_button_toggled.bind(button))
+
+	#Setting up hearts
+	for i in range(game_script.max_health):
+		var heart = TextureRect.new()
+		heart.texture = full_heart
+		heart.expand_mode = TextureRect.EXPAND_FIT_WIDTH
+		get_node("HP container").get_child(0).get_child(0).add_child(heart)
 		
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta: float) -> void:
-	#pass
+func _process(_delta: float) -> void:
+	#setting resources values
+	wood_count_label.set_text("%d" % game_script.game_resources.wood)
+	stone_count_label.set_text("%d" % game_script.game_resources.stone)
+	wheat_count_label.set_text("%d" % game_script.game_resources.wheat)
+	beer_count_label.set_text("%d" % game_script.game_resources.beer)
 
 func update_enemy_count_labels(basic_enemy_num , fast_enemy_num, boss_num):
 	basic_enemy_count.text = str(basic_enemy_num)
@@ -47,14 +66,17 @@ func _on_back_button_pressed() -> void:
 	main_panel.visible = true
 	for button in resource_buttons:
 		button.button_pressed = false
-
+	game_script.current_cam_index = 0
+	game_script.set_camera()
 
 func _on_back_button_2_pressed() -> void:
 	defence_buildings.visible = false
 	main_panel.visible = true
 	for button in defence_buttons:
 		button.button_pressed = false
-
+	game_script.current_cam_index = 0
+	game_script.set_camera()
+	
 func _on_resource_build_button_pressed() -> void:
 	main_panel.visible = false
 	resource_buildings.visible = true
@@ -113,3 +135,11 @@ func _on_defence_button_toggled(is_pressed: bool, button):
 			game_script.freeze_tower_build = is_pressed
 		"AOE Tower":
 			game_script.aoe_tower_build = is_pressed
+
+func update_hearts() -> void:
+	for i in range(game_script.max_health):
+		var heart = get_node("HP container").get_child(0).get_child(0).get_child(i+1) as TextureRect
+		if i < game_script.current_health:
+			heart.texture = full_heart
+		else:
+			heart.texture = empty_heart
