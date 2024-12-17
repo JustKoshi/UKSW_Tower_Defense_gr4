@@ -25,16 +25,20 @@ var defence_group = ButtonGroup.new()
 
 var full_heart = load("res://Resources/Icons/Heart.png")
 var empty_heart = load("res://Resources/Icons/black_heart.png")
+var slow_png = load("res://Resources/Icons/snowflake.png")
+var aoe_png = load("res://Resources/Icons/catapult.png")
 
 var info_panels = preload("res://Scenes/buttons_info_panels.tscn")
 var tower_info = preload("res://Scenes/towers_info_panels.tscn")
 var panel_info_holder
+var ui_tower_panel
 
 var original_positions = {}
 var panel_number
 
 func _ready() -> void:
 	panel_info_holder = null
+	ui_tower_panel = null
 	
 	for button in resource_buttons:
 		button.button_group = resource_group
@@ -196,3 +200,60 @@ func update_hearts() -> void:
 			heart.texture = full_heart
 		else:
 			heart.texture = empty_heart
+			
+			
+#when clicked on tower signal is recieved and pops up the ui for stats/upgrade/destroy
+func _on_normal_tower_lvl_1_tower_info(obj) -> void:
+	#print("Signal recieved from: ",obj.name)
+	if not game_script.normal_tower_build and not game_script.freeze_tower_build and not game_script.aoe_tower_build and not game_script.wood_build and not game_script.stone_build and not game_script.wheat_build and not game_script.beer_build and game_script.is_build_phase:
+		if ui_tower_panel == null:
+			ui_tower_panel = tower_info.instantiate()
+			add_child(ui_tower_panel)
+			var help_panel
+			help_panel = ui_tower_panel.get_child(0)
+			help_panel.visible = true
+			help_panel.size.x-=10
+			help_panel.connect("X_button_pressed",self._on_X_button)
+			help_panel.get_child(1).get_child(0).get_child(1).text = str(obj.title)
+			help_panel.get_child(1).get_child(1).get_node("Dmg").text = str(obj.damage)
+			help_panel.get_child(1).get_child(1).get_node("Range").text = str(obj.range)
+			help_panel.get_child(1).get_child(1).get_node("Lvl").text = str(obj.level)
+			help_panel.get_child(1).get_child(1).get_node("Health").text = str(obj.health)
+			help_panel.get_child(1).get_child(1).get_node("FireRate").text = str(obj.firerate)+"/sec"
+			help_panel.get_child(1).get_child(1).get_child(0).get_child(0).size.x = help_panel.size.x/2 + 25
+			if obj.title == "Normal Tower":
+				help_panel.get_child(1).get_child(1).get_node("Special thing").visible = false
+				help_panel.get_child(1).get_child(1).get_node("Special thing_png").visible = false
+				help_panel.get_child(1).get_child(1).get_child(0).get_child(0).get_child(0).get_node("Name6").visible = false
+			if obj.title == "Freeze Tower":
+				help_panel.get_child(1).get_child(1).get_node("Special thing").text = str(obj.slow*100)+"%"
+				help_panel.get_child(1).get_child(1).get_node("Special thing_png").texture = slow_png
+				help_panel.get_child(1).get_child(1).get_child(0).get_child(0).get_child(0).get_node("Name6").text = "slow"
+			if obj.title == "AOE Tower":
+				help_panel.get_child(1).get_child(1).get_node("Special thing").text = str(obj.aoe*100)+"%"
+				help_panel.get_child(1).get_child(1).get_node("Special thing_png").texture = aoe_png
+				help_panel.get_child(1).get_child(1).get_child(0).get_child(0).get_child(0).get_node("Name6").text = "AOE dmg"
+			if obj.level == 1:
+					help_panel.get_child(1).get_child(2).get_node("Wood").text = str(obj.wood_to_upgrade_lvl2)
+					help_panel.get_child(1).get_child(2).get_node("Stone").text = str(obj.stone_to_upgrade_lvl2)
+					help_panel.get_child(1).get_child(2).get_node("Wheat").text = str(obj.wheat_to_upgrade_lvl2)
+			elif obj.level == 2:
+				help_panel.get_child(1).get_child(2).get_node("Wood").text = str(obj.wood_to_upgrade_lvl3)
+				help_panel.get_child(1).get_child(2).get_node("Stone").text = str(obj.stone_to_upgrade_lvl3)
+				help_panel.get_child(1).get_child(2).get_node("Wheat").text = str(obj.wheat_to_upgrade_lvl3)
+			else:
+				help_panel.get_child(1).get_child(2).get_node("Label").text = "MAX LEVEL!"
+				for i in help_panel.get_child(1).get_child(2).get_child_count():
+					if i>0:
+						help_panel.get_child(1).get_child(2).get_child(i).visible = false
+			help_panel.get_child(1).get_child(4).get_node("Wood").text = "+"+str(obj.return_wood * obj.level)
+			help_panel.get_child(1).get_child(4).get_node("Stone").text = "+"+str(obj.return_stone * obj.level)
+		else:
+			print("One panel already opened")
+
+
+#Signal recived when X_button on tower_panel is clicked
+func _on_X_button() ->void:
+	if ui_tower_panel !=null:
+		ui_tower_panel.queue_free()
+		ui_tower_panel = null

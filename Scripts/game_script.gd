@@ -19,9 +19,6 @@ extends Node3D
 
 @onready var UI = $CanvasLayer/UI
 @onready var GameOver = $CanvasLayer/UI/GameOverScreen
-var ui_tower_panel
-var slow_png = load("res://Resources/Icons/snowflake.png")
-var aoe_png = load("res://Resources/Icons/catapult.png")
 
 var NormalTowerScene = preload("res://Scenes/normal_tower_lvl_1.tscn")
 var FreezeTowerScene = preload("res://Scenes/Freeze_tower_lvl_1.tscn")
@@ -89,7 +86,6 @@ func _ready() -> void:
 	GameOver.visible = false
 	$CanvasLayer/UI/GameOverScreen/VBoxContainer/MainMenu_button.disabled = true
 	$CanvasLayer/UI/GameOverScreen/VBoxContainer/PlayAgain_button.disabled = true
-	ui_tower_panel = null
 	red_mat.albedo_color = Color(1,0,0,0.55)
 	normal_mat.albedo_color = Color(1,1,1,0.55)
 	normal_mat_range.albedo_color = Color(0,0,0,0.55)
@@ -257,7 +253,7 @@ func place_tower_on_click(tower_type:int):
 		if tower_type == 1:
 			tower.set_surface_override_material(1,mat_dup)
 		tower.get_node("MobDetector").visible=false
-		tower.connect("tower_info",self._on_normal_tower_lvl_1_tower_info)
+		tower.connect("tower_info",UI._on_normal_tower_lvl_1_tower_info)
 		grid_map.place_tower_in_tilemap(collision_point)
 		self.get_node("Tower Holder").add_child(tower)
 		print("Added tower in position: ",grid_pos)
@@ -493,7 +489,7 @@ func _on_build_timer_timeout() -> void:
 		enemy_spawner.start_wave()
 		UI.bottom_panel.visible = false
 		UI.unpress_all_buttons()
-		_on_X_button()
+		UI._on_X_button()
 		for h in hover:
 			h.visible = false
 
@@ -513,61 +509,6 @@ func _on_enemy_spawner_wave_ended() -> void:
 	if game:
 		reset_build_timer()
 
-#when clicked on tower signal is recieved and pops up the ui for stats/upgrade/destroy
-func _on_normal_tower_lvl_1_tower_info(obj) -> void:
-	print("Signal recieved from: ",obj.name)
-	if not normal_tower_build and not freeze_tower_build and not aoe_tower_build and not wood_build and not stone_build and not wheat_build and not beer_build and is_build_phase:
-		if ui_tower_panel == null:
-			ui_tower_panel = UI.tower_info.instantiate()
-			get_node("CanvasLayer/UI").add_child(ui_tower_panel)
-			var help_panel
-			help_panel = ui_tower_panel.get_child(0)
-			help_panel.visible = true
-			help_panel.size.x-=10
-			help_panel.connect("X_button_pressed",self._on_X_button)
-			help_panel.get_child(1).get_child(0).get_child(0).text = str(obj.title)
-			help_panel.get_child(1).get_child(1).get_node("Dmg").text = str(obj.damage)
-			help_panel.get_child(1).get_child(1).get_node("Range").text = str(obj.range)
-			help_panel.get_child(1).get_child(1).get_node("Lvl").text = str(obj.level)
-			help_panel.get_child(1).get_child(1).get_node("Health").text = str(obj.health)
-			help_panel.get_child(1).get_child(1).get_node("FireRate").text = str(obj.firerate)+"/sec"
-			help_panel.get_child(1).get_child(1).get_child(0).get_child(0).size.x = help_panel.size.x/2 + 25
-			if obj.title == "Normal Tower":
-				help_panel.get_child(1).get_child(1).get_node("Special thing").visible = false
-				help_panel.get_child(1).get_child(1).get_node("Special thing_png").visible = false
-				help_panel.get_child(1).get_child(1).get_child(0).get_child(0).get_child(0).get_node("Name6").visible = false
-			if obj.title == "Freeze Tower":
-				help_panel.get_child(1).get_child(1).get_node("Special thing").text = str(obj.slow*100)+"%"
-				help_panel.get_child(1).get_child(1).get_node("Special thing_png").texture = slow_png
-				help_panel.get_child(1).get_child(1).get_child(0).get_child(0).get_child(0).get_node("Name6").text = "slow"
-			if obj.title == "AOE Tower":
-				help_panel.get_child(1).get_child(1).get_node("Special thing").text = str(obj.aoe*100)+"%"
-				help_panel.get_child(1).get_child(1).get_node("Special thing_png").texture = aoe_png
-				help_panel.get_child(1).get_child(1).get_child(0).get_child(0).get_child(0).get_node("Name6").text = "AOE dmg"
-			if obj.level == 1:
-					help_panel.get_child(1).get_child(2).get_node("Wood").text = str(obj.wood_to_upgrade_lvl2)
-					help_panel.get_child(1).get_child(2).get_node("Stone").text = str(obj.stone_to_upgrade_lvl2)
-					help_panel.get_child(1).get_child(2).get_node("Wheat").text = str(obj.wheat_to_upgrade_lvl2)
-			elif obj.level == 2:
-				help_panel.get_child(1).get_child(2).get_node("Wood").text = str(obj.wood_to_upgrade_lvl3)
-				help_panel.get_child(1).get_child(2).get_node("Stone").text = str(obj.stone_to_upgrade_lvl3)
-				help_panel.get_child(1).get_child(2).get_node("Wheat").text = str(obj.wheat_to_upgrade_lvl3)
-			else:
-				help_panel.get_child(1).get_child(2).get_node("Label").text = "MAX LEVEL!"
-				for i in help_panel.get_child(1).get_child(2).get_child_count():
-					if i>0:
-						help_panel.get_child(1).get_child(2).get_child(i).visible = false
-			help_panel.get_child(1).get_child(4).get_node("Wood").text = "+"+str(obj.return_wood * obj.level)
-			help_panel.get_child(1).get_child(4).get_node("Stone").text = "+"+str(obj.return_stone * obj.level)
-		else:
-			print("One panel already opened")
-
-
-#Signal recived when X_button on tower_panel is clicked
-func _on_X_button() ->void:
-	ui_tower_panel.queue_free()
-	ui_tower_panel = null
-	
 #changes label 2 s after wave started
 func _on_switch_label_timer_timeout() -> void:
 	build_time_label.text = "Current wave: " + str(enemy_spawner.current_wave)
