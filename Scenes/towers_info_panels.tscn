@@ -366,3 +366,4 @@ text = "Destroy"
 [connection signal="mouse_exited" from="Tower panel/VBoxContainer/GridContainer/FireRate_png" to="Tower panel" method="_on_mouse_exited"]
 [connection signal="mouse_entered" from="Tower panel/VBoxContainer/GridContainer/Special thing_png" to="Tower panel" method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="Tower panel/VBoxContainer/GridContainer/Special thing_png" to="Tower panel" method="_on_mouse_exited"]
+[connection signal="pressed" from="Tower panel/VBoxContainer/Upgrade_button" to="Tower panel" method="_on_upgrade_button_pressed"]

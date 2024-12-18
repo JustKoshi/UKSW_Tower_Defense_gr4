@@ -1,9 +1,10 @@
-[gd_scene load_steps=10 format=3 uid="uid://drdc5fk6ym8f2"]
+[gd_scene load_steps=11 format=3 uid="uid://drdc5fk6ym8f2"]
 
 [ext_resource type="ArrayMesh" uid="uid://dj6t1svcnei6i" path="res://Resources/Towers/FreezeTowerlvl1/building_tower_A_blue.obj" id="1_r4xco"]
 [ext_resource type="Texture2D" uid="uid://b1ms4h5mcmjd0" path="res://Resources/Towers/hexagons_medieval.png" id="2_prlpv"]
 [ext_resource type="Script" path="res://Scripts/freeze_tower_lvl_1.gd" id="3_veq11"]
 [ext_resource type="PackedScene" uid="uid://cgqma0vn5it54" path="res://Scenes/mage.tscn" id="4_sl6ly"]
+[ext_resource type="Script" path="res://Scripts/Camera3D.gd" id="5_3bdpw"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lf0sh"]
 transparency = 1
@@ -15,9 +16,9 @@ size = Vector3(0.919067, 1.57929, 1)
 [sub_resource type="SphereShape3D" id="SphereShape3D_j4ndu"]
 radius = 3.0
 
-[sub_resource type="SphereMesh" id="SphereMesh_irljf"]
+[sub_resource type="SphereMesh" id="SphereMesh_8ek6l"]
 radius = 3.0
-height = 0.001
+height = 6.0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vtmmk"]
 transparency = 1
@@ -29,6 +30,8 @@ surface_material_override/0 = SubResource("StandardMaterial3D_lf0sh")
 script = ExtResource("3_veq11")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
+collision_layer = 2
+collision_mask = 2
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00775146, 0.718155, 0)
@@ -44,11 +47,15 @@ shape = SubResource("SphereShape3D_j4ndu")
 disabled = true
 
 [node name="Color_range" type="MeshInstance3D" parent="MobDetector"]
-mesh = SubResource("SphereMesh_irljf")
+mesh = SubResource("SphereMesh_8ek6l")
 surface_material_override/0 = SubResource("StandardMaterial3D_vtmmk")
 
 [node name="Damage CD" type="Timer" parent="."]
 wait_time = 2.4
+
+[node name="Main Camera" type="Camera3D" parent="."]
+transform = Transform3D(0.889288, -0.257098, 0.378242, -0.00714836, 0.819121, 0.573577, -0.457291, -0.512779, 0.726597, 7, 8, 15)
+script = ExtResource("5_3bdpw")
 
 [connection signal="input_event" from="StaticBody3D" to="." method="_on_static_body_3d_input_event"]
 [connection signal="body_entered" from="MobDetector" to="." method="_on_mob_detector_body_entered"]

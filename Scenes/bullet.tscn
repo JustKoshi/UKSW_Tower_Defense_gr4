@@ -9,23 +9,21 @@ albedo_texture = ExtResource("3_rjdhr")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qjvso"]
 albedo_color = Color(0, 0, 1, 1)
-metallic = 0.8
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pj64d"]
 albedo_color = Color(0, 0, 1, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3gths"]
 albedo_color = Color(0, 0, 1, 1)
-metallic = 0.4
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xjv2h"]
 albedo_color = Color(0, 0, 1, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6bxsu"]
-albedo_color = Color(0, 0, 0.666667, 1)
+albedo_color = Color(0, 0, 1, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_uphr5"]
-albedo_color = Color(0, 0, 0.666667, 1)
+albedo_color = Color(0, 0, 1, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7f0wi"]
 albedo_color = Color(0, 0, 1, 1)

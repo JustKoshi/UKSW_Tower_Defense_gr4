@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bo48g54sntmyh"
-path.s3tc="res://.godot/imported/pusty przycisk_pressed.png-a6d486360f48ce870e541b8ce09501d4.s3tc.ctex"
+uid="uid://bm5dcyhyacplk"
+path.s3tc="res://.godot/imported/green_heart.png-3d7163b5aeb37c91992361f32ec067d3.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://Resources/UI/pusty przycisk_pressed.png"
-dest_files=["res://.godot/imported/pusty przycisk_pressed.png-a6d486360f48ce870e541b8ce09501d4.s3tc.ctex"]
+source_file="res://Resources/Icons/green_heart.png"
+dest_files=["res://.godot/imported/green_heart.png-3d7163b5aeb37c91992361f32ec067d3.s3tc.ctex"]
 
 [params]
 

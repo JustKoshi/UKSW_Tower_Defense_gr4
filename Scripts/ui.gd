@@ -207,16 +207,19 @@ func _on_normal_tower_lvl_1_tower_info(obj) -> void:
 	#print("Signal recieved from: ",obj.name)
 	if not game_script.normal_tower_build and not game_script.freeze_tower_build and not game_script.aoe_tower_build and not game_script.wood_build and not game_script.stone_build and not game_script.wheat_build and not game_script.beer_build and game_script.is_build_phase:
 		if ui_tower_panel == null:
+			obj.get_node("MobDetector").visible = true
 			ui_tower_panel = tower_info.instantiate()
 			add_child(ui_tower_panel)
 			var help_panel
 			help_panel = ui_tower_panel.get_child(0)
 			help_panel.visible = true
 			help_panel.size.x-=10
+			help_panel.object = obj
 			help_panel.connect("X_button_pressed",self._on_X_button)
+			help_panel.connect("upgrade_pressed",self.upgrade_tower)
 			help_panel.get_child(1).get_child(0).get_child(1).text = str(obj.title)
 			help_panel.get_child(1).get_child(1).get_node("Dmg").text = str(obj.damage)
-			help_panel.get_child(1).get_child(1).get_node("Range").text = str(obj.range)
+			help_panel.get_child(1).get_child(1).get_node("Range").text = str(obj.tower_range)
 			help_panel.get_child(1).get_child(1).get_node("Lvl").text = str(obj.level)
 			help_panel.get_child(1).get_child(1).get_node("Health").text = str(obj.health)
 			help_panel.get_child(1).get_child(1).get_node("FireRate").text = str(obj.firerate)+"/sec"
@@ -243,6 +246,7 @@ func _on_normal_tower_lvl_1_tower_info(obj) -> void:
 				help_panel.get_child(1).get_child(2).get_node("Wheat").text = str(obj.wheat_to_upgrade_lvl3)
 			else:
 				help_panel.get_child(1).get_child(2).get_node("Label").text = "MAX LEVEL!"
+				help_panel.get_child(1).get_child(3).disabled = true
 				for i in help_panel.get_child(1).get_child(2).get_child_count():
 					if i>0:
 						help_panel.get_child(1).get_child(2).get_child(i).visible = false
@@ -255,5 +259,12 @@ func _on_normal_tower_lvl_1_tower_info(obj) -> void:
 #Signal recived when X_button on tower_panel is clicked
 func _on_X_button() ->void:
 	if ui_tower_panel !=null:
+		ui_tower_panel.get_child(0).object.get_node("MobDetector").visible = false
 		ui_tower_panel.queue_free()
 		ui_tower_panel = null
+		
+		
+func upgrade_tower(tower) ->void:
+	#print("upgrading: ",tower)
+	_on_X_button()
+	tower.upgrade()

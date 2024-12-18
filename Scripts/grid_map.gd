@@ -144,22 +144,22 @@ func can_place_block(pos_vector: Vector3) -> bool:
 	return true
 
 #places temporary block in tilemap for further analysis
-func place_block_in_tilemap_temp(position: Vector3):
-	if is_within_bounds(position):
-		var tile_pos = Vector3(position.x+map_size, position.y, position.z+map_size)
+func place_block_in_tilemap_temp(pos: Vector3):
+	if is_within_bounds(pos):
+		var tile_pos = Vector3(pos.x+map_size, pos.y, pos.z+map_size)
 		if(tile_state[tile_pos.z][tile_pos.x] == 0):
 			tile_state[tile_pos.z][tile_pos.x] = 1
 
 #replaces temporary block in tilemap with pernament one		
-func place_block_in_tilemap_permanent(position: Vector3):
-	if is_within_bounds(position):
-		var tile_pos = Vector3(position.x+map_size, position.y, position.z+map_size)
+func place_block_in_tilemap_permanent(pos: Vector3):
+	if is_within_bounds(pos):
+		var tile_pos = Vector3(pos.x+map_size, pos.y, pos.z+map_size)
 		tile_state[tile_pos.z][tile_pos.x] = 2
 
 #removes invalid block from tilemap	
-func remove_block_from_tilemap(position: Vector3):
-	if is_within_bounds(position):
-		var tile_pos = Vector3(position.x+map_size, position.y, position.z+map_size)
+func remove_block_from_tilemap(pos: Vector3):
+	if is_within_bounds(pos):
+		var tile_pos = Vector3(pos.x+map_size, pos.y, pos.z+map_size)
 		if(tile_state[tile_pos.z][tile_pos.x]==1):
 			tile_state[tile_pos.z][tile_pos.x] = 0
 

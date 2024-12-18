@@ -8,7 +8,6 @@ var freezing = false
 @onready var animation_player = $AnimationPlayer
 
 func _physics_process(_delta):
-	
 	if finished_walk:
 		play_attack_animation()
 		if can_attack:
@@ -32,8 +31,8 @@ func change_speed(value:float)->void:
 	get_parent_node_3d().speed=get_parent_node_3d().speed * value
 
 #Function that happens when mob is struck with arrow/spell/canon
-func take_damage(damage: int) -> void:
-	health-=damage
+func take_damage(dmg: int) -> void:
+	health-=dmg
 	if(health<=0):
 		get_parent_node_3d().delete_object()
 
