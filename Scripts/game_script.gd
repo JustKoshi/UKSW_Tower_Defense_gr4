@@ -24,6 +24,7 @@ var NormalTowerScene = preload("res://Scenes/normal_tower_lvl_1.tscn")
 var FreezeTowerScene = preload("res://Scenes/Freeze_tower_lvl_1.tscn")
 var Lumbermill = preload("res://Scenes/lumbermill.tscn")
 var Mine = preload("res://Scenes/mine.tscn")
+var Windmill = preload("res://Scenes/windmill.tscn")
 
 var tower_build = false
 var tetris_build_mode = false
@@ -47,7 +48,7 @@ var hovering_tower = 0
 var tower_to_hover = 0#Which tower is picked with button 0-none 1-normal 2-freeze 3-aoe
 
 var hovering_resource = 0
-var resource_to_hover = 0#0 for none, 1 for lumbermill, 2 for mine
+var resource_to_hover = 0#0 for none, 1 for lumbermill, 2 for mine, 3 for windmill
 var resource_shape
 
 var current_cam_index = 0
@@ -156,7 +157,11 @@ func _process(delta: float) -> void:
 		coordinates_check_mode = false
 		resource_to_hover = 2
 		hover_resource(resource_to_hover)
-	if not wood_build and not stone_build:
+	if wheat_build:
+		set_resource_cam()
+		resource_to_hover = 3
+		hover_resource(resource_to_hover)
+	if not wood_build and not stone_build and not wheat_build:
 		resource_to_hover = 0
 	if is_build_phase:
 		update_label_build_time()
@@ -386,12 +391,15 @@ func place_resource_on_click(resource_type:int):
 				building = Lumbermill.instantiate()
 			elif resource_type == 2:
 				building = Mine.instantiate() 
+			elif resource_type == 3:
+				building = Windmill.instantiate()
 			else:
 				return
 			var place_pos = grid_map.map_to_local(grid_pos)
 			place_pos.y=2.5
-			place_pos.x+=1
-			place_pos.z+=1
+			if resource_type in [1,2]:
+				place_pos.x+=1
+				place_pos.z+=1
 			#print(place_pos)
 			building.position=place_pos
 			#if grid_map.place_resource_in_tilemap(collision_point, hovering_resource):
@@ -436,6 +444,10 @@ func hover_resource(resource_type:int):
 			hovering_resource = 2
 			resource_shape = resource_hover_holder.shape
 			resource_hover_holder.generator_on = false
+		elif resource_type == 3:
+			resource_hover_holder = Windmill.instantiate()
+			hovering_resource = 3
+			resource_shape = resource_hover_holder.shape
 		else:
 			return
 		resource_hover_holder.game_script = self
@@ -452,8 +464,10 @@ func hover_resource(resource_type:int):
 		var place_pos = grid_map.map_to_local(grid_pos)
 		#print(grid_pos)
 		place_pos.y=2.5
-		place_pos.x+=1
-		place_pos.z+=1
+		if hovering_resource in [1,2]:
+			place_pos.x+=1
+			place_pos.z+=1
+		
 		resource_hover_holder.position=place_pos
 	else:
 		#print("nie dziala raycast")

@@ -1,0 +1,32 @@
+[gd_scene load_steps=8 format=3 uid="uid://dwxruv2v5bxyy"]
+
+[ext_resource type="ArrayMesh" uid="uid://rqyixxv3cod4" path="res://Resources/Resource_buildings/untitled.obj" id="1_21x5w"]
+[ext_resource type="Texture2D" uid="uid://b1ms4h5mcmjd0" path="res://Resources/Towers/hexagons_medieval.png" id="2_n43q7"]
+[ext_resource type="Script" path="res://Scripts/windmill.gd" id="3_668tx"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ry6ro"]
+albedo_texture = ExtResource("2_n43q7")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kh1bq"]
+albedo_texture = ExtResource("2_n43q7")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lq3le"]
+albedo_texture = ExtResource("2_n43q7")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_egh37"]
+
+[node name="Windmill" type="MeshInstance3D"]
+mesh = ExtResource("1_21x5w")
+surface_material_override/0 = SubResource("StandardMaterial3D_ry6ro")
+surface_material_override/1 = SubResource("StandardMaterial3D_kh1bq")
+surface_material_override/2 = SubResource("StandardMaterial3D_lq3le")
+script = ExtResource("3_668tx")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("BoxShape3D_egh37")
+
+[node name="Timer" type="Timer" parent="."]
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
