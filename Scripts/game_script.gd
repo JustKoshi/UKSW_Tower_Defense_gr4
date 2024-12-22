@@ -536,7 +536,7 @@ func _on_enemy_spawner_wave_ended() -> void:
 			var target_position = child.position
 			target_position.y = UI.original_positions[child]
 			child.position = target_position
-	enemy_spawner.current_wave+=9
+	enemy_spawner.current_wave+=1
 	enemy_spawner.update_wave_enemy_count()
 	UI.update_enemy_count_labels(enemy_spawner.basic_enemies_per_wave, enemy_spawner.fast_enemies_per_wave, 0)
 	if game:
