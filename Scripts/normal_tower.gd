@@ -36,8 +36,8 @@ func _ready() -> void:
 	wheat_to_upgrade_lvl3 = 50
 	firerate = 1/get_node("Shooting CD").wait_time
 	get_node("MobDetector").get_child(0).shape.radius = 2*tower_range+1
-	get_node("MobDetector").get_child(1).mesh.radius = 2*tower_range+1
-	get_node("MobDetector").get_child(1).mesh.height = 2 * get_node("MobDetector").get_child(1).mesh.radius
+	get_node("MobDetector").get_child(1).mesh.top_radius = 2*tower_range+1
+	get_node("MobDetector").get_child(1).mesh.bottom_radius = 2*tower_range+1
 func _process(_delta: float) -> void:
 	#print(get_node("MobDetector").get_child(0).shape.radius)
 	#print(get_node("MobDetector").get_child(1).mesh.radius)
@@ -109,8 +109,9 @@ func upgrade() ->void:
 		self.mesh = mesh_lvl2
 		self.scale_object_local(Vector3(1.2,1.2,1.2))
 		get_node("MobDetector").get_child(0).shape.radius = (2*tower_range+1)/1.2
-		get_node("MobDetector").get_child(1).mesh.radius = (2*tower_range+1)/1.2
-		get_node("MobDetector").get_child(1).mesh.height = 2 * get_node("MobDetector").get_child(1).mesh.radius
+		get_node("MobDetector").get_child(1).mesh.top_radius = (2*tower_range+1)/1.2
+		get_node("MobDetector").get_child(1).mesh.bottom_radius = (2*tower_range+1)/1.2
+		get_node("MobDetector").get_child(1).position.y = -1.6
 	if level == 2:
 		health = 8
 		damage = 33
@@ -120,6 +121,7 @@ func upgrade() ->void:
 		self.mesh = mesh_lvl3
 		self.scale_object_local(Vector3(1.2,1.2,1.2))
 		get_node("MobDetector").get_child(0).shape.radius = (2*tower_range+1)/1.2/1.2
-		get_node("MobDetector").get_child(1).mesh.radius = (2*tower_range+1)/1.2/1.2
-		get_node("MobDetector").get_child(1).mesh.height = 2 * get_node("MobDetector").get_child(1).mesh.radius
+		get_node("MobDetector").get_child(1).mesh.top_radius = (2*tower_range+1)/1.2/1.2
+		get_node("MobDetector").get_child(1).mesh.bottom_radius = (2*tower_range+1)/1.2/1.2
+		get_node("MobDetector").get_child(1).position.y = -1.38
 	level += 1

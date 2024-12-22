@@ -13,7 +13,7 @@ extends Control
 var resource_group = ButtonGroup.new()
 var defence_group = ButtonGroup.new()
 @onready var defence_buttons= [$"Bottom_panel/Defence buildings/HBoxContainer/Walls build button", $"Bottom_panel/Defence buildings/HBoxContainer/Normal Tower button", $"Bottom_panel/Defence buildings/HBoxContainer/Freeze Tower button", $"Bottom_panel/Defence buildings/HBoxContainer/AOE Tower"]
-@onready var resource_buttons = [$"Bottom_panel/Resource buildings/HBoxContainer/Wood building", $"Bottom_panel/Resource buildings/HBoxContainer/Wheat building", $"Bottom_panel/Resource buildings/HBoxContainer/Stone building", $"Bottom_panel/Resource buildings/HBoxContainer/Beer building" ]
+@onready var resource_buttons = [$"Bottom_panel/Resource buildings/HBoxContainer/Wood building", $"Bottom_panel/Resource buildings/HBoxContainer/Wheat building", $"Bottom_panel/Resource buildings/HBoxContainer/Stone building", $"Bottom_panel/Resource buildings/HBoxContainer/Beer building", $"Bottom_panel/Resource buildings/HBoxContainer/Workers" ]
 # Called when the node enters the scene tree for the first time.
 
 @onready var game_script = get_parent().get_parent()
@@ -22,6 +22,7 @@ var defence_group = ButtonGroup.new()
 @onready var wheat_count_label: Label = $"EQ container/MarginContainer/GridContainer/Wheat count label"
 @onready var stone_count_label: Label = $"EQ container/MarginContainer/GridContainer/Stone count label"
 @onready var beer_count_label: Label = $"EQ container/MarginContainer/GridContainer/Beer count label"
+@onready var worker_count_label : Label = $"EQ container/MarginContainer/GridContainer/Worker count label"
 
 var full_heart = load("res://Resources/Icons/Heart.png")
 var empty_heart = load("res://Resources/Icons/black_heart.png")
@@ -35,6 +36,7 @@ var ui_tower_panel
 
 var original_positions = {}
 var panel_number
+@onready var locked_buttons = [$"Bottom_panel/Resource buildings/HBoxContainer/Workers", $"Bottom_panel/Resource buildings/HBoxContainer/Wheat building", $"Bottom_panel/Resource buildings/HBoxContainer/Beer building"]
 
 func _ready() -> void:
 	panel_info_holder = null
@@ -50,6 +52,18 @@ func _ready() -> void:
 		button.toggled.connect(_on_toggled.bind(button))
 		button.toggled.connect(_on_defence_button_toggled.bind(button))
 
+	#locking stuff that is unlockable during the game
+	for button in locked_buttons:
+		button.disabled = true
+		for child in button.get_children():
+			if child is TextureRect:
+				if not original_positions.has(child):
+					original_positions[child] = child.position.y
+			var target_position = child.position
+			if button.disabled:
+				target_position.y = original_positions[child] + 20
+				child.position = target_position
+
 	#Setting up hearts
 	for i in range(game_script.max_health):
 		var heart = TextureRect.new()
@@ -64,6 +78,13 @@ func _process(_delta: float) -> void:
 	stone_count_label.set_text("%d" % game_script.game_resources.stone)
 	wheat_count_label.set_text("%d" % game_script.game_resources.wheat)
 	beer_count_label.set_text("%d" % game_script.game_resources.beer)
+	worker_count_label.set_text("%d/%d" % [game_script.game_resources.used_workers, game_script.game_resources.workers])
+		
+	if panel_info_holder != null and panel_number == 7:
+		panel_info_holder.get_child(7).get_child(1).get_child(2).get_node("Wood").text = str(game_script.number_of_tetris_placed + 1)
+		panel_info_holder.get_child(7).get_child(1).get_child(2).get_node("Stone").text = str(game_script.number_of_tetris_placed + 1)
+	if panel_info_holder != null and panel_number == 8:
+		panel_info_holder.get_child(8).get_child(1).get_child(2).get_node("Wheat").text = str(30 * (game_script.game_resources.workers - 2))
 
 func update_enemy_count_labels(basic_enemy_num , fast_enemy_num, boss_num):
 	basic_enemy_count.text = str(basic_enemy_num)
@@ -148,6 +169,9 @@ func _on_resource_button_toggled(is_pressed: bool, button):
 		"Beer building":
 			game_script.beer_build = is_pressed
 			panel_number = 6
+		"Workers":
+			#kup workera
+			panel_number = 8
 	if panel_number >= 0:
 		if panel_info_holder != null:
 			panel_info_holder.free()
@@ -168,7 +192,7 @@ func _on_defence_button_toggled(is_pressed: bool, button):
 	match button.name:
 		"Walls build button":
 			game_script.walls_build = is_pressed
-			panel_number = -1
+			panel_number = 7
 		"Normal Tower button":
 			game_script.normal_tower_build = is_pressed
 			panel_number=0

@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://dm7bi6l3wt8ua"]
+[gd_scene load_steps=20 format=3 uid="uid://dm7bi6l3wt8ua"]
 
 [ext_resource type="Theme" uid="uid://dik3dswqv7f6y" path="res://Resources/Themes/UI_info_panels_theme.tres" id="1_nocna"]
 [ext_resource type="Texture2D" uid="uid://p8bjhb8fenuq" path="res://Resources/Icons/arrow.png" id="2_f84b4"]
@@ -17,6 +17,8 @@
 [ext_resource type="Texture2D" uid="uid://dh0en8kilvaj1" path="res://Resources/Icons/production reduced.png" id="15_20pmp"]
 [ext_resource type="Texture2D" uid="uid://dffvsvd3mlbeh" path="res://Resources/Icons/wheat.png" id="16_o1gu3"]
 [ext_resource type="Texture2D" uid="uid://irc84uh4ceqx" path="res://Resources/Icons/beer.png" id="17_pwa12"]
+[ext_resource type="Texture2D" uid="uid://b0kndl2r5na8v" path="res://Resources/Icons/Tetris.png" id="19_3m6pb"]
+[ext_resource type="Texture2D" uid="uid://e6o22e318htk" path="res://Resources/Icons/worker.png" id="19_goru2"]
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -30,6 +32,7 @@ offset_bottom = -5.0
 grow_vertical = 0
 
 [node name="Normal tower panel" type="PanelContainer" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
@@ -161,7 +164,7 @@ size_flags_horizontal = 3
 
 [node name="Dmg" type="Label" parent="Normal tower panel/VBoxContainer/GridContainer"]
 layout_mode = 2
-text = "30"
+text = "20"
 
 [node name="Spring" type="Control" parent="Normal tower panel/VBoxContainer/GridContainer"]
 layout_mode = 2
@@ -266,7 +269,7 @@ text = "Cost:"
 
 [node name="Wood" type="Label" parent="Normal tower panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "10"
+text = "5"
 
 [node name="TextureRect" type="TextureRect" parent="Normal tower panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -545,7 +548,7 @@ text = "Cost:"
 
 [node name="Wood" type="Label" parent="Freeze Tower Panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "25"
+text = "8"
 
 [node name="TextureRect" type="TextureRect" parent="Freeze Tower Panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -554,7 +557,7 @@ expand_mode = 2
 
 [node name="Stone" type="Label" parent="Freeze Tower Panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "15"
+text = "8"
 
 [node name="TextureRect2" type="TextureRect" parent="Freeze Tower Panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -944,7 +947,7 @@ expand_mode = 2
 
 [node name="Production" type="Label" parent="Wood building panel/VBoxContainer/HBoxContainer3"]
 layout_mode = 2
-text = "1"
+text = "2"
 
 [node name="Spring2" type="Control" parent="Wood building panel/VBoxContainer"]
 layout_mode = 2
@@ -961,7 +964,7 @@ expand_mode = 2
 
 [node name="Production_reduced" type="Label" parent="Wood building panel/VBoxContainer/HBoxContainer4"]
 layout_mode = 2
-text = "0.5"
+text = "1"
 
 [node name="Spring3" type="Control" parent="Wood building panel/VBoxContainer"]
 layout_mode = 2
@@ -975,23 +978,13 @@ size_flags_horizontal = 4
 layout_mode = 2
 text = "Cost:"
 
-[node name="Wood" type="Label" parent="Wood building panel/VBoxContainer/HBoxContainer"]
+[node name="People" type="Label" parent="Wood building panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "3"
+text = "1"
 
 [node name="TextureRect" type="TextureRect" parent="Wood building panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-texture = ExtResource("10_fgvhj")
-expand_mode = 2
-
-[node name="Stone" type="Label" parent="Wood building panel/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-text = "15
-"
-
-[node name="TextureRect2" type="TextureRect" parent="Wood building panel/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-texture = ExtResource("11_y72v8")
+texture = ExtResource("19_goru2")
 expand_mode = 2
 
 [node name="Wheat building panel" type="PanelContainer" parent="."]
@@ -1098,7 +1091,7 @@ expand_mode = 2
 
 [node name="Production" type="Label" parent="Wheat building panel/VBoxContainer/HBoxContainer3"]
 layout_mode = 2
-text = "1"
+text = "2"
 
 [node name="Spring2" type="Control" parent="Wheat building panel/VBoxContainer"]
 layout_mode = 2
@@ -1115,7 +1108,7 @@ expand_mode = 2
 
 [node name="Production_reduced" type="Label" parent="Wheat building panel/VBoxContainer/HBoxContainer4"]
 layout_mode = 2
-text = "0.5"
+text = "1"
 
 [node name="Spring3" type="Control" parent="Wheat building panel/VBoxContainer"]
 layout_mode = 2
@@ -1129,23 +1122,13 @@ size_flags_horizontal = 4
 layout_mode = 2
 text = "Cost:"
 
-[node name="Wood" type="Label" parent="Wheat building panel/VBoxContainer/HBoxContainer"]
+[node name="People" type="Label" parent="Wheat building panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "10"
+text = "1"
 
 [node name="TextureRect" type="TextureRect" parent="Wheat building panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-texture = ExtResource("10_fgvhj")
-expand_mode = 2
-
-[node name="Stone" type="Label" parent="Wheat building panel/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-text = "10
-"
-
-[node name="TextureRect2" type="TextureRect" parent="Wheat building panel/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-texture = ExtResource("11_y72v8")
+texture = ExtResource("19_goru2")
 expand_mode = 2
 
 [node name="Stone building panel" type="PanelContainer" parent="."]
@@ -1252,7 +1235,7 @@ expand_mode = 2
 
 [node name="Production" type="Label" parent="Stone building panel/VBoxContainer/HBoxContainer3"]
 layout_mode = 2
-text = "1"
+text = "2"
 
 [node name="Spring2" type="Control" parent="Stone building panel/VBoxContainer"]
 layout_mode = 2
@@ -1269,7 +1252,7 @@ expand_mode = 2
 
 [node name="Production_reduced" type="Label" parent="Stone building panel/VBoxContainer/HBoxContainer4"]
 layout_mode = 2
-text = "0.5"
+text = "1"
 
 [node name="Spring3" type="Control" parent="Stone building panel/VBoxContainer"]
 layout_mode = 2
@@ -1283,23 +1266,13 @@ size_flags_horizontal = 4
 layout_mode = 2
 text = "Cost:"
 
-[node name="Wood" type="Label" parent="Stone building panel/VBoxContainer/HBoxContainer"]
+[node name="People" type="Label" parent="Stone building panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "15"
+text = "1"
 
 [node name="TextureRect" type="TextureRect" parent="Stone building panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-texture = ExtResource("10_fgvhj")
-expand_mode = 2
-
-[node name="Stone" type="Label" parent="Stone building panel/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-text = "3
-"
-
-[node name="TextureRect2" type="TextureRect" parent="Stone building panel/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-texture = ExtResource("11_y72v8")
+texture = ExtResource("19_goru2")
 expand_mode = 2
 
 [node name="Beer building panel" type="PanelContainer" parent="."]
@@ -1406,7 +1379,7 @@ expand_mode = 2
 
 [node name="Production" type="Label" parent="Beer building panel/VBoxContainer/HBoxContainer3"]
 layout_mode = 2
-text = "1"
+text = "2"
 
 [node name="Spring2" type="Control" parent="Beer building panel/VBoxContainer"]
 layout_mode = 2
@@ -1423,7 +1396,7 @@ expand_mode = 2
 
 [node name="Production_reduced" type="Label" parent="Beer building panel/VBoxContainer/HBoxContainer4"]
 layout_mode = 2
-text = "0.5"
+text = "1"
 
 [node name="Spring3" type="Control" parent="Beer building panel/VBoxContainer"]
 layout_mode = 2
@@ -1437,24 +1410,163 @@ size_flags_horizontal = 4
 layout_mode = 2
 text = "Cost:"
 
-[node name="Wood" type="Label" parent="Beer building panel/VBoxContainer/HBoxContainer"]
+[node name="People" type="Label" parent="Beer building panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "100"
+text = "1"
 
 [node name="TextureRect" type="TextureRect" parent="Beer building panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("19_goru2")
+expand_mode = 2
+
+[node name="Tetris building panel" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = -164.0
+offset_right = 172.0
+offset_bottom = -34.0
+grow_vertical = 0
+scale = Vector2(1, 1.17572)
+theme = ExtResource("1_nocna")
+script = ExtResource("4_kjbb3")
+
+[node name="MarginContainer" type="MarginContainer" parent="Tetris building panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Tetris building panel"]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Tetris building panel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="TextureRect" type="TextureRect" parent="Tetris building panel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+texture = ExtResource("19_3m6pb")
+expand_mode = 3
+
+[node name="Name" type="Label" parent="Tetris building panel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Wall"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextureRect2" type="TextureRect" parent="Tetris building panel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+texture = ExtResource("19_3m6pb")
+expand_mode = 3
+
+[node name="Spring3" type="Control" parent="Tetris building panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Tetris building panel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Label" type="Label" parent="Tetris building panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Cost:"
+
+[node name="Wood" type="Label" parent="Tetris building panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "1"
+
+[node name="TextureRect" type="TextureRect" parent="Tetris building panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 texture = ExtResource("10_fgvhj")
 expand_mode = 2
 
-[node name="Stone" type="Label" parent="Beer building panel/VBoxContainer/HBoxContainer"]
+[node name="Stone" type="Label" parent="Tetris building panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "150
-"
+text = "1"
 
-[node name="TextureRect2" type="TextureRect" parent="Beer building panel/VBoxContainer/HBoxContainer"]
+[node name="TextureRect2" type="TextureRect" parent="Tetris building panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 texture = ExtResource("11_y72v8")
 expand_mode = 2
+
+[node name="Spring2" type="Control" parent="Tetris building panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Workers buying panel" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = -164.0
+offset_right = 172.0
+offset_bottom = -34.0
+grow_vertical = 0
+scale = Vector2(1, 1.17572)
+theme = ExtResource("1_nocna")
+script = ExtResource("4_kjbb3")
+
+[node name="MarginContainer" type="MarginContainer" parent="Workers buying panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Workers buying panel"]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Workers buying panel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="TextureRect" type="TextureRect" parent="Workers buying panel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+texture = ExtResource("19_goru2")
+expand_mode = 3
+
+[node name="Name" type="Label" parent="Workers buying panel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Worker"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextureRect2" type="TextureRect" parent="Workers buying panel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+texture = ExtResource("19_goru2")
+expand_mode = 3
+
+[node name="Spring3" type="Control" parent="Workers buying panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Workers buying panel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Label" type="Label" parent="Workers buying panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Cost:"
+
+[node name="Wheat" type="Label" parent="Workers buying panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "1"
+
+[node name="TextureRect" type="TextureRect" parent="Workers buying panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("16_o1gu3")
+expand_mode = 2
+
+[node name="Spring2" type="Control" parent="Workers buying panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
 
 [connection signal="mouse_entered" from="Normal tower panel/VBoxContainer/GridContainer/Dmg_png" to="Normal tower panel" method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="Normal tower panel/VBoxContainer/GridContainer/Dmg_png" to="Normal tower panel" method="_on_mouse_exited"]

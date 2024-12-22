@@ -16,11 +16,13 @@ size = Vector3(0.919067, 1.57929, 1)
 [sub_resource type="SphereShape3D" id="SphereShape3D_j4ndu"]
 radius = 3.0
 
-[sub_resource type="SphereMesh" id="SphereMesh_8ek6l"]
-radius = 3.0
-height = 6.0
+[sub_resource type="CylinderMesh" id="CylinderMesh_kvpl4"]
+top_radius = 2.5
+bottom_radius = 2.5
+height = 0.001
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vtmmk"]
+render_priority = 1
 transparency = 1
 albedo_color = Color(0, 0, 0, 0.537255)
 
@@ -47,7 +49,8 @@ shape = SubResource("SphereShape3D_j4ndu")
 disabled = true
 
 [node name="Color_range" type="MeshInstance3D" parent="MobDetector"]
-mesh = SubResource("SphereMesh_8ek6l")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2, 0)
+mesh = SubResource("CylinderMesh_kvpl4")
 surface_material_override/0 = SubResource("StandardMaterial3D_vtmmk")
 
 [node name="Damage CD" type="Timer" parent="."]

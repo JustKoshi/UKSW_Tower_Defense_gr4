@@ -63,7 +63,9 @@ var game_resources = {
 	"wood": 0,
 	"stone": 0,
 	"wheat": 0,
-	"beer": 0
+	"beer": 0,
+	"used_workers": 0,
+	"workers": 0
 }
 var max_health = 15
 var current_health
@@ -71,6 +73,8 @@ var game = true
 
 var wave_number = 1
 var is_build_phase = true
+
+var number_of_tetris_placed
 
 var texture_png = load("res://Resources/Towers/hexagons_medieval.png")
 var red_mat = StandardMaterial3D.new()
@@ -86,6 +90,8 @@ func _ready() -> void:
 	GameOver.visible = false
 	$CanvasLayer/UI/GameOverScreen/VBoxContainer/MainMenu_button.disabled = true
 	$CanvasLayer/UI/GameOverScreen/VBoxContainer/PlayAgain_button.disabled = true
+	number_of_tetris_placed = 0
+	game_resources.workers = 2
 	red_mat.albedo_color = Color(1,0,0,0.55)
 	normal_mat.albedo_color = Color(1,1,1,0.55)
 	normal_mat_range.albedo_color = Color(0,0,0,0.55)
@@ -225,6 +231,7 @@ func place_block_on_click():
 		grid_map.place_tetris_block(grid_pos, grid_map.current_shape)
 		convert_path_to_local()
 		enemy_spawner.set_path(short_path)
+		number_of_tetris_placed += 1
 
 
 #function places tower on raycast position
@@ -503,7 +510,33 @@ func reset_build_timer():
 #when end wave signal is recived resets build timer
 func _on_enemy_spawner_wave_ended() -> void:
 	#print("Przekazano sygnal")
-	enemy_spawner.current_wave+=1
+	if enemy_spawner.current_wave == 5:
+		#odblokuj farme
+		print("Farm unlocked")
+		$"CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Wheat building".disabled = false
+		$"CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Workers".disabled = false
+		for button in UI.locked_buttons:
+			for child in button.get_children():
+				if child is TextureRect:
+					if not UI.original_positions.has(child):
+						UI.original_positions[child] = child.position.y
+				var target_position = child.position
+				if not button.disabled:
+					target_position.y = UI.original_positions[child]
+					child.position = target_position
+		game_resources.workers += 1
+	elif enemy_spawner.current_wave == 10:
+		#odblokuj piwo i skille
+		print("Ber unlocked")
+		$"CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Beer building".disabled = false
+		for child in $"CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Beer building".get_children():
+			if child is TextureRect:
+				if not UI.original_positions.has(child):
+					UI.original_positions[child] = child.position.y
+			var target_position = child.position
+			target_position.y = UI.original_positions[child]
+			child.position = target_position
+	enemy_spawner.current_wave+=9
 	enemy_spawner.update_wave_enemy_count()
 	UI.update_enemy_count_labels(enemy_spawner.basic_enemies_per_wave, enemy_spawner.fast_enemies_per_wave, 0)
 	if game:

@@ -33,7 +33,7 @@ func change_speed(value:float)->void:
 #Function that happens when mob is struck with arrow/spell/canon
 func take_damage(dmg: int) -> void:
 	health-=dmg
-	if(health<=0):
+	if health<=0 and (health+dmg) > 0:
 		get_parent_node_3d().delete_object()
 
 #Resetting attacking 

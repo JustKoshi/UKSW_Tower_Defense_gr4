@@ -18,11 +18,13 @@ size = Vector3(0.86119, 2.2778, 1)
 [sub_resource type="SphereShape3D" id="SphereShape3D_ke3xq"]
 radius = 5.0
 
-[sub_resource type="SphereMesh" id="SphereMesh_6lwtx"]
-radius = 5.0
-height = 10.0
+[sub_resource type="CylinderMesh" id="CylinderMesh_fevqt"]
+top_radius = 5.0
+bottom_radius = 5.0
+height = 0.001
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ksthd"]
+render_priority = 2
 transparency = 1
 albedo_color = Color(0, 0, 0, 0.537255)
 
@@ -46,7 +48,8 @@ shape = SubResource("BoxShape3D_ccfuv")
 shape = SubResource("SphereShape3D_ke3xq")
 
 [node name="Ran" type="MeshInstance3D" parent="MobDetector"]
-mesh = SubResource("SphereMesh_6lwtx")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2, 0)
+mesh = SubResource("CylinderMesh_fevqt")
 surface_material_override/0 = SubResource("StandardMaterial3D_ksthd")
 
 [node name="Shooting CD" type="Timer" parent="."]

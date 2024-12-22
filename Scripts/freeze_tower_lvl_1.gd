@@ -37,8 +37,8 @@ func _ready() -> void:
 	wheat_to_upgrade_lvl3 = 75
 	firerate = round_to_decimals(1/get_node("Damage CD").wait_time,2)
 	get_node("MobDetector").get_child(0).shape.radius = 2*tower_range+1
-	get_node("MobDetector").get_child(1).mesh.radius = 2*tower_range+1
-	get_node("MobDetector").get_child(1).mesh.height = 2 * get_node("MobDetector").get_child(1).mesh.radius
+	get_node("MobDetector").get_child(1).mesh.top_radius = 2*tower_range+1
+	get_node("MobDetector").get_child(1).mesh.bottom_radius = 2*tower_range+1
 
 func _process(_delta: float) -> void:
 	for i in enemies:
@@ -95,8 +95,9 @@ func upgrade() ->void:
 		self.mesh = mesh_lvl2
 		self.scale_object_local(Vector3(1.2,1.2,1.2))
 		get_node("MobDetector").get_child(0).shape.radius = (2*tower_range+1)/1.2
-		get_node("MobDetector").get_child(1).mesh.radius = (2*tower_range+1)/1.2
-		get_node("MobDetector").get_child(1).mesh.height = 2 * get_node("MobDetector").get_child(1).mesh.radius
+		get_node("MobDetector").get_child(1).mesh.top_radius = (2*tower_range+1)/1.2
+		get_node("MobDetector").get_child(1).mesh.bottom_radius = (2*tower_range+1)/1.2
+		get_node("MobDetector").get_child(1).position.y = -1.6
 		var mat = hat.get_surface_override_material(0)
 		var mat_dup = mat.duplicate()
 		mat_dup.albedo_texture = mage_lvl2
@@ -112,8 +113,9 @@ func upgrade() ->void:
 		self.mesh = mesh_lvl3
 		self.scale_object_local(Vector3(1.2,1.2,1.2))
 		get_node("MobDetector").get_child(0).shape.radius = (2*tower_range+1)/1.2/1.2
-		get_node("MobDetector").get_child(1).mesh.radius = (2*tower_range+1)/1.2/1.2
-		get_node("MobDetector").get_child(1).mesh.height = 2 * get_node("MobDetector").get_child(1).mesh.radius
+		get_node("MobDetector").get_child(1).mesh.top_radius = (2*tower_range+1)/1.2/1.2
+		get_node("MobDetector").get_child(1).mesh.bottom_radius = (2*tower_range+1)/1.2/1.2
+		get_node("MobDetector").get_child(1).position.y = -1.38
 		var mat = hat.get_surface_override_material(0)
 		var mat_dup = mat.duplicate()
 		mat_dup.albedo_texture = mage_lvl3
