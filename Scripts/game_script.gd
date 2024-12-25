@@ -18,6 +18,7 @@ extends Node3D
 @onready var enemy_spawner = $"Enemy Spawner"
 
 @onready var UI = $CanvasLayer/UI
+@onready var menu: Control = $CanvasLayer/Menu
 @onready var GameOver = $CanvasLayer/UI/GameOverScreen
 
 var NormalTowerScene = preload("res://Scenes/normal_tower_lvl_1.tscn")
@@ -68,7 +69,8 @@ var game_resources = {
 }
 var max_health = 15
 var current_health
-var game = true
+var game = false
+var game_over = false
 
 var wave_number = 1
 var is_build_phase = true
@@ -83,7 +85,7 @@ var normal_mat_range = StandardMaterial3D.new()
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	current_health = max_health
-	game = true
+	game = false
 	GameOver.visible = false
 	$CanvasLayer/UI/GameOverScreen/VBoxContainer/MainMenu_button.disabled = true
 	$CanvasLayer/UI/GameOverScreen/VBoxContainer/PlayAgain_button.disabled = true
@@ -114,18 +116,18 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	update_resource_timers()
-	if Input.is_action_just_pressed("Camera_F1"):
+	if Input.is_action_just_pressed("Camera_F1") and game:
 		if current_cam_index >0 :
 			current_cam_index -= 1
 		current_cam_index = current_cam_index%3
 		set_camera()
 		
-	elif Input.is_action_just_pressed("Camera_F2"):
+	elif Input.is_action_just_pressed("Camera_F2") and game:
 		current_cam_index += 1
 		current_cam_index = current_cam_index%3
 		set_camera()
 		
-	elif Input.is_action_just_pressed("Camera_F9"):
+	elif Input.is_action_just_pressed("Camera_F9") and game:
 		current_cam_index = 1
 		set_camera()
 		if !coordinates_check_mode:
@@ -510,6 +512,7 @@ func take_damage(dmg) -> void:
 	if current_health <= 0:
 		print("GAMEOVER GG")
 		game = false
+		game_over = true
 		GameOver.visible = true
 		$CanvasLayer/UI/GameOverScreen/VBoxContainer/GameOverText.text = "Game Over!\nYou failed at\n wave number\n %d." % enemy_spawner.current_wave
 		$CanvasLayer/UI/GameOverScreen/VBoxContainer/MainMenu_button.disabled = false
@@ -546,3 +549,16 @@ func _on_skip_button_pressed() -> void:
 	build_timer.stop()
 	prepare_wave()
 	
+func start_game():
+	game = true
+	build_timer.start()
+	UI.visible = true
+	menu.visible = false
+
+func _on_play_pressed() -> void:
+	start_game()
+
+
+
+func _on_quit_pressed() -> void:
+	get_tree().quit()
