@@ -84,10 +84,11 @@ func _ready() -> void:
 		tile_state.append(row)
 	for i in range(10):
 		castle_state.append([0,0,0,0])#array[10][4]
-	generate_start_end_points()
+	var end_point_w = generate_start_end_points()
 	shortest_path = find_shortest_path(start_point, end_point)
 	convert_path_to_grid_map()
 	mark_shortest_path()
+	gen_walls(end_point_w)
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
@@ -241,7 +242,7 @@ func place_tetris_block(position_tetris: Vector3, shape):
 			#print(row)
 		
 #generates start/end points and places them in map
-func generate_start_end_points():
+func generate_start_end_points()->Vector3:
 	end_point = Vector3((-map_size)-1 ,0, randi()%10 - map_size)
 	start_point = Vector3(map_size,0, randi()%10 - map_size)
 	self.set_cell_item(start_point, 4)
@@ -250,7 +251,23 @@ func generate_start_end_points():
 	end_point = Vector3(end_point.x+1,end_point.y+1, end_point.z)
 	print("Start_point" + str(start_point))
 	print("end_point" + str(end_point))
+	return end_point
+
+func gen_walls(end_point:Vector3):
+	for x in range(-10,-6):
+		set_cell_item(Vector3(x,1,-6),12,10)
+		set_cell_item(Vector3(x,1,5),12)
+	for x in range(-5,5):
+		set_cell_item(Vector3(-11,1,x),12,22)
+		set_cell_item(Vector3(-6,1,x),12,16)
+	set_cell_item(Vector3(-11,1,-6),13,10)
+	set_cell_item(Vector3(-11,1,5),13,22)
+	set_cell_item(Vector3(-6,1,-6),13,16)
+	set_cell_item(Vector3(-6,1,5),13)
 	
+	var end=end_point
+	end.x-=1
+	set_cell_item(end,14,16)
 
 #func print_used_tiles():
 	#for x in range(-5, 5):
@@ -349,15 +366,16 @@ func can_place_resource(grid_pos: Vector3, shape)->bool:
 		#print(tile_pos)
 		if not is_within_castle(new_pos):
 			flag = false
-		elif castle_state[tile_pos.z][tile_pos.x] in [1,2]:
+		elif castle_state[tile_pos.z][tile_pos.x] in [1,2,3,4]:
 			flag = false
 	return flag
 
 func place_resource_in_tilemap(col_point: Vector3, resource_type):
 	var grid_pos = self.local_to_map(col_point)
 	var tile_pos = Vector3(grid_pos.x+10, grid_pos.y, grid_pos.z+5)
-
 	castle_state[tile_pos.z][tile_pos.x] = resource_type
-	castle_state[tile_pos.z+1][tile_pos.x] = resource_type
-	castle_state[tile_pos.z+1][tile_pos.x+1] = resource_type
-	castle_state[tile_pos.z][tile_pos.x+1] = resource_type
+	if resource_type in [1,2,3]:
+		castle_state[tile_pos.z+1][tile_pos.x] = resource_type
+		castle_state[tile_pos.z][tile_pos.x+1] = resource_type
+	if resource_type in [1,2]:
+		castle_state[tile_pos.z+1][tile_pos.x+1] = resource_type

@@ -1,0 +1,22 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://dxek417vtuigu"
+path="res://.godot/imported/uploads_files_2755137_FarmLowpoly.obj-037f3c2d625a87133a03419ede8691f2.mesh"
+
+[deps]
+
+files=["res://.godot/imported/uploads_files_2755137_FarmLowpoly.obj-037f3c2d625a87133a03419ede8691f2.mesh"]
+
+source_file="res://Resources/Resource_buildings/uploads_files_2755137_FarmLowpoly.obj"
+dest_files=["res://.godot/imported/uploads_files_2755137_FarmLowpoly.obj-037f3c2d625a87133a03419ede8691f2.mesh", "res://.godot/imported/uploads_files_2755137_FarmLowpoly.obj-037f3c2d625a87133a03419ede8691f2.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true
+force_disable_mesh_compression=false

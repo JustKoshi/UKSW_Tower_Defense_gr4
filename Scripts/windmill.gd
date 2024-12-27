@@ -7,7 +7,7 @@ var resource_type = "wheat"
 
 var generation_depleted = false
 
-var shape = [Vector3(0,0,0)]
+var shape = [Vector3(0,0,0), Vector3(1,0,0), Vector3(0,0,1)]
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

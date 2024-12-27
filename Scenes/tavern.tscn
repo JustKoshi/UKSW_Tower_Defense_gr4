@@ -1,0 +1,32 @@
+[gd_scene load_steps=7 format=3 uid="uid://de8xqixux6pjw"]
+
+[ext_resource type="ArrayMesh" uid="uid://bxq628cq27td5" path="res://Resources/Resource_buildings/building_tavern_blue.obj" id="1_wgmq3"]
+[ext_resource type="Texture2D" uid="uid://b1ms4h5mcmjd0" path="res://Resources/Towers/hexagons_medieval.png" id="2_saliw"]
+[ext_resource type="Script" path="res://Scripts/tavern.gd" id="3_75xxk"]
+[ext_resource type="ArrayMesh" uid="uid://qf8dpkg4ccjt" path="res://Resources/Resource_buildings/exclamation_mark.obj" id="4_7cvg5"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_u5eps"]
+albedo_texture = ExtResource("2_saliw")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_701gx"]
+size = Vector3(1, 2, 1)
+
+[node name="Tavern" type="MeshInstance3D"]
+mesh = ExtResource("1_wgmq3")
+surface_material_override/0 = SubResource("StandardMaterial3D_u5eps")
+script = ExtResource("3_75xxk")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("BoxShape3D_701gx")
+
+[node name="Timer" type="Timer" parent="."]
+
+[node name="exclamation_mark" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 2.36087, 0)
+visible = false
+mesh = ExtResource("4_7cvg5")
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

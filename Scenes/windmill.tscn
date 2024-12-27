@@ -1,32 +1,84 @@
-[gd_scene load_steps=8 format=3 uid="uid://dwxruv2v5bxyy"]
+[gd_scene load_steps=12 format=3 uid="uid://dwxruv2v5bxyy"]
 
-[ext_resource type="ArrayMesh" uid="uid://rqyixxv3cod4" path="res://Resources/Resource_buildings/untitled.obj" id="1_21x5w"]
+[ext_resource type="ArrayMesh" uid="uid://dxek417vtuigu" path="res://Resources/Resource_buildings/uploads_files_2755137_FarmLowpoly.obj" id="1_yne08"]
 [ext_resource type="Texture2D" uid="uid://b1ms4h5mcmjd0" path="res://Resources/Towers/hexagons_medieval.png" id="2_n43q7"]
 [ext_resource type="Script" path="res://Scripts/windmill.gd" id="3_668tx"]
+[ext_resource type="ArrayMesh" uid="uid://qf8dpkg4ccjt" path="res://Resources/Resource_buildings/exclamation_mark.obj" id="4_4xj14"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ry6ro"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_q6ahe"]
+albedo_color = Color(0.898039, 0.905882, 0.380392, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ecotp"]
+albedo_color = Color(0.513726, 0.427451, 0.294118, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0njvp"]
+albedo_color = Color(0.513726, 0.427451, 0.294118, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nnp2n"]
 albedo_texture = ExtResource("2_n43q7")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kh1bq"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_o3vot"]
 albedo_texture = ExtResource("2_n43q7")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lq3le"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_n5o0u"]
 albedo_texture = ExtResource("2_n43q7")
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_egh37"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_onp8n"]
+size = Vector3(1.99792, 2.37891, 1)
 
 [node name="Windmill" type="MeshInstance3D"]
-mesh = ExtResource("1_21x5w")
-surface_material_override/0 = SubResource("StandardMaterial3D_ry6ro")
-surface_material_override/1 = SubResource("StandardMaterial3D_kh1bq")
-surface_material_override/2 = SubResource("StandardMaterial3D_lq3le")
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 0, 0, 0)
+mesh = ExtResource("1_yne08")
+surface_material_override/0 = SubResource("StandardMaterial3D_q6ahe")
+surface_material_override/1 = SubResource("StandardMaterial3D_q6ahe")
+surface_material_override/2 = SubResource("StandardMaterial3D_q6ahe")
+surface_material_override/3 = SubResource("StandardMaterial3D_q6ahe")
+surface_material_override/4 = SubResource("StandardMaterial3D_q6ahe")
+surface_material_override/5 = SubResource("StandardMaterial3D_q6ahe")
+surface_material_override/6 = SubResource("StandardMaterial3D_q6ahe")
+surface_material_override/7 = SubResource("StandardMaterial3D_q6ahe")
+surface_material_override/8 = SubResource("StandardMaterial3D_q6ahe")
+surface_material_override/9 = SubResource("StandardMaterial3D_q6ahe")
+surface_material_override/10 = SubResource("StandardMaterial3D_q6ahe")
+surface_material_override/11 = SubResource("StandardMaterial3D_q6ahe")
+surface_material_override/12 = SubResource("StandardMaterial3D_q6ahe")
+surface_material_override/13 = SubResource("StandardMaterial3D_q6ahe")
+surface_material_override/14 = SubResource("StandardMaterial3D_q6ahe")
+surface_material_override/15 = SubResource("StandardMaterial3D_q6ahe")
+surface_material_override/16 = SubResource("StandardMaterial3D_ecotp")
+surface_material_override/17 = SubResource("StandardMaterial3D_q6ahe")
+surface_material_override/18 = SubResource("StandardMaterial3D_q6ahe")
+surface_material_override/19 = SubResource("StandardMaterial3D_q6ahe")
+surface_material_override/20 = SubResource("StandardMaterial3D_q6ahe")
+surface_material_override/21 = SubResource("StandardMaterial3D_q6ahe")
+surface_material_override/22 = SubResource("StandardMaterial3D_q6ahe")
+surface_material_override/23 = SubResource("StandardMaterial3D_q6ahe")
+surface_material_override/24 = SubResource("StandardMaterial3D_q6ahe")
+surface_material_override/25 = SubResource("StandardMaterial3D_q6ahe")
+surface_material_override/26 = SubResource("StandardMaterial3D_q6ahe")
+surface_material_override/27 = SubResource("StandardMaterial3D_q6ahe")
+surface_material_override/28 = SubResource("StandardMaterial3D_q6ahe")
+surface_material_override/29 = SubResource("StandardMaterial3D_q6ahe")
+surface_material_override/30 = SubResource("StandardMaterial3D_q6ahe")
+surface_material_override/31 = SubResource("StandardMaterial3D_q6ahe")
+surface_material_override/32 = SubResource("StandardMaterial3D_q6ahe")
+surface_material_override/33 = SubResource("StandardMaterial3D_0njvp")
+surface_material_override/34 = SubResource("StandardMaterial3D_nnp2n")
+surface_material_override/35 = SubResource("StandardMaterial3D_o3vot")
+surface_material_override/36 = SubResource("StandardMaterial3D_n5o0u")
 script = ExtResource("3_668tx")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
-shape = SubResource("BoxShape3D_egh37")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.135437, 0.689453, 0)
+shape = SubResource("BoxShape3D_onp8n")
 
 [node name="Timer" type="Timer" parent="."]
+
+[node name="exclamation_mark" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 2.91175, 0)
+visible = false
+mesh = ExtResource("4_4xj14")
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

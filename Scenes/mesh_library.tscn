@@ -1,6 +1,10 @@
-[gd_scene load_steps=45 format=4 uid="uid://bqvre0kw5rrf0"]
+[gd_scene load_steps=55 format=4 uid="uid://bqvre0kw5rrf0"]
 
 [ext_resource type="Texture2D" uid="uid://cgg27jsswlfig" path="res://Resources/map/gltf/X_tetris_block_Red_X.png" id="1_e01wm"]
+[ext_resource type="ArrayMesh" uid="uid://wrekkod1vcvt" path="res://Resources/map/obj/wall_straight.obj" id="2_tfuic"]
+[ext_resource type="Texture2D" uid="uid://b1ms4h5mcmjd0" path="res://Resources/Towers/hexagons_medieval.png" id="3_nxjgt"]
+[ext_resource type="ArrayMesh" uid="uid://b5n0ugmfmfhoi" path="res://Resources/map/obj/wall_corner.obj" id="4_ahpns"]
+[ext_resource type="ArrayMesh" uid="uid://sp22j88piwvg" path="res://Resources/map/obj/wall_gate.obj" id="5_8tjop"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_atnt8"]
 resource_name = "Green"
@@ -545,6 +549,24 @@ render_priority = 1
 transparency = 1
 albedo_color = Color(1, 1, 1, 0.529412)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7ihp6"]
+albedo_texture = ExtResource("3_nxjgt")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_eusrf"]
+albedo_texture = ExtResource("3_nxjgt")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_h7cfv"]
+albedo_texture = ExtResource("3_nxjgt")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2h112"]
+albedo_texture = ExtResource("3_nxjgt")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_o78pm"]
+albedo_texture = ExtResource("3_nxjgt")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5cw6t"]
+size = Vector3(2, 1.71435, 2)
+
 [node name="mesh_library" type="Node3D"]
 
 [node name="tileMedium_forest" type="MeshInstance3D" parent="."]
@@ -644,6 +666,7 @@ shape = SubResource("ConcavePolygonShape3D_ukwmp")
 
 [node name="tetrisBlock_hover" type="MeshInstance3D" parent="."]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
+visible = false
 mesh = SubResource("ArrayMesh_yvk0p")
 skeleton = NodePath("")
 surface_material_override/0 = SubResource("StandardMaterial3D_f5m63")
@@ -652,3 +675,28 @@ surface_material_override/0 = SubResource("StandardMaterial3D_f5m63")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="tetrisBlock_hover/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_i2w6g")
+
+[node name="wall_straight" type="MeshInstance3D" parent="."]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
+visible = false
+mesh = ExtResource("2_tfuic")
+surface_material_override/0 = SubResource("StandardMaterial3D_7ihp6")
+
+[node name="wall_corner" type="MeshInstance3D" parent="."]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
+visible = false
+mesh = ExtResource("4_ahpns")
+surface_material_override/0 = SubResource("StandardMaterial3D_eusrf")
+
+[node name="wall_gate" type="MeshInstance3D" parent="."]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
+mesh = ExtResource("5_8tjop")
+surface_material_override/0 = SubResource("StandardMaterial3D_h7cfv")
+surface_material_override/1 = SubResource("StandardMaterial3D_2h112")
+surface_material_override/2 = SubResource("StandardMaterial3D_o78pm")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="wall_gate"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="wall_gate/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00292969, 0.727062, 0)
+shape = SubResource("BoxShape3D_5cw6t")
