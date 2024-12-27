@@ -258,6 +258,7 @@ layout_mode = 2
 [node name="Play" type="Button" parent="CanvasLayer/Menu/PanelContainer/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 135)
 layout_mode = 2
+focus_mode = 0
 theme_override_styles/hover = SubResource("StyleBoxTexture_peqyp")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_obu66")
 theme_override_styles/normal = SubResource("StyleBoxTexture_68eu4")
@@ -265,6 +266,7 @@ theme_override_styles/normal = SubResource("StyleBoxTexture_68eu4")
 [node name="Options" type="Button" parent="CanvasLayer/Menu/PanelContainer/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 135)
 layout_mode = 2
+focus_mode = 0
 theme_override_styles/hover = SubResource("StyleBoxTexture_4bge7")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_sqxtv")
 theme_override_styles/normal = SubResource("StyleBoxTexture_h3vm7")
@@ -272,6 +274,7 @@ theme_override_styles/normal = SubResource("StyleBoxTexture_h3vm7")
 [node name="Quit" type="Button" parent="CanvasLayer/Menu/PanelContainer/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 135)
 layout_mode = 2
+focus_mode = 0
 theme_override_styles/hover = SubResource("StyleBoxTexture_s3n3l")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_ysp8k")
 theme_override_styles/normal = SubResource("StyleBoxTexture_vjq7h")
