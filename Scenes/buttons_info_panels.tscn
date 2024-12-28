@@ -900,9 +900,9 @@ stretch_mode = 6
 [node name="PanelContainer" type="PanelContainer" parent="Wood building panel/VBoxContainer/HBoxContainer3/Type_png"]
 layout_mode = 0
 offset_left = 2.0
-offset_top = -7.58705
+offset_top = -8.0
 offset_right = 97.0
-offset_bottom = 43.4129
+offset_bottom = 39.0
 scale = Vector2(1.6479, 0.887325)
 theme = ExtResource("5_rbjlk")
 
@@ -947,7 +947,7 @@ expand_mode = 2
 
 [node name="Production" type="Label" parent="Wood building panel/VBoxContainer/HBoxContainer3"]
 layout_mode = 2
-text = "2"
+text = "2/3sec"
 
 [node name="Spring2" type="Control" parent="Wood building panel/VBoxContainer"]
 layout_mode = 2
@@ -964,9 +964,19 @@ expand_mode = 2
 
 [node name="Production_reduced" type="Label" parent="Wood building panel/VBoxContainer/HBoxContainer4"]
 layout_mode = 2
-text = "1"
+text = "1/3sec"
 
 [node name="Spring3" type="Control" parent="Wood building panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="Wood building panel/VBoxContainer"]
+layout_mode = 2
+text = "Reduced when
+near mine"
+horizontal_alignment = 1
+
+[node name="Spring4" type="Control" parent="Wood building panel/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 
@@ -1044,9 +1054,9 @@ stretch_mode = 6
 [node name="PanelContainer" type="PanelContainer" parent="Wheat building panel/VBoxContainer/HBoxContainer3/Type_png"]
 layout_mode = 0
 offset_left = 2.0
-offset_top = -7.58705
+offset_top = -8.0
 offset_right = 97.0
-offset_bottom = 43.4129
+offset_bottom = 36.0
 scale = Vector2(1.6479, 0.921347)
 theme = ExtResource("5_rbjlk")
 
@@ -1091,7 +1101,7 @@ expand_mode = 2
 
 [node name="Production" type="Label" parent="Wheat building panel/VBoxContainer/HBoxContainer3"]
 layout_mode = 2
-text = "2"
+text = "2/3sec"
 
 [node name="Spring2" type="Control" parent="Wheat building panel/VBoxContainer"]
 layout_mode = 2
@@ -1108,7 +1118,17 @@ expand_mode = 2
 
 [node name="Production_reduced" type="Label" parent="Wheat building panel/VBoxContainer/HBoxContainer4"]
 layout_mode = 2
-text = "1"
+text = "1/3sec"
+
+[node name="Spring4" type="Control" parent="Wheat building panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="Wheat building panel/VBoxContainer"]
+layout_mode = 2
+text = "Reduced when
+................."
+horizontal_alignment = 1
 
 [node name="Spring3" type="Control" parent="Wheat building panel/VBoxContainer"]
 layout_mode = 2
@@ -1188,9 +1208,9 @@ stretch_mode = 6
 [node name="PanelContainer" type="PanelContainer" parent="Stone building panel/VBoxContainer/HBoxContainer3/Type_png"]
 layout_mode = 0
 offset_left = 2.0
-offset_top = -7.58705
+offset_top = -8.0
 offset_right = 97.0
-offset_bottom = 43.4129
+offset_bottom = 37.0
 scale = Vector2(1.6479, 0.921347)
 theme = ExtResource("5_rbjlk")
 
@@ -1235,7 +1255,7 @@ expand_mode = 2
 
 [node name="Production" type="Label" parent="Stone building panel/VBoxContainer/HBoxContainer3"]
 layout_mode = 2
-text = "2"
+text = "2/3sec"
 
 [node name="Spring2" type="Control" parent="Stone building panel/VBoxContainer"]
 layout_mode = 2
@@ -1252,7 +1272,17 @@ expand_mode = 2
 
 [node name="Production_reduced" type="Label" parent="Stone building panel/VBoxContainer/HBoxContainer4"]
 layout_mode = 2
-text = "1"
+text = "1/3sec"
+
+[node name="Spring4" type="Control" parent="Stone building panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="Stone building panel/VBoxContainer"]
+layout_mode = 2
+text = "Reduced when
+near lumbermill"
+horizontal_alignment = 1
 
 [node name="Spring3" type="Control" parent="Stone building panel/VBoxContainer"]
 layout_mode = 2
@@ -1276,7 +1306,6 @@ texture = ExtResource("19_goru2")
 expand_mode = 2
 
 [node name="Beer building panel" type="PanelContainer" parent="."]
-visible = false
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
@@ -1332,9 +1361,9 @@ stretch_mode = 6
 [node name="PanelContainer" type="PanelContainer" parent="Beer building panel/VBoxContainer/HBoxContainer3/Type_png"]
 layout_mode = 0
 offset_left = 2.0
-offset_top = -6.73651
+offset_top = -7.0
 offset_right = 97.0
-offset_bottom = 44.2635
+offset_bottom = 37.0
 scale = Vector2(1.6479, 0.921347)
 theme = ExtResource("5_rbjlk")
 
@@ -1379,7 +1408,7 @@ expand_mode = 2
 
 [node name="Production" type="Label" parent="Beer building panel/VBoxContainer/HBoxContainer3"]
 layout_mode = 2
-text = "2"
+text = "2/5sec"
 
 [node name="Spring2" type="Control" parent="Beer building panel/VBoxContainer"]
 layout_mode = 2
@@ -1396,7 +1425,17 @@ expand_mode = 2
 
 [node name="Production_reduced" type="Label" parent="Beer building panel/VBoxContainer/HBoxContainer4"]
 layout_mode = 2
-text = "1"
+text = "1/5sec"
+
+[node name="Spring4" type="Control" parent="Beer building panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="Beer building panel/VBoxContainer"]
+layout_mode = 2
+text = "Reduced when
+NOT near farm"
+horizontal_alignment = 1
 
 [node name="Spring3" type="Control" parent="Beer building panel/VBoxContainer"]
 layout_mode = 2

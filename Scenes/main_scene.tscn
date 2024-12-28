@@ -1,4 +1,4 @@
-[gd_scene load_steps=47 format=3 uid="uid://chdc08c7ct8xv"]
+[gd_scene load_steps=73 format=3 uid="uid://chdc08c7ct8xv"]
 
 [ext_resource type="Script" path="res://Scripts/game_script.gd" id="1_wclms"]
 [ext_resource type="MeshLibrary" uid="uid://746jf5hii373" path="res://mesh_lib.tres" id="2_5f8px"]
@@ -6,18 +6,29 @@
 [ext_resource type="Script" path="res://Scripts/Camera3D.gd" id="4_km4am"]
 [ext_resource type="Script" path="res://Scripts/label.gd" id="5_6gjld"]
 [ext_resource type="Script" path="res://Scripts/ui.gd" id="6_5mynr"]
+[ext_resource type="Theme" uid="uid://tllj1dky1re1" path="res://Resources/Themes/UI_menu.tres" id="6_nh21e"]
 [ext_resource type="Script" path="res://Scripts/path_spawner.gd" id="6_p3rev"]
 [ext_resource type="Theme" uid="uid://bsgc4pitu4gax" path="res://Resources/Themes/UI_Enemy_theme.tres" id="7_dqtye"]
 [ext_resource type="Texture2D" uid="uid://b3vdmx7qxicu5" path="res://Resources/Icons/wood.png" id="7_juwof"]
+[ext_resource type="Texture2D" uid="uid://hm0fik025kv6" path="res://Resources/UI/play/342 px/play02.png" id="7_phjgn"]
 [ext_resource type="Theme" uid="uid://lj74u8ff7f5f" path="res://Resources/Themes/UI_Resource_theme.tres" id="7_utis6"]
+[ext_resource type="Texture2D" uid="uid://b5skfbs10ugve" path="res://Resources/UI/play/342 px/play03.png" id="8_1dbgv"]
+[ext_resource type="Texture2D" uid="uid://vjvgctfcnlml" path="res://Resources/UI/play/342 px/play01.png" id="9_f16ur"]
 [ext_resource type="Texture2D" uid="uid://dffvsvd3mlbeh" path="res://Resources/Icons/wheat.png" id="9_tvx0g"]
 [ext_resource type="Theme" uid="uid://d1yp0vmlk8jtb" path="res://Resources/Themes/UI_hp_theme.tres" id="9_xr12o"]
+[ext_resource type="Texture2D" uid="uid://co6qv7skmsiam" path="res://Resources/UI/options/342 px/options02.png" id="10_06632"]
 [ext_resource type="Texture2D" uid="uid://cgo3w8pokxeen" path="res://Resources/Icons/stone.png" id="10_kc5up"]
 [ext_resource type="Texture2D" uid="uid://irc84uh4ceqx" path="res://Resources/Icons/beer.png" id="10_xkq1o"]
+[ext_resource type="Texture2D" uid="uid://mli0shaoevoo" path="res://Resources/UI/options/342 px/options03.png" id="11_383yi"]
 [ext_resource type="Texture2D" uid="uid://e6o22e318htk" path="res://Resources/Icons/worker.png" id="12_ods8h"]
+[ext_resource type="Texture2D" uid="uid://cmfi6du3x0a6" path="res://Resources/UI/options/342 px/options01.png" id="12_yl8hm"]
+[ext_resource type="Texture2D" uid="uid://nfm1x7d475v2" path="res://Resources/UI/back/342 px/back02.png" id="13_g4grl"]
+[ext_resource type="Texture2D" uid="uid://btjv8ubn2bv1g" path="res://Resources/UI/back/342 px/back03.png" id="14_jum8r"]
 [ext_resource type="Texture2D" uid="uid://bn8dy1n7d2eb5" path="res://Resources/Icons/basic head.png" id="14_tqguo"]
 [ext_resource type="Texture2D" uid="uid://caqpa1w1c6083" path="res://Resources/Icons/Hood head.png" id="15_2podv"]
+[ext_resource type="Texture2D" uid="uid://uo6t8gbongcc" path="res://Resources/UI/back/342 px/back01.png" id="15_13mt4"]
 [ext_resource type="Texture2D" uid="uid://ceyur06fyam64" path="res://Resources/Icons/boss head.png" id="16_1vtdw"]
+[ext_resource type="FontFile" uid="uid://c65ghbnpummrm" path="res://Resources/Fonts/stormfaze.ttf" id="16_6tlrc"]
 [ext_resource type="FontFile" uid="uid://b0sbud2angi6h" path="res://Resources/Fonts/buddychampionexpand.ttf" id="18_18u4r"]
 [ext_resource type="Theme" uid="uid://bk4rbmthy5fx8" path="res://Resources/Themes/UI_buttom_panel.tres" id="18_tdln6"]
 [ext_resource type="Texture2D" uid="uid://uesnqfipiql6" path="res://Resources/UI/UI board Small  stone.png" id="19_15ryl"]
@@ -30,6 +41,8 @@
 [ext_resource type="Texture2D" uid="uid://hbu7q72dq5ji" path="res://Resources/UI/pusty przycisk_hover.png" id="26_123qh"]
 [ext_resource type="Texture2D" uid="uid://dmga3xf4bw28n" path="res://Resources/Icons/gate.png" id="27_gu03x"]
 [ext_resource type="Theme" uid="uid://lg8ungoidciu" path="res://Resources/Themes/UI_Game_Over_theme.tres" id="28_j1bde"]
+[ext_resource type="Texture2D" uid="uid://bwolp3soooh34" path="res://Resources/UI/TextBTN_Medium.png" id="29_d05gk"]
+[ext_resource type="Texture2D" uid="uid://co3tawrxxg8ie" path="res://Resources/UI/TextBTN_Medium_Pressed.png" id="30_5vlt2"]
 
 [sub_resource type="Gradient" id="Gradient_lq3fq"]
 offsets = PackedFloat32Array(0.438819, 0.810127)
@@ -65,6 +78,40 @@ volumetric_fog_density = 0.0001
 
 [sub_resource type="Curve3D" id="Curve3D_xbv8h"]
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_peqyp"]
+texture = ExtResource("7_phjgn")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_obu66"]
+texture = ExtResource("8_1dbgv")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_68eu4"]
+texture = ExtResource("9_f16ur")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_4bge7"]
+texture = ExtResource("10_06632")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_sqxtv"]
+texture = ExtResource("11_383yi")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_h3vm7"]
+texture = ExtResource("12_yl8hm")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_s3n3l"]
+texture = ExtResource("13_g4grl")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ysp8k"]
+texture = ExtResource("14_jum8r")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_vjq7h"]
+texture = ExtResource("15_13mt4")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eu65f"]
+bg_color = Color(0.118582, 0.118581, 0.118581, 0.305882)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_y58hb"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mwxa0"]
@@ -96,6 +143,27 @@ texture = ExtResource("19_15ryl")
 texture_margin_left = 40.0
 texture_margin_top = 30.0
 texture_margin_right = 40.0
+texture_margin_bottom = 30.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kg0tk"]
+texture = ExtResource("29_d05gk")
+texture_margin_left = 15.0
+texture_margin_top = 10.0
+texture_margin_right = 15.0
+texture_margin_bottom = 30.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_vcb7g"]
+texture = ExtResource("30_5vlt2")
+texture_margin_left = 15.0
+texture_margin_top = 44.0
+texture_margin_right = 15.0
+texture_margin_bottom = 31.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dr3oo"]
+texture = ExtResource("29_d05gk")
+texture_margin_left = 15.0
+texture_margin_top = 10.0
+texture_margin_right = 15.0
 texture_margin_bottom = 30.0
 
 [node name="Main_Scene" type="Node3D"]
@@ -146,7 +214,6 @@ transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 
 [node name="Build Timer" type="Timer" parent="."]
 wait_time = 30.0
 one_shot = true
-autostart = true
 
 [node name="Switch Label Timer" type="Timer" parent="."]
 wait_time = 2.0
@@ -154,11 +221,92 @@ one_shot = true
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
+[node name="Menu" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -960.0
+offset_top = -539.0
+offset_right = 960.0
+offset_bottom = 539.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/Menu"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -245.0
+offset_top = -163.0
+offset_right = 242.0
+offset_bottom = 295.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("6_nh21e")
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Menu/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Menu/PanelContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="Play" type="Button" parent="CanvasLayer/Menu/PanelContainer/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 135)
+layout_mode = 2
+focus_mode = 0
+theme_override_styles/hover = SubResource("StyleBoxTexture_peqyp")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_obu66")
+theme_override_styles/normal = SubResource("StyleBoxTexture_68eu4")
+
+[node name="Options" type="Button" parent="CanvasLayer/Menu/PanelContainer/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 135)
+layout_mode = 2
+focus_mode = 0
+theme_override_styles/hover = SubResource("StyleBoxTexture_4bge7")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_sqxtv")
+theme_override_styles/normal = SubResource("StyleBoxTexture_h3vm7")
+
+[node name="Quit" type="Button" parent="CanvasLayer/Menu/PanelContainer/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 135)
+layout_mode = 2
+focus_mode = 0
+theme_override_styles/hover = SubResource("StyleBoxTexture_s3n3l")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_ysp8k")
+theme_override_styles/normal = SubResource("StyleBoxTexture_vjq7h")
+
+[node name="Title" type="Label" parent="CanvasLayer/Menu"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -267.0
+offset_top = -372.0
+offset_right = 267.0
+offset_bottom = -174.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("16_6tlrc")
+theme_override_font_sizes/font_size = 164
+theme_override_styles/normal = SubResource("StyleBoxFlat_eu65f")
+text = "RBTTD"
+
 [node name="UI" type="Control" parent="CanvasLayer"]
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 2.0
+offset_right = 2.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -718,9 +866,10 @@ theme_override_styles/normal = SubResource("StyleBoxTexture_na0bh")
 
 [node name="HP container" type="PanelContainer" parent="CanvasLayer/UI"]
 layout_mode = 1
-offset_top = -6.0
-offset_right = 355.0
-offset_bottom = 84.0
+offset_left = -3.0
+offset_top = -5.0
+offset_right = 352.0
+offset_bottom = 85.0
 theme = ExtResource("9_xr12o")
 
 [node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI/HP container"]
@@ -786,10 +935,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -259.5
-offset_top = -300.0
-offset_right = 140.5
-offset_bottom = 300.0
+offset_left = -209.0
+offset_top = -328.0
+offset_right = 191.0
+offset_bottom = 272.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("28_j1bde")
@@ -830,10 +979,29 @@ layout_mode = 2
 focus_mode = 0
 text = "Main Menu"
 
+[node name="skip_button" type="Button" parent="CanvasLayer/UI"]
+layout_mode = 2
+offset_left = 1408.0
+offset_top = 7.0
+offset_right = 1543.0
+offset_bottom = 71.0
+focus_mode = 0
+theme = ExtResource("18_tdln6")
+theme_override_colors/font_hover_color = Color(0, 0.560784, 0.368627, 1)
+theme_override_colors/font_pressed_color = Color(0, 0.927874, 0, 1)
+theme_override_font_sizes/font_size = 26
+theme_override_styles/hover = SubResource("StyleBoxTexture_kg0tk")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_vcb7g")
+theme_override_styles/normal = SubResource("StyleBoxTexture_dr3oo")
+text = "SKIP"
+
 [connection signal="wave_ended" from="Enemy Spawner" to="." method="_on_enemy_spawner_wave_ended"]
-[connection signal="timeout" from="Build Timer" to="." method="_on_build_timer_timeout"]
+[connection signal="timeout" from="Build Timer" to="." method="prepare_wave"]
 [connection signal="timeout" from="Switch Label Timer" to="." method="_on_switch_label_timer_timeout"]
+[connection signal="pressed" from="CanvasLayer/Menu/PanelContainer/MarginContainer/VBoxContainer/Play" to="." method="_on_play_pressed"]
+[connection signal="pressed" from="CanvasLayer/Menu/PanelContainer/MarginContainer/VBoxContainer/Quit" to="." method="_on_quit_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/Bottom_panel/Main panel/HBoxContainer/Resource build button" to="CanvasLayer/UI" method="_on_resource_build_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/Bottom_panel/Main panel/HBoxContainer/Defence build" to="CanvasLayer/UI" method="_on_defence_build_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/Bottom_panel/Defence buildings/HBoxContainer/Back Button2" to="CanvasLayer/UI" method="_on_back_button_2_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Back Button" to="CanvasLayer/UI" method="_on_back_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/UI/skip_button" to="." method="_on_skip_button_pressed"]

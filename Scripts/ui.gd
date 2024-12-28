@@ -24,6 +24,8 @@ var defence_group = ButtonGroup.new()
 @onready var beer_count_label: Label = $"EQ container/MarginContainer/GridContainer/Beer count label"
 @onready var worker_count_label : Label = $"EQ container/MarginContainer/GridContainer/Worker count label"
 
+@onready var skip_button: Button = $skip_button
+
 var full_heart = load("res://Resources/Icons/Heart.png")
 var empty_heart = load("res://Resources/Icons/black_heart.png")
 var slow_png = load("res://Resources/Icons/snowflake.png")
@@ -292,3 +294,9 @@ func upgrade_tower(tower) ->void:
 	#print("upgrading: ",tower)
 	_on_X_button()
 	tower.upgrade()
+
+func switch_skip_button_visiblity() -> void:
+	if skip_button.visible == true:
+		skip_button.visible = false
+	else:
+		skip_button.visible = true

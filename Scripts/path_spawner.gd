@@ -4,26 +4,36 @@ var curve_length = 0.0
 
 var timer = 0.0
 var fast_timer = 0.0
+var boss_timer = 0.0
 
 var basic_enemy_spawn_cd = 2.0
+
 var fast_enemy_initial_delay = 20.0
 var fast_enemy_spawn_cd = 3.0
+
+var boss_enemy_initial_delay = 5.0
+var boss_enemy_spawn_cd = 5.0
+
 
 var current_wave = 1
 var basic_enemies_per_wave = 4
 var fast_enemies_per_wave = 0
+var boss_enemies_per_wave = 0
 var basic_enemy_increment = 2
 
 var enemy_count = 0 #current alive enemies count
 var fast_enemy_count = 0 # how many fast enemies spawned
 var basic_enemy_count = 0
+var boss_enemy_count = 0
 var spawned_enemy_count = 0
 
 var follower = preload("res://Scenes/enemy_path.tscn")
 var fast_follower = preload("res://Scenes/fast_enemy_path.tscn")
+var boss_follower = preload("res://Scenes/boss_path.tscn")
 
 var wave_in_progress = false
 var fast_enemy_spawn_started = false
+var boss_enemy_spawn_started = false
 
 signal wave_ended(wave_number)
 
@@ -60,6 +70,22 @@ func _process(delta: float) -> void:
 		fast_timer = 0
 		spawn_enemy(fast_follower)
 		randomize_fast_enemy_cd()
+	
+	if not boss_enemy_spawn_started and wave_in_progress:
+		
+		if boss_timer >= boss_enemy_initial_delay:
+			boss_timer = 0
+			boss_enemy_spawn_started = true
+			print("Boss enemy spawn started!")
+	
+	if boss_enemies_per_wave > 0:
+		boss_timer+=delta
+	
+	if boss_enemy_spawn_started and boss_timer > boss_enemy_spawn_cd and boss_enemy_count < boss_enemies_per_wave and wave_in_progress:
+		boss_enemy_count += 1
+		boss_timer = 0
+		spawn_enemy(boss_follower)
+		
 	
 	#ends wave when spawned enemy count is equal to total enemy count tbc
 	if spawned_enemy_count >= basic_enemies_per_wave + fast_enemies_per_wave and enemy_count == 0 and wave_in_progress:
@@ -102,6 +128,11 @@ func start_wave():
 	fast_enemy_spawn_started = false
 	fast_enemy_spawn_cd = 3.0
 	fast_enemy_count = 0
+	
+	boss_timer = 0
+	boss_enemy_spawn_started = false
+	boss_enemy_count = 0
+	
 	basic_enemy_count = 0
 	
 #ends wave and emits signal to main scene	
@@ -116,6 +147,8 @@ func update_wave_enemy_count():
 	print("basic przeciwnicy: " + str(basic_enemies_per_wave))
 	fast_enemies_per_wave = int((current_wave/ 3))
 	print("Fast przeciwnicy: " + str(fast_enemies_per_wave))
+	boss_enemies_per_wave = int((current_wave/10))
+	print("Boss przeciwnicy: " + str(boss_enemies_per_wave))
 
 func randomize_fast_enemy_cd():
 	fast_enemy_spawn_cd = randf_range(3.0, 6.0)

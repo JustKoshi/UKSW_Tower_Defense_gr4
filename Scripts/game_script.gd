@@ -18,6 +18,7 @@ extends Node3D
 @onready var enemy_spawner = $"Enemy Spawner"
 
 @onready var UI = $CanvasLayer/UI
+@onready var menu: Control = $CanvasLayer/Menu
 @onready var GameOver = $CanvasLayer/UI/GameOverScreen
 
 var NormalTowerScene = preload("res://Scenes/normal_tower_lvl_1.tscn")
@@ -69,7 +70,8 @@ var game_resources = {
 }
 var max_health = 15
 var current_health
-var game = true
+var game = false
+var game_over = false
 
 var wave_number = 1
 var is_build_phase = true
@@ -86,7 +88,7 @@ var normal_mat_range = StandardMaterial3D.new()
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	current_health = max_health
-	game = true
+	game = false
 	GameOver.visible = false
 	$CanvasLayer/UI/GameOverScreen/VBoxContainer/MainMenu_button.disabled = true
 	$CanvasLayer/UI/GameOverScreen/VBoxContainer/PlayAgain_button.disabled = true
@@ -119,18 +121,18 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	update_resource_timers()
-	if Input.is_action_just_pressed("Camera_F1"):
+	if Input.is_action_just_pressed("Camera_F1") and game:
 		if current_cam_index >0 :
 			current_cam_index -= 1
 		current_cam_index = current_cam_index%3
 		set_camera()
 		
-	elif Input.is_action_just_pressed("Camera_F2"):
+	elif Input.is_action_just_pressed("Camera_F2") and game:
 		current_cam_index += 1
 		current_cam_index = current_cam_index%3
 		set_camera()
 		
-	elif Input.is_action_just_pressed("Camera_F9"):
+	elif Input.is_action_just_pressed("Camera_F9") and game:
 		current_cam_index = 1
 		set_camera()
 		if !coordinates_check_mode:
@@ -451,7 +453,7 @@ func _on_tetris_build_button_pressed() -> void:
 func update_hover_mesh(good_place:bool) -> void:
 	var mesh_lib = grid_map.mesh_library
 	if not mesh_lib:
-		return  # Upewnij się, że mesh_library istnieje
+		return  # Upewnij sie, ze mesh_library istnieje
 	for i in range(hover.size()):
 		if hover[i] and good_place:
 			hover[i].mesh = mesh_lib.get_item_mesh(11)
@@ -477,12 +479,10 @@ func convert_path_to_local()-> void:
 			short_path.append(grid_map.map_to_local(vect))
 	short_path.append(grid_map.map_to_local(path_end))
 
-
 func update_label_build_time():
 	build_time_label.text = "Time for building: " + str(ceil(build_timer.time_left)) + "s"
-
-
-func _on_build_timer_timeout() -> void:
+			
+func prepare_wave() -> void:
 	is_build_phase = false
 	build_time_label.text = "Build phase ended!"
 	current_cam_index = 0
@@ -499,6 +499,7 @@ func _on_build_timer_timeout() -> void:
 		UI._on_X_button()
 		for h in hover:
 			h.visible = false
+	UI.switch_skip_button_visiblity()
 
 #resets build timer and enables buttons
 func reset_build_timer():
@@ -541,6 +542,7 @@ func _on_enemy_spawner_wave_ended() -> void:
 	UI.update_enemy_count_labels(enemy_spawner.basic_enemies_per_wave, enemy_spawner.fast_enemies_per_wave, 0)
 	if game:
 		reset_build_timer()
+		UI.switch_skip_button_visiblity()
 
 #changes label 2 s after wave started
 func _on_switch_label_timer_timeout() -> void:
@@ -567,3 +569,18 @@ func take_damage(dmg) -> void:
 			building.get_node("Timer").stop()
 			building.generator_on = false
 			
+func _on_skip_button_pressed() -> void:
+	build_timer.stop()
+	prepare_wave()
+	
+func start_game():
+	game = true
+	build_timer.start()
+	UI.visible = true
+	menu.visible = false
+
+func _on_play_pressed() -> void:
+	start_game()
+
+func _on_quit_pressed() -> void:
+	get_tree().quit()
