@@ -91,6 +91,9 @@ var normal_mat_range = StandardMaterial3D.new()
 func _ready() -> void:
 	#testing chagnes: 
 	#enemy_spawner.current_wave = 5
+	#game_resources.wood = 999
+	#game_resources.stone = 999
+	#game_resources.wheat = 999
 	
 	current_health = max_health
 	game = false
@@ -239,11 +242,14 @@ func get_collision_point(): #returns raycast collision point with map
 #function places block on raycast position
 func place_block_on_click():
 	var collision_point = get_collision_point()
+	var needed_res = 2*(number_of_tetris_placed + 1)
 	#checking if raycast detected any block if so place block on gridmap
-	if collision_point != null:
+	if collision_point != null and is_enough_resources(needed_res,needed_res,0,0,0):
 		var grid_pos = grid_map.local_to_map(collision_point)
 		if grid_map.can_place_tetris_block(grid_pos,grid_map.current_shape):
 			number_of_tetris_placed += 1
+			game_resources.wood -= needed_res
+			game_resources.stone -= needed_res
 		grid_map.place_tetris_block(grid_pos, grid_map.current_shape)
 		convert_path_to_local()
 		enemy_spawner.set_path(short_path)
@@ -254,8 +260,17 @@ func place_tower_on_click(tower_type:int):
 	if tower_hover_holder != null:
 		tower_hover_holder.free()#deleting hover tower before getting collision point
 	var collision_point = get_collision_point()
+	var needed_wood = 0
+	var needed_stone = 0
+	var needed_wheat = 0
+	if tower_type == 1:
+		needed_wood = 10
+		needed_stone = 10
+	elif tower_type == 2:
+		needed_wood = 16
+		needed_stone = 16
 	#checking if raycast detected any block if so place block on gridmap
-	if collision_point != null and grid_map.can_place_tower(collision_point):
+	if collision_point != null and grid_map.can_place_tower(collision_point) and is_enough_resources(needed_wood,needed_stone,needed_wheat,0,0):
 	#if tower can be placed instantiate tower and change its cordinates and turn off range and turning of hover transparency
 		var tower
 		if(tower_type==1):
@@ -278,21 +293,33 @@ func place_tower_on_click(tower_type:int):
 		tower.connect("tower_info",UI._on_normal_tower_lvl_1_tower_info)
 		grid_map.place_tower_in_tilemap(collision_point)
 		self.get_node("Tower Holder").add_child(tower)
-		print("Added tower in position: ",grid_pos)
+		#print("Added tower in position: ",grid_pos)
+		game_resources.wood -= needed_wood
+		game_resources.stone -= needed_stone
+		game_resources.wheat -= needed_wheat
 		tower_hover_holder = null
 		hovering_tower = 0
 
 #function that hover towers over the map showing where it can be placed and its range
 func hover_tower(_tower_type:int):
 	var collision_point = get_collision_point()
+	var needed_wood = 0
+	var needed_stone = 0
+	var needed_wheat = 0
+	if tower_to_hover == 1:
+		needed_wood = 10
+		needed_stone = 10
+	elif tower_to_hover == 2:
+		needed_wood = 16
+		needed_stone = 16
 	if tower_hover_holder==null or tower_to_hover!=hovering_tower:
 		#if there was no hover instantiate 1 hover tower and making its opacity = 0.5
 		if(tower_to_hover==1):
 			tower_hover_holder = NormalTowerScene.instantiate()
-			hovering_tower=1
+			hovering_tower = 1
 		elif(tower_to_hover==2):
 			tower_hover_holder = FreezeTowerScene.instantiate()
-			hovering_tower=2
+			hovering_tower = 2
 		tower_hover_holder.can_shoot=false
 		tower_hover_holder.get_node("MobDetector").visible = true
 		get_node("Tower Holder").add_child(tower_hover_holder)
@@ -307,14 +334,16 @@ func hover_tower(_tower_type:int):
 		var place_pos = grid_map.map_to_local(grid_pos)
 		place_pos.y=4.5
 		tower_hover_holder.position=place_pos#changing tower position after cursor
-		if grid_map.can_place_tower(collision_point):
+		if grid_map.can_place_tower(collision_point) and is_enough_resources(needed_wood,needed_stone,needed_wheat,0,0):
 			#if tower can be placed change its color to normal
+			#print("Normal tower\t\twood: ",needed_wood," stone: ",needed_stone)
 			tower_hover_holder.get_node("MobDetector").get_child(1).set_surface_override_material(0,normal_mat_range)
 			tower_hover_holder.set_surface_override_material(0,normal_mat)
 			if tower_to_hover == 1:
 				tower_hover_holder.set_surface_override_material(1,normal_mat)
 		else:
 			#if it cant be placed change its color to red
+			#print("Red tower")
 			tower_hover_holder.get_node("MobDetector").get_child(1).set_surface_override_material(0,red_mat_range)
 			tower_hover_holder.set_surface_override_material(0,red_mat)
 			if tower_to_hover == 1:
@@ -330,7 +359,8 @@ func update_hover_tetris():
 	if collision_point != null and walls_build:
 		var grid_pos = grid_map.local_to_map(collision_point)
 		var grid_pos_f = Vector3(grid_pos.x, grid_pos.y, grid_pos.z)
-		if grid_map.can_place_tetris_block(grid_pos,grid_map.current_shape):
+		var needed_res = 2*(number_of_tetris_placed + 1)
+		if grid_map.can_place_tetris_block(grid_pos,grid_map.current_shape) and is_enough_resources(needed_res,needed_res,0,0,0):
 			#print("mozna")
 			update_hover_mesh(true)
 			for i in range(grid_map.current_shape.size()):
@@ -393,7 +423,7 @@ func place_resource_on_click(resource_type:int):
 	var collision_point = get_collision_point()
 	var building
 	#checking if raycast detected any block if so place block on gridmap
-	if collision_point != null:
+	if collision_point != null and is_enough_resources(0,0,0,0,1):
 		var grid_pos = grid_map.local_to_map(collision_point)
 		if grid_map.can_place_resource(grid_pos, resource_shape):
 			if resource_type == 1:
@@ -419,6 +449,7 @@ func place_resource_on_click(resource_type:int):
 			color_transparent_mesh_instance(building,3)
 			check_resource_generation_req()
 			#print("Added lumbermill in position: ",grid_pos)
+			game_resources.used_workers += 1
 			resource_hover_holder=null
 			hovering_resource = 0
 
@@ -485,7 +516,7 @@ func hover_resource(resource_type:int):
 		var grid_pos = grid_map.local_to_map(collision_point)
 		resource_hover_holder.visible = true
 		check_resource_generation_req()
-		if grid_map.can_place_resource(grid_pos, resource_hover_holder.shape):
+		if grid_map.can_place_resource(grid_pos, resource_hover_holder.shape) and is_enough_resources(0,0,0,0,1):
 			color_transparent_mesh_instance(resource_hover_holder, 1)
 			
 			#print("dziala")
@@ -585,7 +616,7 @@ func _on_enemy_spawner_wave_ended() -> void:
 	#print("Przekazano sygnal")
 	if enemy_spawner.current_wave == 5:
 		#odblokuj farme
-		print("Farm unlocked")
+		#print("Farm unlocked")
 		$"CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Wheat building".disabled = false
 		$"CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Workers".disabled = false
 		for button in UI.locked_buttons:
@@ -600,7 +631,7 @@ func _on_enemy_spawner_wave_ended() -> void:
 		game_resources.workers += 1
 	elif enemy_spawner.current_wave == 10:
 		#odblokuj piwo i skille
-		print("Ber unlocked")
+		#print("Beer unlocked")
 		$"CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Beer building".disabled = false
 		for child in $"CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Beer building".get_children():
 			if child is TextureRect:
@@ -642,6 +673,21 @@ func take_damage(dmg) -> void:
 			building.generator_on = false
 			
 func _on_skip_button_pressed() -> void:
+	var remaining_time = build_timer.time_left
+	var adding_resources = int(remaining_time/3)
+	var adding_beer = int(remaining_time/5)
+	for i in range(get_node("Resource Holder").get_child_count()):
+		var child = get_node("Resource Holder").get_child(i)
+		if not child.resource_type == "beer":
+			if child.generation_depleted:
+				game_resources[child.resource_type] += 1*adding_resources#polowa wartosci
+			else:
+				game_resources[child.resource_type] += 2*adding_resources
+		else:
+			if child.generation_depleted:
+				game_resources[child.resource_type] += 1*adding_beer#polowa wartosci
+			else:
+				game_resources[child.resource_type] += 2*adding_beer
 	build_timer.stop()
 	prepare_wave()
 	
