@@ -25,6 +25,8 @@ var NormalTowerScene = preload("res://Scenes/normal_tower_lvl_1.tscn")
 var FreezeTowerScene = preload("res://Scenes/Freeze_tower_lvl_1.tscn")
 var Lumbermill = preload("res://Scenes/lumbermill.tscn")
 var Mine = preload("res://Scenes/mine.tscn")
+var Windmill = preload("res://Scenes/windmill.tscn")
+var Tavern = preload("res://Scenes/tavern.tscn")
 
 var tower_build = false
 var tetris_build_mode = false
@@ -47,7 +49,7 @@ var hovering_tower = 0
 var tower_to_hover = 0#Which tower is picked with button 0-none 1-normal 2-freeze 3-aoe
 
 var hovering_resource = 0
-var resource_to_hover = 0#0 for none, 1 for lumbermill, 2 for mine
+var resource_to_hover = 0#0 for none, 1 for lumbermill, 2 for mine, 3 for windmill, 4 for tavern
 var resource_shape
 
 var current_cam_index = 0
@@ -163,14 +165,21 @@ func _process(delta: float) -> void:
 		coordinates_check_mode = false
 		resource_to_hover = 2
 		hover_resource(resource_to_hover)
-	if not wood_build and not stone_build:
+	if wheat_build:
+		set_resource_cam()
+		resource_to_hover = 3
+		hover_resource(resource_to_hover)
+	if beer_build:
+		set_resource_cam()
+		resource_to_hover = 4
+		hover_resource(resource_to_hover)
+	if not wood_build and not stone_build and not wheat_build and not beer_build:
 		resource_to_hover = 0
 	if is_build_phase:
 		update_label_build_time()
 	
 	if not game:
 		get_node("Main Camera").angle += 0.1 * delta
-
 
 func _input(event: InputEvent) -> void:
 	if walls_build and event is InputEventMouseButton:
@@ -187,7 +196,7 @@ func _input(event: InputEvent) -> void:
 	if (normal_tower_build or freeze_tower_build) and event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
 			place_tower_on_click(hovering_tower)
-	if (wood_build or stone_build) and event is InputEventMouseButton:
+	if (wood_build or stone_build or wheat_build or beer_build) and event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
 			place_resource_on_click(hovering_resource)
 			
@@ -369,9 +378,9 @@ func update_resource_timers():
 			child.get_node("Timer").start()
 			child.generator_on = false
 			if child.generation_depleted:
-				game_resources[child.resource_type] += 0.5#polowa wartosci
+				game_resources[child.resource_type] += 1#polowa wartosci
 			else:
-				game_resources[child.resource_type] += 1
+				game_resources[child.resource_type] += 2
 
 
 func place_resource_on_click(resource_type:int):
@@ -387,23 +396,60 @@ func place_resource_on_click(resource_type:int):
 				building = Lumbermill.instantiate()
 			elif resource_type == 2:
 				building = Mine.instantiate() 
+			elif resource_type == 3:
+				building = Windmill.instantiate()
+			elif resource_type == 4:
+				building = Tavern.instantiate()
 			else:
 				return
 			var place_pos = grid_map.map_to_local(grid_pos)
 			place_pos.y=2.5
-			place_pos.x+=1
-			place_pos.z+=1
+			if resource_type in [1,2]:
+				place_pos.x+=1
+				place_pos.z+=1
 			#print(place_pos)
 			building.position=place_pos
-			if grid_map.place_resource_in_tilemap(collision_point, hovering_resource):
-				building.generation_depleted = true
+			grid_map.place_resource_in_tilemap(collision_point, hovering_resource)
+			#	building.generation_depleted = true
 			get_node("Resource Holder").add_child(building)
 			color_transparent_mesh_instance(building,3)
+			check_resource_generation_req()
 			#print("Added lumbermill in position: ",grid_pos)
 			resource_hover_holder=null
 			hovering_resource = 0
 
-	
+func check_resource_generation_req():
+	var shifts = [Vector3(-4,0,0),Vector3(4,0,0),Vector3(0,0,-4),Vector3(0,0,4)]
+	var tavern_shift = Vector3(-2,0,-2)#distance from corretly placed tavern to its correctly placed windmill
+	var node = get_node("Resource Holder")
+	for r in node.get_child_count():
+		var resource = node.get_child(r)
+		if resource is Tavern:
+			resource.generation_depleted = true
+		else:
+			resource.generation_depleted = false
+		for r2 in node.get_child_count():
+			var resource2 = node.get_child(r2)
+			if resource==resource2:
+				continue
+			for i in shifts:
+				if resource is Lumbermill:
+					if resource.transform.origin+i==resource2.transform.origin and resource2 is Mine:
+						resource.generation_depleted = true
+						resource2.generation_depleted = true
+				if resource is Mine:
+					if resource.transform.origin+i==resource2.transform.origin and resource2 is Lumbermill:
+						resource.generation_depleted = true
+						resource2.generation_depleted = true
+				if resource is Tavern:
+					if resource2 is Windmill and resource2.transform.origin == resource.transform.origin+tavern_shift:
+						resource.generation_depleted = false
+		if resource.generation_depleted:
+			resource.get_node("exclamation_mark").visible = true
+		else:
+			resource.get_node("exclamation_mark").visible = false
+
+
 func hover_resource(resource_type:int):
 	var collision_point = get_collision_point()
 	if resource_hover_holder == null or hovering_resource != resource_type:
@@ -417,6 +463,14 @@ func hover_resource(resource_type:int):
 			hovering_resource = 2
 			resource_shape = resource_hover_holder.shape
 			resource_hover_holder.generator_on = false
+		elif resource_type == 3:
+			resource_hover_holder = Windmill.instantiate()
+			hovering_resource = 3
+			resource_shape = resource_hover_holder.shape
+		elif resource_type == 4:
+			resource_hover_holder = Tavern.instantiate()
+			hovering_resource = 4
+			resource_shape = resource_hover_holder.shape
 		else:
 			return
 		resource_hover_holder.game_script = self
@@ -424,8 +478,10 @@ func hover_resource(resource_type:int):
 	if collision_point != null:
 		var grid_pos = grid_map.local_to_map(collision_point)
 		resource_hover_holder.visible = true
+		check_resource_generation_req()
 		if grid_map.can_place_resource(grid_pos, resource_hover_holder.shape):
 			color_transparent_mesh_instance(resource_hover_holder, 1)
+			
 			#print("dziala")
 		else:
 			#print("nie dziala")
@@ -433,12 +489,15 @@ func hover_resource(resource_type:int):
 		var place_pos = grid_map.map_to_local(grid_pos)
 		#print(grid_pos)
 		place_pos.y=2.5
-		place_pos.x+=1
-		place_pos.z+=1
+		if hovering_resource in [1,2]:
+			place_pos.x+=1
+			place_pos.z+=1
+		
 		resource_hover_holder.position=place_pos
 	else:
 		#print("nie dziala raycast")
-		resource_hover_holder.visible = false
+		resource_hover_holder.queue_free()
+		resource_hover_holder = null
 
 
 #Signal to enter build mode

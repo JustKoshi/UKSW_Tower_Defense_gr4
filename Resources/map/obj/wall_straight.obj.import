@@ -1,0 +1,22 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://wrekkod1vcvt"
+path="res://.godot/imported/wall_straight.obj-28e780982dc7e1c651de96ae805fca10.mesh"
+
+[deps]
+
+files=["res://.godot/imported/wall_straight.obj-28e780982dc7e1c651de96ae805fca10.mesh"]
+
+source_file="res://Resources/map/obj/wall_straight.obj"
+dest_files=["res://.godot/imported/wall_straight.obj-28e780982dc7e1c651de96ae805fca10.mesh", "res://.godot/imported/wall_straight.obj-28e780982dc7e1c651de96ae805fca10.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true
+force_disable_mesh_compression=false

@@ -83,8 +83,8 @@ func _process(_delta: float) -> void:
 	worker_count_label.set_text("%d/%d" % [game_script.game_resources.used_workers, game_script.game_resources.workers])
 		
 	if panel_info_holder != null and panel_number == 7:
-		panel_info_holder.get_child(7).get_child(1).get_child(2).get_node("Wood").text = str(game_script.number_of_tetris_placed + 1)
-		panel_info_holder.get_child(7).get_child(1).get_child(2).get_node("Stone").text = str(game_script.number_of_tetris_placed + 1)
+		panel_info_holder.get_child(7).get_child(1).get_child(2).get_node("Wood").text = str(2*(game_script.number_of_tetris_placed + 1))
+		panel_info_holder.get_child(7).get_child(1).get_child(2).get_node("Stone").text = str(2*(game_script.number_of_tetris_placed + 1))
 	if panel_info_holder != null and panel_number == 8:
 		panel_info_holder.get_child(8).get_child(1).get_child(2).get_node("Wheat").text = str(30 * (game_script.game_resources.workers - 2))
 

@@ -52,7 +52,7 @@ transform = Transform3D(1, -1.42109e-14, 1.42109e-14, 1.42109e-14, 1, 6.17863e-1
 transform = Transform3D(1, 1.25214e-21, 0, -1.25214e-21, 1, 0, 0, 0, 1, -1.90735e-06, 1.21587, -1.3411e-07)
 
 [node name="BoneAttachment3D" type="BoneAttachment3D" parent="Rig/Skeleton3D" index="10"]
-transform = Transform3D(-4.87019e-07, -0.999999, 3.93153e-07, 5.29247e-07, 3.96661e-07, 1, -0.999999, 4.75847e-07, 5.35882e-07, -0.787007, 1.10676, -6.14808e-07)
+transform = Transform3D(-8.93072e-07, -0.999999, 9.89199e-07, 1.10237e-06, 1.02051e-06, 1, -0.999999, 9.11702e-07, 1.13193e-06, -0.787007, 1.10676, -3.38623e-07)
 bone_name = "hand.r"
 bone_idx = 12
 

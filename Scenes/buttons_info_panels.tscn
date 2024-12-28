@@ -269,7 +269,7 @@ text = "Cost:"
 
 [node name="Wood" type="Label" parent="Normal tower panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "5"
+text = "10"
 
 [node name="TextureRect" type="TextureRect" parent="Normal tower panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -278,7 +278,7 @@ expand_mode = 2
 
 [node name="Stone" type="Label" parent="Normal tower panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "5"
+text = "10"
 
 [node name="TextureRect2" type="TextureRect" parent="Normal tower panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -548,7 +548,7 @@ text = "Cost:"
 
 [node name="Wood" type="Label" parent="Freeze Tower Panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "8"
+text = "16"
 
 [node name="TextureRect" type="TextureRect" parent="Freeze Tower Panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -557,7 +557,7 @@ expand_mode = 2
 
 [node name="Stone" type="Label" parent="Freeze Tower Panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "8"
+text = "16"
 
 [node name="TextureRect2" type="TextureRect" parent="Freeze Tower Panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -1306,6 +1306,7 @@ texture = ExtResource("19_goru2")
 expand_mode = 2
 
 [node name="Beer building panel" type="PanelContainer" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
@@ -1517,7 +1518,7 @@ text = "Cost:"
 
 [node name="Wood" type="Label" parent="Tetris building panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "1"
+text = "2"
 
 [node name="TextureRect" type="TextureRect" parent="Tetris building panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -1526,7 +1527,7 @@ expand_mode = 2
 
 [node name="Stone" type="Label" parent="Tetris building panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "1"
+text = "2"
 
 [node name="TextureRect2" type="TextureRect" parent="Tetris building panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2

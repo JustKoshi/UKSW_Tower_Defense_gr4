@@ -1,3 +1,4 @@
+class_name Mine
 extends MeshInstance3D
 var game_script
 
