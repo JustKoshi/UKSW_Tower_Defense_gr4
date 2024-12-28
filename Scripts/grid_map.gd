@@ -254,7 +254,7 @@ func generate_start_end_points()->Vector3:
 	print("end_point" + str(end_point))
 	return end_point
 
-func gen_walls(end_point:Vector3):
+func gen_walls(ends:Vector3):
 	for x in range(-10,-6):
 		set_cell_item(Vector3(x,1,-6),12,10)
 		set_cell_item(Vector3(x,1,5),12)
@@ -266,7 +266,7 @@ func gen_walls(end_point:Vector3):
 	set_cell_item(Vector3(-6,1,-6),13,16)
 	set_cell_item(Vector3(-6,1,5),13)
 	
-	var end=end_point
+	var end=ends
 	end.x-=1
 	set_cell_item(end,14,16)
 

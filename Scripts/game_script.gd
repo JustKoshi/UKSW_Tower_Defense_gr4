@@ -89,6 +89,9 @@ var normal_mat_range = StandardMaterial3D.new()
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	#testing chagnes: 
+	#enemy_spawner.current_wave = 5
+	
 	current_health = max_health
 	game = false
 	GameOver.visible = false
@@ -117,7 +120,7 @@ func _ready() -> void:
 			hover[i].visible = false
 	convert_path_to_local()
 	enemy_spawner.set_path(short_path)
-	UI.update_enemy_count_labels(enemy_spawner.basic_enemies_per_wave, enemy_spawner.fast_enemies_per_wave, 0)
+	UI.update_enemy_count_labels(enemy_spawner.basic_enemies_per_wave, enemy_spawner.fast_enemies_per_wave, enemy_spawner.boss_enemies_per_wave)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -239,10 +242,11 @@ func place_block_on_click():
 	#checking if raycast detected any block if so place block on gridmap
 	if collision_point != null:
 		var grid_pos = grid_map.local_to_map(collision_point)
+		if grid_map.can_place_tetris_block(grid_pos,grid_map.current_shape):
+			number_of_tetris_placed += 1
 		grid_map.place_tetris_block(grid_pos, grid_map.current_shape)
 		convert_path_to_local()
 		enemy_spawner.set_path(short_path)
-		number_of_tetris_placed += 1
 
 
 #function places tower on raycast position
@@ -467,10 +471,12 @@ func hover_resource(resource_type:int):
 			resource_hover_holder = Windmill.instantiate()
 			hovering_resource = 3
 			resource_shape = resource_hover_holder.shape
+			resource_hover_holder.generator_on = false
 		elif resource_type == 4:
 			resource_hover_holder = Tavern.instantiate()
 			hovering_resource = 4
 			resource_shape = resource_hover_holder.shape
+			resource_hover_holder.generator_on = false
 		else:
 			return
 		resource_hover_holder.game_script = self
@@ -536,7 +542,7 @@ func convert_path_to_local()-> void:
 	for vect in grid_map.shortest_path:
 			vect.y += 1
 			short_path.append(grid_map.map_to_local(vect))
-	short_path.append(grid_map.map_to_local(path_end))
+	#short_path.append(grid_map.map_to_local(path_end))
 
 func update_label_build_time():
 	build_time_label.text = "Time for building: " + str(ceil(build_timer.time_left)) + "s"
@@ -559,6 +565,13 @@ func prepare_wave() -> void:
 		for h in hover:
 			h.visible = false
 	UI.switch_skip_button_visiblity()
+
+#function that checks whether you can buy something or you have not enough resources
+func is_enough_resources(wo:int, st:int, wh:int, be:int, pe:int) -> bool:
+	if game_resources.wood >= wo and game_resources.stone >= st and game_resources.wheat >= wh and game_resources.beer >= be and game_resources.workers >= game_resources.used_workers + pe:
+		return true
+	else:
+		return false
 
 #resets build timer and enables buttons
 func reset_build_timer():
@@ -596,9 +609,9 @@ func _on_enemy_spawner_wave_ended() -> void:
 			var target_position = child.position
 			target_position.y = UI.original_positions[child]
 			child.position = target_position
-	enemy_spawner.current_wave+=1
+	enemy_spawner.current_wave += 1
 	enemy_spawner.update_wave_enemy_count()
-	UI.update_enemy_count_labels(enemy_spawner.basic_enemies_per_wave, enemy_spawner.fast_enemies_per_wave, 0)
+	UI.update_enemy_count_labels(enemy_spawner.basic_enemies_per_wave, enemy_spawner.fast_enemies_per_wave, enemy_spawner.boss_enemies_per_wave)
 	if game:
 		reset_build_timer()
 		UI.switch_skip_button_visiblity()
@@ -643,3 +656,9 @@ func _on_play_pressed() -> void:
 
 func _on_quit_pressed() -> void:
 	get_tree().quit()
+
+#fuction to buy workers
+func buy_workers() -> void:
+	game_resources.wheat -= (30 * (game_resources.workers - 2))
+	game_resources.workers += 1
+	UI._on_no_pressed()

@@ -1508,6 +1508,15 @@ expand_mode = 3
 layout_mode = 2
 size_flags_vertical = 3
 
+[node name="Label" type="Label" parent="Tetris building panel/VBoxContainer"]
+layout_mode = 2
+text = "Q and E to rotate"
+horizontal_alignment = 1
+
+[node name="Spring2" type="Control" parent="Tetris building panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
 [node name="HBoxContainer" type="HBoxContainer" parent="Tetris building panel/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
@@ -1533,10 +1542,6 @@ text = "2"
 layout_mode = 2
 texture = ExtResource("11_y72v8")
 expand_mode = 2
-
-[node name="Spring2" type="Control" parent="Tetris building panel/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
 
 [node name="Workers buying panel" type="PanelContainer" parent="."]
 visible = false

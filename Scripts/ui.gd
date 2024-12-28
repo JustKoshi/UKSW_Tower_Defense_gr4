@@ -26,6 +26,8 @@ var defence_group = ButtonGroup.new()
 
 @onready var skip_button: Button = $skip_button
 
+@onready var worker_bonus_panel = $Workers_buy
+
 var full_heart = load("res://Resources/Icons/Heart.png")
 var empty_heart = load("res://Resources/Icons/black_heart.png")
 var slow_png = load("res://Resources/Icons/snowflake.png")
@@ -43,7 +45,9 @@ var panel_number
 func _ready() -> void:
 	panel_info_holder = null
 	ui_tower_panel = null
-	
+	worker_bonus_panel.position.x += 235
+	worker_bonus_panel.position.y -= 179
+			
 	for button in resource_buttons:
 		button.button_group = resource_group
 		button.toggled.connect(_on_toggled.bind(button))
@@ -83,10 +87,16 @@ func _process(_delta: float) -> void:
 	worker_count_label.set_text("%d/%d" % [game_script.game_resources.used_workers, game_script.game_resources.workers])
 		
 	if panel_info_holder != null and panel_number == 7:
-		panel_info_holder.get_child(7).get_child(1).get_child(2).get_node("Wood").text = str(2*(game_script.number_of_tetris_placed + 1))
-		panel_info_holder.get_child(7).get_child(1).get_child(2).get_node("Stone").text = str(2*(game_script.number_of_tetris_placed + 1))
+		panel_info_holder.get_child(7).get_child(1).get_child(4).get_node("Wood").text = str(2*(game_script.number_of_tetris_placed + 1))
+		panel_info_holder.get_child(7).get_child(1).get_child(4).get_node("Stone").text = str(2*(game_script.number_of_tetris_placed + 1))
 	if panel_info_holder != null and panel_number == 8:
 		panel_info_holder.get_child(8).get_child(1).get_child(2).get_node("Wheat").text = str(30 * (game_script.game_resources.workers - 2))
+		if game_script.is_enough_resources(0,0,30 * (game_script.game_resources.workers - 2),0,0):
+			worker_bonus_panel.get_child(1).get_child(2).get_child(0).disabled = false
+		else:
+			worker_bonus_panel.get_child(1).get_child(2).get_child(0).disabled = true
+	else:
+		worker_bonus_panel.visible = false
 
 func update_enemy_count_labels(basic_enemy_num , fast_enemy_num, boss_num):
 	basic_enemy_count.text = str(basic_enemy_num)
@@ -173,6 +183,8 @@ func _on_resource_button_toggled(is_pressed: bool, button):
 			panel_number = 6
 		"Workers":
 			#kup workera
+			worker_bonus_panel.visible = true
+			worker_bonus_panel.get_child(1).get_child(2).get_child(2).disabled = false
 			panel_number = 8
 	if panel_number >= 0:
 		if panel_info_holder != null:
@@ -300,3 +312,15 @@ func switch_skip_button_visiblity() -> void:
 		skip_button.visible = false
 	else:
 		skip_button.visible = true
+
+#closing bonus worker panel
+func _on_no_pressed() -> void:
+	panel_number = 0
+	worker_bonus_panel.get_child(1).get_child(2).get_child(0).disabled = true
+	worker_bonus_panel.get_child(1).get_child(2).get_child(2).disabled = true
+	$"Bottom_panel/Resource buildings/HBoxContainer/Workers".set_pressed_no_signal(false)
+	worker_bonus_panel.visible = false
+	for child in $"Bottom_panel/Resource buildings/HBoxContainer/Workers".get_children():
+		var target_position = child.position
+		target_position.y = original_positions[child]
+		child.position = target_position

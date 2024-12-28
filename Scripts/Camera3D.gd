@@ -4,6 +4,7 @@ var radius = 20.0
 var angle = -40.0
 var speed = 0.5
 
+@onready var game_script = get_parent()
 # Center of circle (Camera moves around this point)
 var center = Vector3(0, 20, 0)
 var tilt_value = -20
@@ -17,9 +18,11 @@ func _ready():
 func _process(delta):
 	# Sprawdzanie naciśnięcia klawiszy
 	if Input.is_action_pressed("move_left"):
-		angle -= speed * delta  # W lewo (klawisz "Q")
+		if game_script.game:
+			angle -= speed * delta  # W lewo (klawisz "Q")
 	elif Input.is_action_pressed("move_right"):
-		angle += speed * delta  # W prawo (klawisz "E")
+		if game_script.game:
+			angle += speed * delta  # W prawo (klawisz "E")
 	
 	# Obliczanie nowej pozycji kamery na okręgu
 	var new_x = center.x + radius * sin(angle)
