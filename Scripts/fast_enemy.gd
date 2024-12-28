@@ -36,10 +36,10 @@ func change_speed(value:float)->void:
 	#print("Speed after change: ",get_parent_node_3d().speed)#Testing purposes
 
 #Function that happens when mob is struck with arrow/spell/canon
-func take_damage(damage: int) -> void:
-	health-=damage
+func take_damage(dmg: int) -> void:
+	health-=dmg
 	#print("Current health: ",health)
-	if(health<=0):
+	if health<=0 and (health+dmg) > 0:
 		get_parent_node_3d().delete_object()
 
 #Resetting attacking 

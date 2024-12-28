@@ -33,6 +33,7 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	#print("EC ",enemy_count,"     SEC ",spawned_enemy_count,"      Basic ",basic_enemies_per_wave,"       fast ",fast_enemies_per_wave)
 	if wave_in_progress:
 		timer += delta
 	#spawn basic enemy:

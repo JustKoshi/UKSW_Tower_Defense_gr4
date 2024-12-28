@@ -13,7 +13,7 @@ extends Control
 var resource_group = ButtonGroup.new()
 var defence_group = ButtonGroup.new()
 @onready var defence_buttons= [$"Bottom_panel/Defence buildings/HBoxContainer/Walls build button", $"Bottom_panel/Defence buildings/HBoxContainer/Normal Tower button", $"Bottom_panel/Defence buildings/HBoxContainer/Freeze Tower button", $"Bottom_panel/Defence buildings/HBoxContainer/AOE Tower"]
-@onready var resource_buttons = [$"Bottom_panel/Resource buildings/HBoxContainer/Wood building", $"Bottom_panel/Resource buildings/HBoxContainer/Wheat building", $"Bottom_panel/Resource buildings/HBoxContainer/Stone building", $"Bottom_panel/Resource buildings/HBoxContainer/Beer building" ]
+@onready var resource_buttons = [$"Bottom_panel/Resource buildings/HBoxContainer/Wood building", $"Bottom_panel/Resource buildings/HBoxContainer/Wheat building", $"Bottom_panel/Resource buildings/HBoxContainer/Stone building", $"Bottom_panel/Resource buildings/HBoxContainer/Beer building", $"Bottom_panel/Resource buildings/HBoxContainer/Workers" ]
 # Called when the node enters the scene tree for the first time.
 
 @onready var game_script = get_parent().get_parent()
@@ -22,13 +22,25 @@ var defence_group = ButtonGroup.new()
 @onready var wheat_count_label: Label = $"EQ container/MarginContainer/GridContainer/Wheat count label"
 @onready var stone_count_label: Label = $"EQ container/MarginContainer/GridContainer/Stone count label"
 @onready var beer_count_label: Label = $"EQ container/MarginContainer/GridContainer/Beer count label"
+@onready var worker_count_label : Label = $"EQ container/MarginContainer/GridContainer/Worker count label"
 
 var full_heart = load("res://Resources/Icons/Heart.png")
 var empty_heart = load("res://Resources/Icons/black_heart.png")
+var slow_png = load("res://Resources/Icons/snowflake.png")
+var aoe_png = load("res://Resources/Icons/catapult.png")
+
+var info_panels = preload("res://Scenes/buttons_info_panels.tscn")
+var tower_info = preload("res://Scenes/towers_info_panels.tscn")
+var panel_info_holder
+var ui_tower_panel
 
 var original_positions = {}
+var panel_number
+@onready var locked_buttons = [$"Bottom_panel/Resource buildings/HBoxContainer/Workers", $"Bottom_panel/Resource buildings/HBoxContainer/Wheat building", $"Bottom_panel/Resource buildings/HBoxContainer/Beer building"]
 
 func _ready() -> void:
+	panel_info_holder = null
+	ui_tower_panel = null
 	
 	for button in resource_buttons:
 		button.button_group = resource_group
@@ -39,6 +51,18 @@ func _ready() -> void:
 		button.button_group = defence_group
 		button.toggled.connect(_on_toggled.bind(button))
 		button.toggled.connect(_on_defence_button_toggled.bind(button))
+
+	#locking stuff that is unlockable during the game
+	for button in locked_buttons:
+		button.disabled = true
+		for child in button.get_children():
+			if child is TextureRect:
+				if not original_positions.has(child):
+					original_positions[child] = child.position.y
+			var target_position = child.position
+			if button.disabled:
+				target_position.y = original_positions[child] + 20
+				child.position = target_position
 
 	#Setting up hearts
 	for i in range(game_script.max_health):
@@ -54,6 +78,13 @@ func _process(_delta: float) -> void:
 	stone_count_label.set_text("%d" % game_script.game_resources.stone)
 	wheat_count_label.set_text("%d" % game_script.game_resources.wheat)
 	beer_count_label.set_text("%d" % game_script.game_resources.beer)
+	worker_count_label.set_text("%d/%d" % [game_script.game_resources.used_workers, game_script.game_resources.workers])
+		
+	if panel_info_holder != null and panel_number == 7:
+		panel_info_holder.get_child(7).get_child(1).get_child(2).get_node("Wood").text = str(game_script.number_of_tetris_placed + 1)
+		panel_info_holder.get_child(7).get_child(1).get_child(2).get_node("Stone").text = str(game_script.number_of_tetris_placed + 1)
+	if panel_info_holder != null and panel_number == 8:
+		panel_info_holder.get_child(8).get_child(1).get_child(2).get_node("Wheat").text = str(30 * (game_script.game_resources.workers - 2))
 
 func update_enemy_count_labels(basic_enemy_num , fast_enemy_num, boss_num):
 	basic_enemy_count.text = str(basic_enemy_num)
@@ -68,6 +99,9 @@ func _on_back_button_pressed() -> void:
 		button.button_pressed = false
 	game_script.current_cam_index = 0
 	game_script.set_camera()
+	if panel_info_holder != null:
+			panel_info_holder.free()
+			panel_info_holder = null
 
 func _on_back_button_2_pressed() -> void:
 	defence_buildings.visible = false
@@ -76,6 +110,9 @@ func _on_back_button_2_pressed() -> void:
 		button.button_pressed = false
 	game_script.current_cam_index = 0
 	game_script.set_camera()
+	if panel_info_holder != null:
+			panel_info_holder.free()
+			panel_info_holder = null
 	
 func _on_resource_build_button_pressed() -> void:
 	main_panel.visible = false
@@ -114,27 +151,71 @@ func unpress_all_buttons():
 		button.button_pressed = false
 	for button in defence_buttons:
 		button.button_pressed = false
+	if panel_info_holder != null:
+			panel_info_holder.free()
+			panel_info_holder = null
 
 func _on_resource_button_toggled(is_pressed: bool, button):
 	match button.name:
 		"Wood building":
 			game_script.wood_build = is_pressed
+			panel_number = 3
 		"Wheat building":
 			game_script.wheat_build = is_pressed
+			panel_number = 4
 		"Stone building":
 			game_script.stone_build = is_pressed
+			panel_number = 5
 		"Beer building":
 			game_script.beer_build = is_pressed
+			panel_number = 6
+		"Workers":
+			#kup workera
+			panel_number = 8
+	if panel_number >= 0:
+		if panel_info_holder != null:
+			panel_info_holder.free()
+		panel_info_holder = info_panels.instantiate()
+		add_child(panel_info_holder)
+		for i in panel_info_holder.get_child_count():
+			if i == panel_number:
+				panel_info_holder.get_child(i).visible = true
+			else:
+				panel_info_holder.get_child(i).visible = false
+	else:
+		if panel_info_holder != null:
+			panel_info_holder.free()
+			panel_info_holder = null
+			
+
 func _on_defence_button_toggled(is_pressed: bool, button):
 	match button.name:
 		"Walls build button":
 			game_script.walls_build = is_pressed
+			panel_number = 7
 		"Normal Tower button":
 			game_script.normal_tower_build = is_pressed
+			panel_number=0
 		"Freeze Tower button":
 			game_script.freeze_tower_build = is_pressed
+			panel_number=1
 		"AOE Tower":
 			game_script.aoe_tower_build = is_pressed
+			panel_number=2
+	if panel_number >= 0:
+		if panel_info_holder != null:
+			panel_info_holder.free()
+		panel_info_holder = info_panels.instantiate()
+		add_child(panel_info_holder)
+		for i in panel_info_holder.get_child_count():
+			if i == panel_number:
+				panel_info_holder.get_child(i).visible = true
+			else:
+				panel_info_holder.get_child(i).visible = false
+	else:
+		if panel_info_holder != null:
+			panel_info_holder.free()
+			panel_info_holder = null
 
 func update_hearts() -> void:
 	for i in range(game_script.max_health):
@@ -143,3 +224,71 @@ func update_hearts() -> void:
 			heart.texture = full_heart
 		else:
 			heart.texture = empty_heart
+			
+			
+#when clicked on tower signal is recieved and pops up the ui for stats/upgrade/destroy
+func _on_normal_tower_lvl_1_tower_info(obj) -> void:
+	#print("Signal recieved from: ",obj.name)
+	if not game_script.normal_tower_build and not game_script.freeze_tower_build and not game_script.aoe_tower_build and not game_script.wood_build and not game_script.stone_build and not game_script.wheat_build and not game_script.beer_build and game_script.is_build_phase:
+		if ui_tower_panel == null:
+			obj.get_node("MobDetector").visible = true
+			ui_tower_panel = tower_info.instantiate()
+			add_child(ui_tower_panel)
+			var help_panel
+			help_panel = ui_tower_panel.get_child(0)
+			help_panel.visible = true
+			help_panel.size.x-=10
+			help_panel.object = obj
+			help_panel.connect("X_button_pressed",self._on_X_button)
+			help_panel.connect("upgrade_pressed",self.upgrade_tower)
+			help_panel.get_child(1).get_child(0).get_child(1).text = str(obj.title)
+			help_panel.get_child(1).get_child(1).get_node("Dmg").text = str(obj.damage)
+			help_panel.get_child(1).get_child(1).get_node("Range").text = str(obj.tower_range)
+			help_panel.get_child(1).get_child(1).get_node("Lvl").text = str(obj.level)
+			help_panel.get_child(1).get_child(1).get_node("Health").text = str(obj.health)
+			help_panel.get_child(1).get_child(1).get_node("FireRate").text = str(obj.firerate)+"/sec"
+			help_panel.get_child(1).get_child(1).get_child(0).get_child(0).size.x = help_panel.size.x/2 + 25
+			if obj.title == "Normal Tower":
+				help_panel.get_child(1).get_child(1).get_node("Special thing").visible = false
+				help_panel.get_child(1).get_child(1).get_node("Special thing_png").visible = false
+				help_panel.get_child(1).get_child(1).get_child(0).get_child(0).get_child(0).get_node("Name6").visible = false
+			if obj.title == "Freeze Tower":
+				help_panel.get_child(1).get_child(1).get_node("Special thing").text = str(obj.slow*100)+"%"
+				help_panel.get_child(1).get_child(1).get_node("Special thing_png").texture = slow_png
+				help_panel.get_child(1).get_child(1).get_child(0).get_child(0).get_child(0).get_node("Name6").text = "slow"
+			if obj.title == "AOE Tower":
+				help_panel.get_child(1).get_child(1).get_node("Special thing").text = str(obj.aoe*100)+"%"
+				help_panel.get_child(1).get_child(1).get_node("Special thing_png").texture = aoe_png
+				help_panel.get_child(1).get_child(1).get_child(0).get_child(0).get_child(0).get_node("Name6").text = "AOE dmg"
+			if obj.level == 1:
+					help_panel.get_child(1).get_child(2).get_node("Wood").text = str(obj.wood_to_upgrade_lvl2)
+					help_panel.get_child(1).get_child(2).get_node("Stone").text = str(obj.stone_to_upgrade_lvl2)
+					help_panel.get_child(1).get_child(2).get_node("Wheat").text = str(obj.wheat_to_upgrade_lvl2)
+			elif obj.level == 2:
+				help_panel.get_child(1).get_child(2).get_node("Wood").text = str(obj.wood_to_upgrade_lvl3)
+				help_panel.get_child(1).get_child(2).get_node("Stone").text = str(obj.stone_to_upgrade_lvl3)
+				help_panel.get_child(1).get_child(2).get_node("Wheat").text = str(obj.wheat_to_upgrade_lvl3)
+			else:
+				help_panel.get_child(1).get_child(2).get_node("Label").text = "MAX LEVEL!"
+				help_panel.get_child(1).get_child(3).disabled = true
+				for i in help_panel.get_child(1).get_child(2).get_child_count():
+					if i>0:
+						help_panel.get_child(1).get_child(2).get_child(i).visible = false
+			help_panel.get_child(1).get_child(4).get_node("Wood").text = "+"+str(obj.return_wood * obj.level)
+			help_panel.get_child(1).get_child(4).get_node("Stone").text = "+"+str(obj.return_stone * obj.level)
+		else:
+			print("One panel already opened")
+
+
+#Signal recived when X_button on tower_panel is clicked
+func _on_X_button() ->void:
+	if ui_tower_panel !=null:
+		ui_tower_panel.get_child(0).object.get_node("MobDetector").visible = false
+		ui_tower_panel.queue_free()
+		ui_tower_panel = null
+		
+		
+func upgrade_tower(tower) ->void:
+	#print("upgrading: ",tower)
+	_on_X_button()
+	tower.upgrade()

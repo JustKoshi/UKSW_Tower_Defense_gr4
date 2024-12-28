@@ -1,4 +1,4 @@
-[gd_scene load_steps=45 format=3 uid="uid://chdc08c7ct8xv"]
+[gd_scene load_steps=47 format=3 uid="uid://chdc08c7ct8xv"]
 
 [ext_resource type="Script" path="res://Scripts/game_script.gd" id="1_wclms"]
 [ext_resource type="MeshLibrary" uid="uid://746jf5hii373" path="res://mesh_lib.tres" id="2_5f8px"]
@@ -14,12 +14,14 @@
 [ext_resource type="Theme" uid="uid://d1yp0vmlk8jtb" path="res://Resources/Themes/UI_hp_theme.tres" id="9_xr12o"]
 [ext_resource type="Texture2D" uid="uid://cgo3w8pokxeen" path="res://Resources/Icons/stone.png" id="10_kc5up"]
 [ext_resource type="Texture2D" uid="uid://irc84uh4ceqx" path="res://Resources/Icons/beer.png" id="10_xkq1o"]
+[ext_resource type="Texture2D" uid="uid://e6o22e318htk" path="res://Resources/Icons/worker.png" id="12_ods8h"]
 [ext_resource type="Texture2D" uid="uid://bn8dy1n7d2eb5" path="res://Resources/Icons/basic head.png" id="14_tqguo"]
 [ext_resource type="Texture2D" uid="uid://caqpa1w1c6083" path="res://Resources/Icons/Hood head.png" id="15_2podv"]
 [ext_resource type="Texture2D" uid="uid://ceyur06fyam64" path="res://Resources/Icons/boss head.png" id="16_1vtdw"]
 [ext_resource type="FontFile" uid="uid://b0sbud2angi6h" path="res://Resources/Fonts/buddychampionexpand.ttf" id="18_18u4r"]
 [ext_resource type="Theme" uid="uid://bk4rbmthy5fx8" path="res://Resources/Themes/UI_buttom_panel.tres" id="18_tdln6"]
 [ext_resource type="Texture2D" uid="uid://uesnqfipiql6" path="res://Resources/UI/UI board Small  stone.png" id="19_15ryl"]
+[ext_resource type="Texture2D" uid="uid://4v5jwxcl5ofb" path="res://Resources/Icons/catapult.png" id="20_7ex20"]
 [ext_resource type="Texture2D" uid="uid://b0kndl2r5na8v" path="res://Resources/Icons/Tetris.png" id="21_eu6v8"]
 [ext_resource type="Texture2D" uid="uid://p8bjhb8fenuq" path="res://Resources/Icons/arrow.png" id="22_si6jt"]
 [ext_resource type="Texture2D" uid="uid://b7i53w4037ub2" path="res://Resources/Icons/snowflake.png" id="23_f26j8"]
@@ -35,7 +37,7 @@ offsets = PackedFloat32Array(0.438819, 0.810127)
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_dr3hc"]
 seed = 3
 
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_sldny"]
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_atrpq"]
 seamless = true
 color_ramp = SubResource("Gradient_lq3fq")
 noise = SubResource("FastNoiseLite_dr3hc")
@@ -44,18 +46,18 @@ noise = SubResource("FastNoiseLite_dr3hc")
 sky_top_color = Color(0.368627, 0.490196, 0.709804, 1)
 sky_horizon_color = Color(0.484983, 0.59755, 0.753083, 1)
 sky_curve = 0.0247406
-sky_cover = SubResource("NoiseTexture2D_sldny")
+sky_cover = SubResource("NoiseTexture2D_atrpq")
 ground_bottom_color = Color(0.0784314, 0.607843, 1, 1)
 ground_horizon_color = Color(0.350571, 0.48282, 0.98942, 1)
 ground_curve = 0.0127456
 sun_curve = 0.0699775
 
-[sub_resource type="Sky" id="Sky_62k22"]
+[sub_resource type="Sky" id="Sky_376uu"]
 sky_material = SubResource("ProceduralSkyMaterial_vssjk")
 
 [sub_resource type="Environment" id="Environment_vognj"]
 background_mode = 2
-sky = SubResource("Sky_62k22")
+sky = SubResource("Sky_376uu")
 fog_light_color = Color(0.462538, 0.644657, 0.882591, 1)
 fog_light_energy = 0.2
 fog_density = 0.005
@@ -159,6 +161,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 script = ExtResource("6_5mynr")
 
 [node name="EQ container" type="PanelContainer" parent="CanvasLayer/UI"]
@@ -195,6 +198,16 @@ text = "100
 "
 vertical_alignment = 1
 
+[node name="Stone" type="TextureRect" parent="CanvasLayer/UI/EQ container/MarginContainer/GridContainer"]
+layout_mode = 2
+texture = ExtResource("10_kc5up")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="Stone count label" type="Label" parent="CanvasLayer/UI/EQ container/MarginContainer/GridContainer"]
+layout_mode = 2
+text = "100"
+
 [node name="Wheat" type="TextureRect" parent="CanvasLayer/UI/EQ container/MarginContainer/GridContainer"]
 layout_mode = 2
 texture = ExtResource("9_tvx0g")
@@ -204,16 +217,6 @@ stretch_mode = 5
 [node name="Wheat count label" type="Label" parent="CanvasLayer/UI/EQ container/MarginContainer/GridContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 38
-text = "100"
-
-[node name="Stone" type="TextureRect" parent="CanvasLayer/UI/EQ container/MarginContainer/GridContainer"]
-layout_mode = 2
-texture = ExtResource("10_kc5up")
-expand_mode = 2
-stretch_mode = 5
-
-[node name="Stone count label" type="Label" parent="CanvasLayer/UI/EQ container/MarginContainer/GridContainer"]
-layout_mode = 2
 text = "100"
 
 [node name="Beer" type="TextureRect" parent="CanvasLayer/UI/EQ container/MarginContainer/GridContainer"]
@@ -226,6 +229,17 @@ stretch_mode = 5
 layout_mode = 2
 theme_override_font_sizes/font_size = 38
 text = "100"
+
+[node name="Worker" type="TextureRect" parent="CanvasLayer/UI/EQ container/MarginContainer/GridContainer"]
+layout_mode = 2
+texture = ExtResource("12_ods8h")
+expand_mode = 2
+
+[node name="Worker count label" type="Label" parent="CanvasLayer/UI/EQ container/MarginContainer/GridContainer"]
+layout_mode = 2
+text = "0/2
+"
+vertical_alignment = 1
 
 [node name="EnemyPanelContainer" type="PanelContainer" parent="CanvasLayer/UI"]
 layout_mode = 1
@@ -456,6 +470,34 @@ focus_mode = 0
 toggle_mode = true
 text = "AOE TOWER"
 
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/UI/Bottom_panel/Defence buildings/HBoxContainer/AOE Tower"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.366
+anchor_right = 1.0
+anchor_bottom = 0.366
+offset_left = -120.5
+offset_top = -14.038
+offset_right = -217.0
+offset_bottom = 17.962
+texture = ExtResource("20_7ex20")
+expand_mode = 1
+
+[node name="TextureRect2" type="TextureRect" parent="CanvasLayer/UI/Bottom_panel/Defence buildings/HBoxContainer/AOE Tower"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.366
+anchor_right = 0.5
+anchor_bottom = 0.366
+offset_left = 85.5
+offset_top = -14.038
+offset_right = 117.5
+offset_bottom = 17.962
+texture = ExtResource("20_7ex20")
+expand_mode = 1
+
 [node name="spring4" type="Control" parent="CanvasLayer/UI/Bottom_panel/Defence buildings/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -514,44 +556,6 @@ expand_mode = 1
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Wheat building" type="Button" parent="CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer"]
-layout_mode = 2
-focus_mode = 0
-toggle_mode = true
-text = "wheat fields"
-
-[node name="TextureRect" type="TextureRect" parent="CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Wheat building"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.5
-anchor_top = 0.333
-anchor_right = 0.5
-anchor_bottom = 0.333
-offset_left = -134.5
-offset_top = -13.969
-offset_right = -102.5
-offset_bottom = 18.031
-texture = ExtResource("9_tvx0g")
-expand_mode = 1
-
-[node name="TextureRect2" type="TextureRect" parent="CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Wheat building"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.5
-anchor_top = 0.333
-anchor_right = 0.5
-anchor_bottom = 0.333
-offset_left = 103.5
-offset_top = -11.969
-offset_right = 135.5
-offset_bottom = 20.031
-texture = ExtResource("9_tvx0g")
-expand_mode = 1
-
-[node name="spring2" type="Control" parent="CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-
 [node name="Stone building" type="Button" parent="CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer"]
 layout_mode = 2
 focus_mode = 0
@@ -586,7 +590,83 @@ offset_bottom = 12.01
 texture = ExtResource("10_kc5up")
 expand_mode = 1
 
+[node name="spring2" type="Control" parent="CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Wheat building" type="Button" parent="CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+toggle_mode = true
+text = "Wheat fields"
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Wheat building"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.333
+anchor_right = 0.5
+anchor_bottom = 0.333
+offset_left = -134.5
+offset_top = -13.969
+offset_right = -102.5
+offset_bottom = 18.031
+texture = ExtResource("9_tvx0g")
+expand_mode = 1
+
+[node name="TextureRect2" type="TextureRect" parent="CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Wheat building"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.333
+anchor_right = 0.5
+anchor_bottom = 0.333
+offset_left = 103.5
+offset_top = -11.969
+offset_right = 135.5
+offset_bottom = 20.031
+texture = ExtResource("9_tvx0g")
+expand_mode = 1
+
 [node name="spring3" type="Control" parent="CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Workers" type="Button" parent="CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+toggle_mode = true
+text = "Workers"
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Workers"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.376
+anchor_right = 0.5
+anchor_bottom = 0.376
+offset_left = -97.0
+offset_top = -13.968
+offset_right = -69.0
+offset_bottom = 14.032
+texture = ExtResource("12_ods8h")
+expand_mode = 1
+
+[node name="TextureRect2" type="TextureRect" parent="CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Workers"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.387
+anchor_right = 0.5
+anchor_bottom = 0.387
+offset_left = 69.0
+offset_top = -13.991
+offset_right = 97.0
+offset_bottom = 14.009
+texture = ExtResource("12_ods8h")
+expand_mode = 1
+
+[node name="spring4" type="Control" parent="CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
@@ -625,7 +705,7 @@ offset_bottom = 13.032
 texture = ExtResource("10_xkq1o")
 expand_mode = 1
 
-[node name="spring4" type="Control" parent="CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer"]
+[node name="spring5" type="Control" parent="CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
@@ -699,6 +779,7 @@ theme_override_styles/normal = SubResource("StyleBoxTexture_pkn5g")
 text = "Current wave:"
 
 [node name="GameOverScreen" type="PanelContainer" parent="CanvasLayer/UI"]
+visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5

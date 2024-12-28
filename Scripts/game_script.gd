@@ -43,7 +43,6 @@ var aoe_tower_build = false
 
 
 var hovering_tower = 0
-
 var tower_to_hover = 0#Which tower is picked with button 0-none 1-normal 2-freeze 3-aoe
 
 var hovering_resource = 0
@@ -64,7 +63,9 @@ var game_resources = {
 	"wood": 0,
 	"stone": 0,
 	"wheat": 0,
-	"beer": 0
+	"beer": 0,
+	"used_workers": 0,
+	"workers": 0
 }
 var max_health = 15
 var current_health
@@ -72,6 +73,8 @@ var game = true
 
 var wave_number = 1
 var is_build_phase = true
+
+var number_of_tetris_placed
 
 var texture_png = load("res://Resources/Towers/hexagons_medieval.png")
 var red_mat = StandardMaterial3D.new()
@@ -87,6 +90,8 @@ func _ready() -> void:
 	GameOver.visible = false
 	$CanvasLayer/UI/GameOverScreen/VBoxContainer/MainMenu_button.disabled = true
 	$CanvasLayer/UI/GameOverScreen/VBoxContainer/PlayAgain_button.disabled = true
+	number_of_tetris_placed = 0
+	game_resources.workers = 2
 	red_mat.albedo_color = Color(1,0,0,0.55)
 	normal_mat.albedo_color = Color(1,1,1,0.55)
 	normal_mat_range.albedo_color = Color(0,0,0,0.55)
@@ -163,14 +168,7 @@ func _process(delta: float) -> void:
 	
 	if not game:
 		get_node("Main Camera").angle += 0.1 * delta
-	#print("wood build: " + str(wood_build))
-	#print("wheat build: " + str(wheat_build))
-	#print("stone build: "+ str(stone_build))
-	#print("beer build: " + str(beer_build))
-	#print("walls build: " + str(walls_build))
-	#print("normal tower: " + str(normal_tower_build))
-	#print("freeze tower: " + str(freeze_tower_build))
-	#print("aoe tower: " + str(aoe_tower_build))
+
 
 func _input(event: InputEvent) -> void:
 	if walls_build and event is InputEventMouseButton:
@@ -218,8 +216,8 @@ func get_collision_point(): #returns raycast collision point with map
 	var query = PhysicsRayQueryParameters3D.create(from, to)
 	var result = space_state.intersect_ray(query)
 	
-	if result.size() > 0:
 		#print("Collision point: ", result)
+	if result.size() > 0:
 		return result.position  # Return collision point
 	else:
 		return null  #No collison
@@ -233,6 +231,7 @@ func place_block_on_click():
 		grid_map.place_tetris_block(grid_pos, grid_map.current_shape)
 		convert_path_to_local()
 		enemy_spawner.set_path(short_path)
+		number_of_tetris_placed += 1
 
 
 #function places tower on raycast position
@@ -261,6 +260,7 @@ func place_tower_on_click(tower_type:int):
 		if tower_type == 1:
 			tower.set_surface_override_material(1,mat_dup)
 		tower.get_node("MobDetector").visible=false
+		tower.connect("tower_info",UI._on_normal_tower_lvl_1_tower_info)
 		grid_map.place_tower_in_tilemap(collision_point)
 		self.get_node("Tower Holder").add_child(tower)
 		print("Added tower in position: ",grid_pos)
@@ -279,6 +279,7 @@ func hover_tower(_tower_type:int):
 			tower_hover_holder = FreezeTowerScene.instantiate()
 			hovering_tower=2
 		tower_hover_holder.can_shoot=false
+		tower_hover_holder.get_node("MobDetector").visible = true
 		get_node("Tower Holder").add_child(tower_hover_holder)
 		tower_hover_holder.set_surface_override_material(0,normal_mat)
 		if tower_to_hover == 1:
@@ -304,8 +305,9 @@ func hover_tower(_tower_type:int):
 			if tower_to_hover == 1:
 				tower_hover_holder.set_surface_override_material(1,red_mat)
 	else:
-		#hide hover if cursor is out of gridmap
-		tower_hover_holder.visible=false
+		#free hover if cursor is out of gridmap
+		tower_hover_holder.queue_free()
+		tower_hover_holder = null
 	
 #function creates block hover on raycast position
 func update_hover_tetris():
@@ -371,7 +373,8 @@ func update_resource_timers():
 
 
 func place_resource_on_click(resource_type:int):
-	resource_hover_holder.free()
+	if resource_hover_holder != null:
+		resource_hover_holder.free()
 	var collision_point = get_collision_point()
 	var building
 	#checking if raycast detected any block if so place block on gridmap
@@ -493,6 +496,7 @@ func _on_build_timer_timeout() -> void:
 		enemy_spawner.start_wave()
 		UI.bottom_panel.visible = false
 		UI.unpress_all_buttons()
+		UI._on_X_button()
 		for h in hover:
 			h.visible = false
 
@@ -506,6 +510,32 @@ func reset_build_timer():
 #when end wave signal is recived resets build timer
 func _on_enemy_spawner_wave_ended() -> void:
 	#print("Przekazano sygnal")
+	if enemy_spawner.current_wave == 5:
+		#odblokuj farme
+		print("Farm unlocked")
+		$"CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Wheat building".disabled = false
+		$"CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Workers".disabled = false
+		for button in UI.locked_buttons:
+			for child in button.get_children():
+				if child is TextureRect:
+					if not UI.original_positions.has(child):
+						UI.original_positions[child] = child.position.y
+				var target_position = child.position
+				if not button.disabled:
+					target_position.y = UI.original_positions[child]
+					child.position = target_position
+		game_resources.workers += 1
+	elif enemy_spawner.current_wave == 10:
+		#odblokuj piwo i skille
+		print("Ber unlocked")
+		$"CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Beer building".disabled = false
+		for child in $"CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Beer building".get_children():
+			if child is TextureRect:
+				if not UI.original_positions.has(child):
+					UI.original_positions[child] = child.position.y
+			var target_position = child.position
+			target_position.y = UI.original_positions[child]
+			child.position = target_position
 	enemy_spawner.current_wave+=1
 	enemy_spawner.update_wave_enemy_count()
 	UI.update_enemy_count_labels(enemy_spawner.basic_enemies_per_wave, enemy_spawner.fast_enemies_per_wave, 0)
@@ -516,11 +546,12 @@ func _on_enemy_spawner_wave_ended() -> void:
 func _on_switch_label_timer_timeout() -> void:
 	build_time_label.text = "Current wave: " + str(enemy_spawner.current_wave)
 	
+#Function that happens when enemies deal damage to our gate and checks for game_over possibility
 func take_damage(dmg) -> void:
 	current_health = current_health-dmg
 	#print("Current health z maina:",current_health)
 	UI.update_hearts()
-	if current_health <= 0:
+	if current_health <= 0 and game:
 		print("GAMEOVER GG")
 		game = false
 		GameOver.visible = true
