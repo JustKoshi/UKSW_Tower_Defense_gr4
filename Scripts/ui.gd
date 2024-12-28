@@ -249,6 +249,17 @@ func _on_normal_tower_lvl_1_tower_info(obj) -> void:
 			ui_tower_panel = tower_info.instantiate()
 			add_child(ui_tower_panel)
 			var help_panel
+			var needed_wood = 0
+			var needed_stone = 0
+			var needed_wheat = 0
+			if obj.level == 1:
+				needed_wood = obj.wood_to_upgrade_lvl2
+				needed_stone = obj.stone_to_upgrade_lvl2
+				needed_wheat = obj.wheat_to_upgrade_lvl2
+			elif obj.level == 2:
+				needed_wood = obj.wood_to_upgrade_lvl3
+				needed_stone = obj.stone_to_upgrade_lvl3
+				needed_wheat = obj.wheat_to_upgrade_lvl3
 			help_panel = ui_tower_panel.get_child(0)
 			help_panel.visible = true
 			help_panel.size.x-=10
@@ -275,21 +286,24 @@ func _on_normal_tower_lvl_1_tower_info(obj) -> void:
 				help_panel.get_child(1).get_child(1).get_node("Special thing_png").texture = aoe_png
 				help_panel.get_child(1).get_child(1).get_child(0).get_child(0).get_child(0).get_node("Name6").text = "AOE dmg"
 			if obj.level == 1:
-					help_panel.get_child(1).get_child(2).get_node("Wood").text = str(obj.wood_to_upgrade_lvl2)
-					help_panel.get_child(1).get_child(2).get_node("Stone").text = str(obj.stone_to_upgrade_lvl2)
-					help_panel.get_child(1).get_child(2).get_node("Wheat").text = str(obj.wheat_to_upgrade_lvl2)
+				help_panel.get_child(1).get_child(2).get_node("Wood").text = str(obj.wood_to_upgrade_lvl2)
+				help_panel.get_child(1).get_child(2).get_node("Stone").text = str(obj.stone_to_upgrade_lvl2)
+				help_panel.get_child(1).get_child(2).get_node("Wheat").text = str(obj.wheat_to_upgrade_lvl2)
 			elif obj.level == 2:
 				help_panel.get_child(1).get_child(2).get_node("Wood").text = str(obj.wood_to_upgrade_lvl3)
 				help_panel.get_child(1).get_child(2).get_node("Stone").text = str(obj.stone_to_upgrade_lvl3)
 				help_panel.get_child(1).get_child(2).get_node("Wheat").text = str(obj.wheat_to_upgrade_lvl3)
 			else:
 				help_panel.get_child(1).get_child(2).get_node("Label").text = "MAX LEVEL!"
-				help_panel.get_child(1).get_child(3).disabled = true
 				for i in help_panel.get_child(1).get_child(2).get_child_count():
 					if i>0:
 						help_panel.get_child(1).get_child(2).get_child(i).visible = false
 			help_panel.get_child(1).get_child(4).get_node("Wood").text = "+"+str(obj.return_wood * obj.level)
 			help_panel.get_child(1).get_child(4).get_node("Stone").text = "+"+str(obj.return_stone * obj.level)
+			if not game_script.is_enough_resources(needed_wood,needed_stone,needed_wheat,0,0) or obj.level == 3:
+				help_panel.get_child(1).get_child(3).disabled = true
+			else:
+				help_panel.get_child(1).get_child(3).disabled = false
 		else:
 			print("One panel already opened")
 
@@ -305,6 +319,14 @@ func _on_X_button() ->void:
 func upgrade_tower(tower) ->void:
 	#print("upgrading: ",tower)
 	_on_X_button()
+	if tower.level == 1:
+		game_script.game_resources.wood -= tower.wood_to_upgrade_lvl2
+		game_script.game_resources.stone -= tower.stone_to_upgrade_lvl2
+		game_script.game_resources.wheat -= tower.wheat_to_upgrade_lvl2
+	elif tower.level == 2:
+		game_script.game_resources.wood -= tower.wood_to_upgrade_lvl3
+		game_script.game_resources.stone -= tower.stone_to_upgrade_lvl3
+		game_script.game_resources.wheat -= tower.wheat_to_upgrade_lvl3
 	tower.upgrade()
 
 func switch_skip_button_visiblity() -> void:

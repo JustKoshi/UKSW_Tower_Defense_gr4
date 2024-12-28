@@ -91,9 +91,9 @@ var normal_mat_range = StandardMaterial3D.new()
 func _ready() -> void:
 	#testing chagnes: 
 	#enemy_spawner.current_wave = 5
-	#game_resources.wood = 999
-	#game_resources.stone = 999
-	#game_resources.wheat = 999
+	game_resources.wood = 999
+	game_resources.stone = 999
+	game_resources.wheat = 999
 	
 	current_health = max_health
 	game = false
