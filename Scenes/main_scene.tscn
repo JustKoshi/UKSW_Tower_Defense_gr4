@@ -577,8 +577,10 @@ Resource Management:
         2. Blocking paths: Arrange Tetris blocks 
         to redirect and slow down enemies.
      - The \"workers\" resource is required to place resource 
-       generating buildings. Workers increase every 5 waves.
-       Some buildings unlock after few waves!
+       generating buildings. One bonus worker is obtained after
+						 5th wave.
+     - Some buildings and option to buy workers unlock after
+						 few waves!
 Tower Interaction:
      - Click on a tower to open its management menu.
        1. Upgrade: Enhance the tower's stats.
