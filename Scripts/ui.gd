@@ -28,6 +28,11 @@ var defence_group = ButtonGroup.new()
 
 @onready var worker_bonus_panel = $Workers_buy
 
+@onready var menu_buttons: PanelContainer = $"../Menu/Menu Buttons"
+@onready var how_to_play: Control = $"../Menu/How to Play"
+@onready var title: Label = $"../Menu/Title"
+
+
 var full_heart = load("res://Resources/Icons/Heart.png")
 var empty_heart = load("res://Resources/Icons/black_heart.png")
 var slow_png = load("res://Resources/Icons/snowflake.png")
@@ -346,3 +351,17 @@ func _on_no_pressed() -> void:
 		var target_position = child.position
 		target_position.y = original_positions[child]
 		child.position = target_position
+
+
+func _on_about_pressed() -> void:
+	if !how_to_play.visible:
+		how_to_play.visible = true
+		title.global_position.x -= 500
+		menu_buttons.global_position.x -= 500
+	
+
+
+func _on_close_pressed() -> void:
+	how_to_play.visible = false
+	title.global_position.x += 500
+	menu_buttons.global_position.x += 500
