@@ -1,7 +1,7 @@
 extends Node3D
 
 #List containing all cameras and current cam index
-@onready var cameras = [$"Main Camera", $"Top Camera", $"Front camera", $"Resource Camera" ]
+@onready var cameras = [$"Main Camera", $"Top Camera", $"Front camera", $"Front camera2", $"Resource Camera"]
 
 #variable to contain main GridMap
 @onready var grid_map = $GridMap
@@ -20,6 +20,8 @@ extends Node3D
 @onready var UI = $CanvasLayer/UI
 @onready var menu: Control = $CanvasLayer/Menu
 @onready var GameOver = $CanvasLayer/UI/GameOverScreen
+@onready var how_to_play: Control = $"CanvasLayer/Menu/How to Play"
+
 
 var NormalTowerScene = preload("res://Scenes/normal_tower_lvl_1.tscn")
 var FreezeTowerScene = preload("res://Scenes/Freeze_tower_lvl_1.tscn")
@@ -137,7 +139,7 @@ func _process(delta: float) -> void:
 		
 	elif Input.is_action_just_pressed("Camera_F2") and game:
 		current_cam_index += 1
-		current_cam_index = current_cam_index%3
+		current_cam_index = current_cam_index%4
 		set_camera()
 		
 	elif Input.is_action_just_pressed("Camera_F9") and game:
@@ -217,7 +219,7 @@ func set_build_cam():
 	set_camera()
 
 func set_resource_cam():
-	current_cam_index = 3
+	current_cam_index = 4
 	set_camera()
 
 func get_collision_point(): #returns raycast collision point with map
@@ -699,6 +701,8 @@ func start_game():
 
 func _on_play_pressed() -> void:
 	start_game()
+	if how_to_play.visible:
+		how_to_play.visible = false
 
 func _on_quit_pressed() -> void:
 	get_tree().quit()
