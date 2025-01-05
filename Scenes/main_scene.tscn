@@ -22,17 +22,17 @@
 [ext_resource type="Texture2D" uid="uid://mli0shaoevoo" path="res://Resources/UI/options/342 px/options03.png" id="11_383yi"]
 [ext_resource type="Texture2D" uid="uid://e6o22e318htk" path="res://Resources/Icons/worker.png" id="12_ods8h"]
 [ext_resource type="Texture2D" uid="uid://cmfi6du3x0a6" path="res://Resources/UI/options/342 px/options01.png" id="12_yl8hm"]
-[ext_resource type="Texture2D" uid="uid://nfm1x7d475v2" path="res://Resources/UI/back/342 px/back02.png" id="13_g4grl"]
 [ext_resource type="Texture2D" uid="uid://bygfrtxr7mhk8" path="res://Resources/UI/about/342 px/about02.png" id="13_i88m8"]
 [ext_resource type="Texture2D" uid="uid://d3oepobtsg5yx" path="res://Resources/UI/about/342 px/about03.png" id="14_8xkrs"]
-[ext_resource type="Texture2D" uid="uid://btjv8ubn2bv1g" path="res://Resources/UI/back/342 px/back03.png" id="14_jum8r"]
 [ext_resource type="Texture2D" uid="uid://bn8dy1n7d2eb5" path="res://Resources/Icons/basic head.png" id="14_tqguo"]
 [ext_resource type="Texture2D" uid="uid://caqpa1w1c6083" path="res://Resources/Icons/Hood head.png" id="15_2podv"]
-[ext_resource type="Texture2D" uid="uid://uo6t8gbongcc" path="res://Resources/UI/back/342 px/back01.png" id="15_13mt4"]
 [ext_resource type="Texture2D" uid="uid://b4qthg3goao0f" path="res://Resources/UI/about/342 px/about01.png" id="15_yauhd"]
 [ext_resource type="Texture2D" uid="uid://ceyur06fyam64" path="res://Resources/Icons/boss head.png" id="16_1vtdw"]
 [ext_resource type="FontFile" uid="uid://c65ghbnpummrm" path="res://Resources/Fonts/stormfaze.ttf" id="16_6tlrc"]
+[ext_resource type="Texture2D" uid="uid://bu83pixrfaoog" path="res://Resources/UI/exit/exit02.png" id="16_xoy66"]
+[ext_resource type="Texture2D" uid="uid://dvyngax7xomjl" path="res://Resources/UI/exit/exit03.png" id="17_oanfy"]
 [ext_resource type="FontFile" uid="uid://b0sbud2angi6h" path="res://Resources/Fonts/buddychampionexpand.ttf" id="18_18u4r"]
+[ext_resource type="Texture2D" uid="uid://cmoi6xfau3jc5" path="res://Resources/UI/exit/exit01.png" id="18_l85iy"]
 [ext_resource type="Theme" uid="uid://bk4rbmthy5fx8" path="res://Resources/Themes/UI_buttom_panel.tres" id="18_tdln6"]
 [ext_resource type="Texture2D" uid="uid://uesnqfipiql6" path="res://Resources/UI/UI board Small  stone.png" id="19_15ryl"]
 [ext_resource type="Texture2D" uid="uid://4v5jwxcl5ofb" path="res://Resources/Icons/catapult.png" id="20_7ex20"]
@@ -125,13 +125,13 @@ texture = ExtResource("14_8xkrs")
 texture = ExtResource("15_yauhd")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_s3n3l"]
-texture = ExtResource("13_g4grl")
+texture = ExtResource("16_xoy66")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ysp8k"]
-texture = ExtResource("14_jum8r")
+texture = ExtResource("17_oanfy")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_vjq7h"]
-texture = ExtResource("15_13mt4")
+texture = ExtResource("18_l85iy")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eu65f"]
 bg_color = Color(0.117647, 0.117647, 0.117647, 0.501961)
