@@ -400,7 +400,37 @@ func check_coordinates():
 		
 
 func color_transparent_mesh_instance(object, color):#1 - transparent, 2 - red/transparent, 3 - normal
-	for i in range(object.get_surface_override_material_count()):
+	if object is Windmill:#bardzo tymczasowy i brzydki fix
+		print("1")
+		for i in range(34):
+			if i==16 || i==33:
+				var mat = object.get_surface_override_material(i)
+				var mat_dupe = mat.duplicate()
+				mat_dupe.flags_transparent = true
+				match color:
+					1:
+						mat_dupe.albedo_color = Color(1,1,1,0.5)
+					2:
+						mat_dupe.albedo_color = Color(1,0,0,0.5)
+					3:
+						mat_dupe.albedo_color = Color("#836d4b")
+						mat_dupe.transparency=BaseMaterial3D.TRANSPARENCY_DISABLED
+				object.set_surface_override_material(i,mat_dupe)
+			else:
+				var mat = object.get_surface_override_material(i)
+				var mat_dupe = mat.duplicate()
+				mat_dupe.flags_transparent = true
+				match color:
+					1:
+						mat_dupe.albedo_color = Color(1,1,1,0.5)
+					2:
+						mat_dupe.albedo_color = Color(1,0,0,0.5)
+					3:
+						mat_dupe.albedo_color = Color("#e5e761")
+						mat_dupe.transparency=BaseMaterial3D.TRANSPARENCY_DISABLED
+				object.set_surface_override_material(i,mat_dupe)
+			
+		for i in range(object.get_surface_override_material_count()-3,object.get_surface_override_material_count()):
 			var mat = object.get_surface_override_material(i)
 			var mat_dupe = mat.duplicate()
 			mat_dupe.flags_transparent = true
@@ -413,6 +443,20 @@ func color_transparent_mesh_instance(object, color):#1 - transparent, 2 - red/tr
 					mat_dupe.albedo_color = Color(1,1,1,1)
 					mat_dupe.transparency=BaseMaterial3D.TRANSPARENCY_DISABLED
 			object.set_surface_override_material(i,mat_dupe)
+	else:
+		for i in range(object.get_surface_override_material_count()):
+				var mat = object.get_surface_override_material(i)
+				var mat_dupe = mat.duplicate()
+				mat_dupe.flags_transparent = true
+				match color:
+					1:
+						mat_dupe.albedo_color = Color(1,1,1,0.5)
+					2:
+						mat_dupe.albedo_color = Color(1,0,0,0.5)
+					3:
+						mat_dupe.albedo_color = Color(1,1,1,1)
+						mat_dupe.transparency=BaseMaterial3D.TRANSPARENCY_DISABLED
+				object.set_surface_override_material(i,mat_dupe)
 
 func update_resource_timers():
 	for i in range(get_node("Resource Holder").get_child_count()):
@@ -468,7 +512,7 @@ func check_resource_generation_req():
 	var node = get_node("Resource Holder")
 	for r in node.get_child_count():
 		var resource = node.get_child(r)
-		if resource is Tavern:
+		if resource is Tavern or resource is Windmill:
 			resource.generation_depleted = true
 		else:
 			resource.generation_depleted = false
@@ -487,6 +531,9 @@ func check_resource_generation_req():
 						resource2.generation_depleted = true
 				if resource is Tavern:
 					if resource2 is Windmill and resource2.transform.origin == resource.transform.origin+tavern_shift:
+						resource.generation_depleted = false
+				if resource is Windmill:
+					if resource2.transform.origin+tavern_shift == resource.transform.origin:
 						resource.generation_depleted = false
 		if resource.generation_depleted:
 			resource.get_node("exclamation_mark").visible = true
@@ -528,9 +575,11 @@ func hover_resource(resource_type:int):
 		if grid_map.can_place_resource(grid_pos, resource_hover_holder.shape) and is_enough_resources(0,0,0,0,1):
 			color_transparent_mesh_instance(resource_hover_holder, 1)
 			
+			
 			#print("dziala")
 		else:
 			#print("nie dziala")
+
 			color_transparent_mesh_instance(resource_hover_holder, 2)
 		var place_pos = grid_map.map_to_local(grid_pos)
 		#print(grid_pos)

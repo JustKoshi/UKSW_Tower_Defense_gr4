@@ -1127,7 +1127,8 @@ size_flags_vertical = 3
 [node name="Label" type="Label" parent="Wheat building panel/VBoxContainer"]
 layout_mode = 2
 text = "Reduced when
-................."
+bottom right corner
+is empty"
 horizontal_alignment = 1
 
 [node name="Spring3" type="Control" parent="Wheat building panel/VBoxContainer"]
