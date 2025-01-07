@@ -1,7 +1,10 @@
 extends CharacterBody3D
 
+var title = "Basic Enemy"
 var health=100
 var damage = 1
+var speed = 1.0/2
+var description = " Normal enemy with\nbasic damage speed\nand health."
 var finished_walk = false
 var can_attack = true
 var freezing = false

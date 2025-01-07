@@ -1344,9 +1344,9 @@ text = "Main Menu"
 
 [node name="skip_button" type="Button" parent="CanvasLayer/UI"]
 layout_mode = 2
-offset_left = 1189.0
+offset_left = 1210.0
 offset_top = 7.0
-offset_right = 1324.0
+offset_right = 1345.0
 offset_bottom = 71.0
 focus_mode = 0
 theme = ExtResource("18_tdln6")
@@ -1365,6 +1365,12 @@ text = "SKIP"
 [connection signal="pressed" from="CanvasLayer/Menu/Menu Buttons/MarginContainer/VBoxContainer/About" to="CanvasLayer/UI" method="_on_about_pressed"]
 [connection signal="pressed" from="CanvasLayer/Menu/Menu Buttons/MarginContainer/VBoxContainer/Quit" to="." method="_on_quit_pressed"]
 [connection signal="pressed" from="CanvasLayer/Menu/How to Play/Close" to="CanvasLayer/UI" method="_on_close_pressed"]
+[connection signal="mouse_entered" from="CanvasLayer/UI/EnemyPanelContainer/MarginContainer/GridContainer/Basic enemy" to="CanvasLayer/UI" method="_open_normal_enemy_info_panels"]
+[connection signal="mouse_exited" from="CanvasLayer/UI/EnemyPanelContainer/MarginContainer/GridContainer/Basic enemy" to="CanvasLayer/UI" method="_close_enemy_info_panels"]
+[connection signal="mouse_entered" from="CanvasLayer/UI/EnemyPanelContainer/MarginContainer/GridContainer/Fast enemy" to="CanvasLayer/UI" method="_open_fast_enemy_info_panel"]
+[connection signal="mouse_exited" from="CanvasLayer/UI/EnemyPanelContainer/MarginContainer/GridContainer/Fast enemy" to="CanvasLayer/UI" method="_close_enemy_info_panels"]
+[connection signal="mouse_entered" from="CanvasLayer/UI/EnemyPanelContainer/MarginContainer/GridContainer/Boss" to="CanvasLayer/UI" method="_on_boss_enemy_info_panel"]
+[connection signal="mouse_exited" from="CanvasLayer/UI/EnemyPanelContainer/MarginContainer/GridContainer/Boss" to="CanvasLayer/UI" method="_close_enemy_info_panels"]
 [connection signal="pressed" from="CanvasLayer/UI/Workers_buy/VBoxContainer/HBoxContainer/Yes" to="." method="buy_workers"]
 [connection signal="pressed" from="CanvasLayer/UI/Workers_buy/VBoxContainer/HBoxContainer/No" to="CanvasLayer/UI" method="_on_no_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/Bottom_panel/Main panel/HBoxContainer/Resource build button" to="CanvasLayer/UI" method="_on_resource_build_button_pressed"]

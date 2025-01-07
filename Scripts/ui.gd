@@ -40,14 +40,30 @@ var aoe_png = load("res://Resources/Icons/catapult.png")
 
 var info_panels = preload("res://Scenes/buttons_info_panels.tscn")
 var tower_info = preload("res://Scenes/towers_info_panels.tscn")
+var enemy_info = preload("res://Scenes/Enemy_info_panel.tscn")
 var panel_info_holder
 var ui_tower_panel
+var enemy_panel_holder
+
+const basic_enemies = preload("res://Scripts/enemy_basic.gd")
+const fast_enemies = preload("res://Scripts/fast_enemy.gd")
+const boss_enemies = preload("res://Scripts/skeleton_boss.gd")
+var basic_enemy
+var fast_enemy
+var boss_enemy
+var basic_enemy_png = load("res://Resources/Icons/basic head.png")
+var fast_enemy_png = load("res://Resources/Icons/Hood head.png")
+var boss_enemy_png = load("res://Resources/Icons/boss head.png")
 
 var original_positions = {}
 var panel_number
 @onready var locked_buttons = [$"Bottom_panel/Resource buildings/HBoxContainer/Workers", $"Bottom_panel/Resource buildings/HBoxContainer/Wheat building", $"Bottom_panel/Resource buildings/HBoxContainer/Beer building"]
 
 func _ready() -> void:
+	basic_enemy = basic_enemies.new()
+	fast_enemy = fast_enemies.new()
+	boss_enemy = boss_enemies.new()
+	
 	panel_info_holder = null
 	ui_tower_panel = null
 	worker_bonus_panel.position.x += 235
@@ -365,3 +381,46 @@ func _on_close_pressed() -> void:
 	how_to_play.visible = false
 	title.global_position.x += 500
 	menu_buttons.global_position.x += 500
+
+
+func _open_normal_enemy_info_panels() -> void:
+	if enemy_panel_holder == null:
+		enemy_panel_holder = enemy_info.instantiate()
+		add_child(enemy_panel_holder)
+		enemy_panel_holder.get_child(0).get_child(1).get_child(0).get_child(2).text = basic_enemy.title
+		enemy_panel_holder.get_child(0).get_child(1).get_child(1).get_node("Damage").text = str(basic_enemy.damage)
+		enemy_panel_holder.get_child(0).get_child(1).get_child(1).get_node("Health").text = str(basic_enemy.health)
+		enemy_panel_holder.get_child(0).get_child(1).get_child(3).get_node("Speed").text = str(basic_enemy.speed) + " blocks/s"
+		enemy_panel_holder.get_child(0).get_child(1).get_node("Label").text = basic_enemy.description
+		enemy_panel_holder.get_child(0).get_child(1).get_child(0).get_child(0).texture = basic_enemy_png
+		enemy_panel_holder.get_child(0).get_child(1).get_child(0).get_child(4).texture = basic_enemy_png
+
+func _open_fast_enemy_info_panel() -> void:
+	if enemy_panel_holder == null:
+		enemy_panel_holder = enemy_info.instantiate()
+		add_child(enemy_panel_holder)
+		enemy_panel_holder.get_child(0).get_child(1).get_child(0).get_child(2).text = fast_enemy.title
+		enemy_panel_holder.get_child(0).get_child(1).get_child(1).get_node("Damage").text = str(fast_enemy.damage)
+		enemy_panel_holder.get_child(0).get_child(1).get_child(1).get_node("Health").text = str(fast_enemy.health)
+		enemy_panel_holder.get_child(0).get_child(1).get_child(3).get_node("Speed").text = str(fast_enemy.speed) + " blocks/s"
+		enemy_panel_holder.get_child(0).get_child(1).get_node("Label").text = fast_enemy.description
+		enemy_panel_holder.get_child(0).get_child(1).get_child(0).get_child(0).texture = fast_enemy_png
+		enemy_panel_holder.get_child(0).get_child(1).get_child(0).get_child(4).texture = fast_enemy_png
+
+
+func _on_boss_enemy_info_panel() -> void:
+	if enemy_panel_holder == null:
+		enemy_panel_holder = enemy_info.instantiate()
+		add_child(enemy_panel_holder)
+		enemy_panel_holder.get_child(0).get_child(1).get_child(0).get_child(2).text = boss_enemy.title
+		enemy_panel_holder.get_child(0).get_child(1).get_child(1).get_node("Damage").text = str(boss_enemy.damage)
+		enemy_panel_holder.get_child(0).get_child(1).get_child(1).get_node("Health").text = str(boss_enemy.health)
+		enemy_panel_holder.get_child(0).get_child(1).get_child(3).get_node("Speed").text = str(boss_enemy.speed) + " blocks/s"
+		enemy_panel_holder.get_child(0).get_child(1).get_node("Label").text = boss_enemy.description
+		enemy_panel_holder.get_child(0).get_child(1).get_child(0).get_child(0).texture = boss_enemy_png
+		enemy_panel_holder.get_child(0).get_child(1).get_child(0).get_child(4).texture = boss_enemy_png
+
+func _close_enemy_info_panels() -> void:
+	if enemy_panel_holder != null:
+		enemy_panel_holder.queue_free()
+		enemy_panel_holder = null
