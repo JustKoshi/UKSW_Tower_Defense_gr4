@@ -88,7 +88,7 @@ func _process(delta: float) -> void:
 		
 	
 	#ends wave when spawned enemy count is equal to total enemy count tbc
-	if spawned_enemy_count >= basic_enemies_per_wave + fast_enemies_per_wave and enemy_count == 0 and wave_in_progress:
+	if spawned_enemy_count >= basic_enemies_per_wave + fast_enemies_per_wave + boss_enemies_per_wave and enemy_count == 0 and wave_in_progress:
 		end_wave()
 	
 func set_path(points: Array) -> void:

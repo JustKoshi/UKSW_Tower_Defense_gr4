@@ -5,6 +5,7 @@
 
 [node name="PathFollow3D" type="PathFollow3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40, 0, 40)
+loop = false
 script = ExtResource("1_62h0e")
 
 [node name="Skeleton_Warrior" parent="." groups=["Enemies"] instance=ExtResource("1_l1nmk")]
