@@ -5,7 +5,7 @@ var game_script
 var generator_on = true
 var resource_type = "wheat"
 
-var generation_depleted = false
+var generation_depleted = true
 
 var shape = [Vector3(0,0,0), Vector3(1,0,0), Vector3(0,0,1)]
 

@@ -692,3 +692,8 @@ mesh = ExtResource("5_8tjop")
 surface_material_override/0 = SubResource("StandardMaterial3D_h7cfv")
 surface_material_override/1 = SubResource("StandardMaterial3D_2h112")
 surface_material_override/2 = SubResource("StandardMaterial3D_o78pm")
+
+[node name="wall_floor" type="MeshInstance3D" parent="."]
+visible = false
+mesh = SubResource("ArrayMesh_54t0w")
+skeleton = NodePath("")

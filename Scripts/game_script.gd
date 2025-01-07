@@ -21,6 +21,7 @@ extends Node3D
 @onready var menu: Control = $CanvasLayer/Menu
 @onready var GameOver = $CanvasLayer/UI/GameOverScreen
 @onready var how_to_play: Control = $"CanvasLayer/Menu/How to Play"
+@onready var pause_menu: Control = $"CanvasLayer/Pause Menu"
 
 
 var NormalTowerScene = preload("res://Scenes/normal_tower_lvl_1.tscn")
@@ -149,6 +150,12 @@ func _process(delta: float) -> void:
 			coordinates_check_mode = true
 		else:
 			coordinates_check_mode = false
+			
+	elif Input.is_action_just_pressed("pause") and game:
+		get_tree().paused = true
+		UI.visible = false
+		pause_menu.visible = true
+		
 	
 	if walls_build:
 		set_build_cam()
@@ -393,7 +400,36 @@ func check_coordinates():
 		
 
 func color_transparent_mesh_instance(object, color):#1 - transparent, 2 - red/transparent, 3 - normal
-	for i in range(object.get_surface_override_material_count()):
+	if object is Windmill:#bardzo tymczasowy i brzydki fix
+		for i in range(34):
+			if i==16 || i==33:
+				var mat = object.get_surface_override_material(i)
+				var mat_dupe = mat.duplicate()
+				mat_dupe.flags_transparent = true
+				match color:
+					1:
+						mat_dupe.albedo_color = Color(1,1,1,0.5)
+					2:
+						mat_dupe.albedo_color = Color(1,0,0,0.5)
+					3:
+						mat_dupe.albedo_color = Color("#836d4b")
+						mat_dupe.transparency=BaseMaterial3D.TRANSPARENCY_DISABLED
+				object.set_surface_override_material(i,mat_dupe)
+			else:
+				var mat = object.get_surface_override_material(i)
+				var mat_dupe = mat.duplicate()
+				mat_dupe.flags_transparent = true
+				match color:
+					1:
+						mat_dupe.albedo_color = Color(1,1,1,0.5)
+					2:
+						mat_dupe.albedo_color = Color(1,0,0,0.5)
+					3:
+						mat_dupe.albedo_color = Color("#e5e761")
+						mat_dupe.transparency=BaseMaterial3D.TRANSPARENCY_DISABLED
+				object.set_surface_override_material(i,mat_dupe)
+			
+		for i in range(object.get_surface_override_material_count()-3,object.get_surface_override_material_count()):
 			var mat = object.get_surface_override_material(i)
 			var mat_dupe = mat.duplicate()
 			mat_dupe.flags_transparent = true
@@ -406,6 +442,20 @@ func color_transparent_mesh_instance(object, color):#1 - transparent, 2 - red/tr
 					mat_dupe.albedo_color = Color(1,1,1,1)
 					mat_dupe.transparency=BaseMaterial3D.TRANSPARENCY_DISABLED
 			object.set_surface_override_material(i,mat_dupe)
+	else:
+		for i in range(object.get_surface_override_material_count()):
+				var mat = object.get_surface_override_material(i)
+				var mat_dupe = mat.duplicate()
+				mat_dupe.flags_transparent = true
+				match color:
+					1:
+						mat_dupe.albedo_color = Color(1,1,1,0.5)
+					2:
+						mat_dupe.albedo_color = Color(1,0,0,0.5)
+					3:
+						mat_dupe.albedo_color = Color(1,1,1,1)
+						mat_dupe.transparency=BaseMaterial3D.TRANSPARENCY_DISABLED
+				object.set_surface_override_material(i,mat_dupe)
 
 func update_resource_timers():
 	for i in range(get_node("Resource Holder").get_child_count()):
@@ -458,10 +508,11 @@ func place_resource_on_click(resource_type:int):
 func check_resource_generation_req():
 	var shifts = [Vector3(-4,0,0),Vector3(4,0,0),Vector3(0,0,-4),Vector3(0,0,4)]
 	var tavern_shift = Vector3(-2,0,-2)#distance from corretly placed tavern to its correctly placed windmill
+	var windmill_shift = Vector3(-3,0,-3)
 	var node = get_node("Resource Holder")
 	for r in node.get_child_count():
 		var resource = node.get_child(r)
-		if resource is Tavern:
+		if resource is Tavern or resource is Windmill:
 			resource.generation_depleted = true
 		else:
 			resource.generation_depleted = false
@@ -481,6 +532,15 @@ func check_resource_generation_req():
 				if resource is Tavern:
 					if resource2 is Windmill and resource2.transform.origin == resource.transform.origin+tavern_shift:
 						resource.generation_depleted = false
+
+				if resource is Windmill:
+					if resource2 is Mine or resource2 is Lumbermill:
+						print("farma:", resource.transform.origin, " drugie: ", resource2.transform.origin )
+						if resource2.transform.origin+windmill_shift == resource.transform.origin:
+							resource.generation_depleted = false
+					elif resource2 is Windmill:
+						if resource2.transform.origin+tavern_shift == resource.transform.origin:
+							resource.generation_depleted = false
 		if resource.generation_depleted:
 			resource.get_node("exclamation_mark").visible = true
 		else:
@@ -521,9 +581,11 @@ func hover_resource(resource_type:int):
 		if grid_map.can_place_resource(grid_pos, resource_hover_holder.shape) and is_enough_resources(0,0,0,0,1):
 			color_transparent_mesh_instance(resource_hover_holder, 1)
 			
+			
 			#print("dziala")
 		else:
 			#print("nie dziala")
+
 			color_transparent_mesh_instance(resource_hover_holder, 2)
 		var place_pos = grid_map.map_to_local(grid_pos)
 		#print(grid_pos)
@@ -705,7 +767,14 @@ func _on_play_pressed() -> void:
 		how_to_play.visible = false
 
 func _on_quit_pressed() -> void:
+	get_tree().paused = false
 	get_tree().quit()
+
+func _on_continue_pressed()->void:
+	get_tree().paused = false
+	pause_menu.visible = false
+	UI.visible = true
+	
 
 #fuction to buy workers
 func buy_workers() -> void:
