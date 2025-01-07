@@ -401,7 +401,6 @@ func check_coordinates():
 
 func color_transparent_mesh_instance(object, color):#1 - transparent, 2 - red/transparent, 3 - normal
 	if object is Windmill:#bardzo tymczasowy i brzydki fix
-		print("1")
 		for i in range(34):
 			if i==16 || i==33:
 				var mat = object.get_surface_override_material(i)
@@ -509,6 +508,7 @@ func place_resource_on_click(resource_type:int):
 func check_resource_generation_req():
 	var shifts = [Vector3(-4,0,0),Vector3(4,0,0),Vector3(0,0,-4),Vector3(0,0,4)]
 	var tavern_shift = Vector3(-2,0,-2)#distance from corretly placed tavern to its correctly placed windmill
+	var windmill_shift = Vector3(-3,0,-3)
 	var node = get_node("Resource Holder")
 	for r in node.get_child_count():
 		var resource = node.get_child(r)
@@ -532,9 +532,15 @@ func check_resource_generation_req():
 				if resource is Tavern:
 					if resource2 is Windmill and resource2.transform.origin == resource.transform.origin+tavern_shift:
 						resource.generation_depleted = false
+
 				if resource is Windmill:
-					if resource2.transform.origin+tavern_shift == resource.transform.origin:
-						resource.generation_depleted = false
+					if resource2 is Mine or resource2 is Lumbermill:
+						print("farma:", resource.transform.origin, " drugie: ", resource2.transform.origin )
+						if resource2.transform.origin+windmill_shift == resource.transform.origin:
+							resource.generation_depleted = false
+					elif resource2 is Windmill:
+						if resource2.transform.origin+tavern_shift == resource.transform.origin:
+							resource.generation_depleted = false
 		if resource.generation_depleted:
 			resource.get_node("exclamation_mark").visible = true
 		else:
