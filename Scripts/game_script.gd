@@ -21,6 +21,7 @@ extends Node3D
 @onready var menu: Control = $CanvasLayer/Menu
 @onready var GameOver = $CanvasLayer/UI/GameOverScreen
 @onready var how_to_play: Control = $"CanvasLayer/Menu/How to Play"
+@onready var pause_menu: Control = $"CanvasLayer/Pause Menu"
 
 
 var NormalTowerScene = preload("res://Scenes/normal_tower_lvl_1.tscn")
@@ -149,6 +150,12 @@ func _process(delta: float) -> void:
 			coordinates_check_mode = true
 		else:
 			coordinates_check_mode = false
+			
+	elif Input.is_action_just_pressed("pause") and game:
+		get_tree().paused = true
+		UI.visible = false
+		pause_menu.visible = true
+		
 	
 	if walls_build:
 		set_build_cam()
@@ -705,7 +712,14 @@ func _on_play_pressed() -> void:
 		how_to_play.visible = false
 
 func _on_quit_pressed() -> void:
+	get_tree().paused = false
 	get_tree().quit()
+
+func _on_continue_pressed()->void:
+	get_tree().paused = false
+	pause_menu.visible = false
+	UI.visible = true
+	
 
 #fuction to buy workers
 func buy_workers() -> void:

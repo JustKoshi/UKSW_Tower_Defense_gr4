@@ -1358,6 +1358,71 @@ theme_override_styles/pressed = SubResource("StyleBoxTexture_vcb7g")
 theme_override_styles/normal = SubResource("StyleBoxTexture_dr3oo")
 text = "SKIP"
 
+[node name="Pause Menu" type="Control" parent="CanvasLayer"]
+process_mode = 3
+visible = false
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -960.0
+offset_top = -539.0
+offset_right = 960.0
+offset_bottom = 539.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Menu Buttons" type="PanelContainer" parent="CanvasLayer/Pause Menu"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -244.0
+offset_top = -168.0
+offset_right = 243.0
+offset_bottom = 154.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("6_nh21e")
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Pause Menu/Menu Buttons"]
+layout_mode = 2
+theme_override_constants/margin_top = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Pause Menu/Menu Buttons/MarginContainer"]
+layout_mode = 2
+
+[node name="Continue" type="Button" parent="CanvasLayer/Pause Menu/Menu Buttons/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 135)
+layout_mode = 2
+focus_mode = 0
+theme_override_styles/hover = SubResource("StyleBoxTexture_peqyp")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_obu66")
+theme_override_styles/normal = SubResource("StyleBoxTexture_68eu4")
+
+[node name="Quit" type="Button" parent="CanvasLayer/Pause Menu/Menu Buttons/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 135)
+layout_mode = 2
+focus_mode = 0
+theme_override_styles/hover = SubResource("StyleBoxTexture_s3n3l")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_ysp8k")
+theme_override_styles/normal = SubResource("StyleBoxTexture_vjq7h")
+
+[node name="Title" type="Label" parent="CanvasLayer/Pause Menu"]
+layout_mode = 0
+offset_left = 642.0
+offset_top = 200.0
+offset_right = 2032.0
+offset_bottom = 425.0
+scale = Vector2(0.5, 0.5)
+theme_override_font_sizes/font_size = 164
+theme_override_styles/normal = SubResource("StyleBoxFlat_eu65f")
+text = "Game is paused..."
+
 [connection signal="wave_ended" from="Enemy Spawner" to="." method="_on_enemy_spawner_wave_ended"]
 [connection signal="timeout" from="Build Timer" to="." method="prepare_wave"]
 [connection signal="timeout" from="Switch Label Timer" to="." method="_on_switch_label_timer_timeout"]
@@ -1372,3 +1437,5 @@ text = "SKIP"
 [connection signal="pressed" from="CanvasLayer/UI/Bottom_panel/Defence buildings/HBoxContainer/Back Button2" to="CanvasLayer/UI" method="_on_back_button_2_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Back Button" to="CanvasLayer/UI" method="_on_back_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/skip_button" to="." method="_on_skip_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/Pause Menu/Menu Buttons/MarginContainer/VBoxContainer/Continue" to="." method="_on_continue_pressed"]
+[connection signal="pressed" from="CanvasLayer/Pause Menu/Menu Buttons/MarginContainer/VBoxContainer/Quit" to="." method="_on_quit_pressed"]
