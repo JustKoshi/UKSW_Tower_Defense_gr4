@@ -94,6 +94,7 @@ var normal_mat_range = StandardMaterial3D.new()
 func _ready() -> void:
 	#testing chagnes: 
 	#enemy_spawner.current_wave = 5
+	print("2")
 	game_resources.wood = 999
 	game_resources.stone = 999
 	game_resources.wheat = 999
@@ -102,7 +103,6 @@ func _ready() -> void:
 	game = false
 	GameOver.visible = false
 	$CanvasLayer/UI/GameOverScreen/VBoxContainer/MainMenu_button.disabled = true
-	$CanvasLayer/UI/GameOverScreen/VBoxContainer/PlayAgain_button.disabled = true
 	number_of_tetris_placed = 0
 	game_resources.workers = 2
 	red_mat.albedo_color = Color(1,0,0,0.55)
@@ -726,7 +726,6 @@ func take_damage(dmg) -> void:
 		GameOver.visible = true
 		$CanvasLayer/UI/GameOverScreen/VBoxContainer/GameOverText.text = "Game Over!\nYou failed at\n wave number\n %d." % enemy_spawner.current_wave
 		$CanvasLayer/UI/GameOverScreen/VBoxContainer/MainMenu_button.disabled = false
-		$CanvasLayer/UI/GameOverScreen/VBoxContainer/PlayAgain_button.disabled = false
 		for i in range(get_node("Tower Holder").get_child_count()):
 			var tower = get_node("Tower Holder").get_child(i)
 			tower.get_node("MobDetector").get_child(0).disabled=true
@@ -757,6 +756,7 @@ func _on_skip_button_pressed() -> void:
 	
 func start_game():
 	game = true
+	print("1")
 	build_timer.start()
 	UI.visible = true
 	menu.visible = false
@@ -767,7 +767,6 @@ func _on_play_pressed() -> void:
 		how_to_play.visible = false
 
 func _on_quit_pressed() -> void:
-	get_tree().paused = false
 	get_tree().quit()
 
 func _on_continue_pressed()->void:

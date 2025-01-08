@@ -365,3 +365,12 @@ func _on_close_pressed() -> void:
 	how_to_play.visible = false
 	title.global_position.x += 500
 	menu_buttons.global_position.x += 500
+
+
+func _button_to_main_menu() -> void:
+	get_tree().reload_current_scene()
+
+
+func _on_quit_in_pause_pressed() -> void:
+	get_tree().paused = false
+	_button_to_main_menu()

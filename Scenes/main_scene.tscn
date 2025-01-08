@@ -1324,15 +1324,6 @@ wave number
 %d"
 horizontal_alignment = 1
 
-[node name="spring2" type="Control" parent="CanvasLayer/UI/GameOverScreen/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="PlayAgain_button" type="Button" parent="CanvasLayer/UI/GameOverScreen/VBoxContainer"]
-layout_mode = 2
-focus_mode = 0
-text = "Play Again"
-
 [node name="spring" type="Control" parent="CanvasLayer/UI/GameOverScreen/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -1436,6 +1427,7 @@ text = "Game is paused..."
 [connection signal="pressed" from="CanvasLayer/UI/Bottom_panel/Main panel/HBoxContainer/Defence build" to="CanvasLayer/UI" method="_on_defence_build_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/Bottom_panel/Defence buildings/HBoxContainer/Back Button2" to="CanvasLayer/UI" method="_on_back_button_2_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Back Button" to="CanvasLayer/UI" method="_on_back_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/UI/GameOverScreen/VBoxContainer/MainMenu_button" to="CanvasLayer/UI" method="_button_to_main_menu"]
 [connection signal="pressed" from="CanvasLayer/UI/skip_button" to="." method="_on_skip_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/Pause Menu/Menu Buttons/MarginContainer/VBoxContainer/Continue" to="." method="_on_continue_pressed"]
-[connection signal="pressed" from="CanvasLayer/Pause Menu/Menu Buttons/MarginContainer/VBoxContainer/Quit" to="." method="_on_quit_pressed"]
+[connection signal="pressed" from="CanvasLayer/Pause Menu/Menu Buttons/MarginContainer/VBoxContainer/Quit" to="CanvasLayer/UI" method="_on_quit_in_pause_pressed"]
