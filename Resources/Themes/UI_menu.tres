@@ -1,0 +1,13 @@
+[gd_resource type="Theme" load_steps=3 format=3 uid="uid://tllj1dky1re1"]
+
+[ext_resource type="Texture2D" uid="uid://c2tgutojdeake" path="res://Resources/UI/UI board Large  stone.png" id="1_i3upy"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_5j36m"]
+texture = ExtResource("1_i3upy")
+texture_margin_left = 24.0
+texture_margin_top = 24.0
+texture_margin_right = 24.0
+texture_margin_bottom = 24.0
+
+[resource]
+PanelContainer/styles/panel = SubResource("StyleBoxTexture_5j36m")

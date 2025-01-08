@@ -1,8 +1,9 @@
-[gd_scene load_steps=11 format=3 uid="uid://dt23d5ipegngd"]
+[gd_scene load_steps=12 format=3 uid="uid://dt23d5ipegngd"]
 
 [ext_resource type="ArrayMesh" uid="uid://cwa7glwnajxsr" path="res://Resources/Resource_buildings/lumbermill_v2.obj" id="1_dddwa"]
 [ext_resource type="Script" path="res://Scripts/lumbermill.gd" id="2_6bixp"]
 [ext_resource type="Texture2D" uid="uid://b1ms4h5mcmjd0" path="res://Resources/Towers/hexagons_medieval.png" id="2_hbsqb"]
+[ext_resource type="ArrayMesh" uid="uid://qf8dpkg4ccjt" path="res://Resources/Resource_buildings/exclamation_mark.obj" id="4_r68lw"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6vy3w"]
 render_priority = 1
@@ -29,6 +30,7 @@ render_priority = 1
 albedo_texture = ExtResource("2_hbsqb")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_cw6o8"]
+size = Vector3(1, 2.07727, 1)
 
 [node name="lumbermill" type="MeshInstance3D"]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
@@ -44,9 +46,15 @@ script = ExtResource("2_6bixp")
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.538635, 0)
 shape = SubResource("BoxShape3D_cw6o8")
 
 [node name="Timer" type="Timer" parent="."]
 wait_time = 3.0
+
+[node name="exclamation_mark" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 2.03815, 0)
+visible = false
+mesh = ExtResource("4_r68lw")
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

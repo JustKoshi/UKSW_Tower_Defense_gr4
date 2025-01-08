@@ -1,0 +1,1674 @@
+[gd_scene load_steps=20 format=3 uid="uid://dm7bi6l3wt8ua"]
+
+[ext_resource type="Theme" uid="uid://dik3dswqv7f6y" path="res://Resources/Themes/UI_info_panels_theme.tres" id="1_nocna"]
+[ext_resource type="Texture2D" uid="uid://p8bjhb8fenuq" path="res://Resources/Icons/arrow.png" id="2_f84b4"]
+[ext_resource type="Texture2D" uid="uid://bivms320kp4bo" path="res://Resources/Icons/damage.png" id="3_7u7rf"]
+[ext_resource type="Script" path="res://Scripts/bubble_text.gd" id="4_kjbb3"]
+[ext_resource type="Theme" uid="uid://bj4jsc3t11ucn" path="res://Resources/Themes/bubble_text_theme.tres" id="5_rbjlk"]
+[ext_resource type="Texture2D" uid="uid://py6ptw6h0vbo" path="res://Resources/Icons/range.png" id="6_x02uu"]
+[ext_resource type="Texture2D" uid="uid://c01d6rqlpnnjh" path="res://Resources/Icons/level.png" id="7_t1mn4"]
+[ext_resource type="Texture2D" uid="uid://b5eyxvf5y2v5n" path="res://Resources/Icons/Heart.png" id="8_7lpng"]
+[ext_resource type="Texture2D" uid="uid://dumy3gsxwrtdv" path="res://Resources/Icons/fire speed.png" id="9_h1bnj"]
+[ext_resource type="Texture2D" uid="uid://b3vdmx7qxicu5" path="res://Resources/Icons/wood.png" id="10_fgvhj"]
+[ext_resource type="Texture2D" uid="uid://cgo3w8pokxeen" path="res://Resources/Icons/stone.png" id="11_y72v8"]
+[ext_resource type="Texture2D" uid="uid://b7i53w4037ub2" path="res://Resources/Icons/snowflake.png" id="12_c3yfl"]
+[ext_resource type="Texture2D" uid="uid://4v5jwxcl5ofb" path="res://Resources/Icons/catapult.png" id="13_kobuc"]
+[ext_resource type="Texture2D" uid="uid://frijqq04jhk2" path="res://Resources/Icons/production.png" id="14_aunhg"]
+[ext_resource type="Texture2D" uid="uid://dh0en8kilvaj1" path="res://Resources/Icons/production reduced.png" id="15_20pmp"]
+[ext_resource type="Texture2D" uid="uid://dffvsvd3mlbeh" path="res://Resources/Icons/wheat.png" id="16_o1gu3"]
+[ext_resource type="Texture2D" uid="uid://irc84uh4ceqx" path="res://Resources/Icons/beer.png" id="17_pwa12"]
+[ext_resource type="Texture2D" uid="uid://b0kndl2r5na8v" path="res://Resources/Icons/Tetris.png" id="19_3m6pb"]
+[ext_resource type="Texture2D" uid="uid://e6o22e318htk" path="res://Resources/Icons/worker.png" id="19_goru2"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 6.0
+offset_top = -185.0
+offset_right = 195.0
+offset_bottom = -5.0
+grow_vertical = 0
+
+[node name="Normal tower panel" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 2.0
+offset_top = -182.0
+offset_right = 191.0
+offset_bottom = -27.0
+grow_vertical = 0
+scale = Vector2(1, 1.176)
+theme = ExtResource("1_nocna")
+script = ExtResource("4_kjbb3")
+
+[node name="MarginContainer" type="MarginContainer" parent="Normal tower panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Normal tower panel"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Normal tower panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Normal tower panel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+texture = ExtResource("2_f84b4")
+expand_mode = 2
+
+[node name="Name" type="Label" parent="Normal tower panel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Normal Tower"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextureRect2" type="TextureRect" parent="Normal tower panel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+texture = ExtResource("2_f84b4")
+expand_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="Normal tower panel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 75)
+layout_mode = 2
+columns = 5
+
+[node name="Dmg_png" type="TextureRect" parent="Normal tower panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+texture = ExtResource("3_7u7rf")
+expand_mode = 2
+stretch_mode = 6
+
+[node name="PanelContainer" type="PanelContainer" parent="Normal tower panel/VBoxContainer/GridContainer/Dmg_png"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = -13.0
+offset_right = 96.0
+offset_bottom = 38.0
+scale = Vector2(1.64552, 1.56776)
+theme = ExtResource("5_rbjlk")
+
+[node name="GridContainer" type="GridContainer" parent="Normal tower panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer"]
+layout_mode = 2
+columns = 3
+
+[node name="Name" type="Label" parent="Normal tower panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer/GridContainer"]
+layout_mode = 2
+text = "Damage"
+
+[node name="Control" type="Control" parent="Normal tower panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Name2" type="Label" parent="Normal tower panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer/GridContainer"]
+layout_mode = 2
+text = "Range"
+
+[node name="Control3" type="Control" parent="Normal tower panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Control5" type="Control" parent="Normal tower panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Control4" type="Control" parent="Normal tower panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Name3" type="Label" parent="Normal tower panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer/GridContainer"]
+layout_mode = 2
+text = "Level"
+
+[node name="Control2" type="Control" parent="Normal tower panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Name4" type="Label" parent="Normal tower panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer/GridContainer"]
+layout_mode = 2
+text = "Health"
+
+[node name="Control6" type="Control" parent="Normal tower panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Control7" type="Control" parent="Normal tower panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Control8" type="Control" parent="Normal tower panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Name5" type="Label" parent="Normal tower panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer/GridContainer"]
+layout_mode = 2
+text = "Fire Rate"
+
+[node name="Control9" type="Control" parent="Normal tower panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Dmg" type="Label" parent="Normal tower panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "20"
+
+[node name="Spring" type="Control" parent="Normal tower panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Range_png" type="TextureRect" parent="Normal tower panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+texture = ExtResource("6_x02uu")
+expand_mode = 2
+
+[node name="Range" type="Label" parent="Normal tower panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "2"
+
+[node name="Spring4" type="Control" parent="Normal tower panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Spring5" type="Control" parent="Normal tower panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Spring6" type="Control" parent="Normal tower panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Spring7" type="Control" parent="Normal tower panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Spring8" type="Control" parent="Normal tower panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Lvl_png" type="TextureRect" parent="Normal tower panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+texture = ExtResource("7_t1mn4")
+expand_mode = 2
+
+[node name="Lvl" type="Label" parent="Normal tower panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "1"
+
+[node name="Spring2" type="Control" parent="Normal tower panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Health_png" type="TextureRect" parent="Normal tower panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+texture = ExtResource("8_7lpng")
+expand_mode = 2
+
+[node name="Health" type="Label" parent="Normal tower panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "5"
+
+[node name="Spring11" type="Control" parent="Normal tower panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Spring12" type="Control" parent="Normal tower panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Spring13" type="Control" parent="Normal tower panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Spring9" type="Control" parent="Normal tower panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Spring10" type="Control" parent="Normal tower panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="FireRate_png" type="TextureRect" parent="Normal tower panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+texture = ExtResource("9_h1bnj")
+expand_mode = 2
+
+[node name="FireRate" type="Label" parent="Normal tower panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "1/sec"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Normal tower panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Normal tower panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Cost:"
+
+[node name="Wood" type="Label" parent="Normal tower panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "10"
+
+[node name="TextureRect" type="TextureRect" parent="Normal tower panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("10_fgvhj")
+expand_mode = 2
+
+[node name="Stone" type="Label" parent="Normal tower panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "10"
+
+[node name="TextureRect2" type="TextureRect" parent="Normal tower panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("11_y72v8")
+expand_mode = 2
+
+[node name="Freeze Tower Panel" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 2.0
+offset_top = -182.0
+offset_right = 191.0
+offset_bottom = -27.0
+grow_vertical = 0
+scale = Vector2(1, 1.17572)
+theme = ExtResource("1_nocna")
+script = ExtResource("4_kjbb3")
+
+[node name="MarginContainer" type="MarginContainer" parent="Freeze Tower Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Freeze Tower Panel"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Freeze Tower Panel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="TextureRect" type="TextureRect" parent="Freeze Tower Panel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+texture = ExtResource("12_c3yfl")
+expand_mode = 2
+
+[node name="Name" type="Label" parent="Freeze Tower Panel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Freeze Tower"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextureRect2" type="TextureRect" parent="Freeze Tower Panel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+texture = ExtResource("12_c3yfl")
+expand_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="Freeze Tower Panel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 75)
+layout_mode = 2
+columns = 5
+
+[node name="Dmg_png" type="TextureRect" parent="Freeze Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+texture = ExtResource("3_7u7rf")
+expand_mode = 2
+stretch_mode = 6
+
+[node name="PanelContainer" type="PanelContainer" parent="Freeze Tower Panel/VBoxContainer/GridContainer/Dmg_png"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = -13.0
+offset_right = 96.0
+offset_bottom = 38.0
+scale = Vector2(1.64552, 1.56776)
+theme = ExtResource("5_rbjlk")
+
+[node name="GridContainer" type="GridContainer" parent="Freeze Tower Panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer"]
+layout_mode = 2
+columns = 3
+
+[node name="Name" type="Label" parent="Freeze Tower Panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer/GridContainer"]
+layout_mode = 2
+text = "Damage"
+
+[node name="Control" type="Control" parent="Freeze Tower Panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Name2" type="Label" parent="Freeze Tower Panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer/GridContainer"]
+layout_mode = 2
+text = "Range"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Control3" type="Control" parent="Freeze Tower Panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Control5" type="Control" parent="Freeze Tower Panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Control4" type="Control" parent="Freeze Tower Panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Name3" type="Label" parent="Freeze Tower Panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer/GridContainer"]
+layout_mode = 2
+text = "Level"
+
+[node name="Control2" type="Control" parent="Freeze Tower Panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Name4" type="Label" parent="Freeze Tower Panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer/GridContainer"]
+layout_mode = 2
+text = "Health"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Control6" type="Control" parent="Freeze Tower Panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Control7" type="Control" parent="Freeze Tower Panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Control8" type="Control" parent="Freeze Tower Panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Name5" type="Label" parent="Freeze Tower Panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer/GridContainer"]
+layout_mode = 2
+text = "Fire Rate"
+
+[node name="Control9" type="Control" parent="Freeze Tower Panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Name6" type="Label" parent="Freeze Tower Panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer/GridContainer"]
+layout_mode = 2
+text = "Slow"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Dmg" type="Label" parent="Freeze Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "3
+"
+
+[node name="Spring" type="Control" parent="Freeze Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Range_png" type="TextureRect" parent="Freeze Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+texture = ExtResource("6_x02uu")
+expand_mode = 2
+
+[node name="Range" type="Label" parent="Freeze Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "1"
+
+[node name="Spring4" type="Control" parent="Freeze Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Spring5" type="Control" parent="Freeze Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Spring6" type="Control" parent="Freeze Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Spring7" type="Control" parent="Freeze Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Spring8" type="Control" parent="Freeze Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Lvl_png" type="TextureRect" parent="Freeze Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+texture = ExtResource("7_t1mn4")
+expand_mode = 2
+
+[node name="Lvl" type="Label" parent="Freeze Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "1"
+
+[node name="Spring2" type="Control" parent="Freeze Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Health_png" type="TextureRect" parent="Freeze Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+texture = ExtResource("8_7lpng")
+expand_mode = 2
+
+[node name="Health" type="Label" parent="Freeze Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "3
+"
+
+[node name="Spring11" type="Control" parent="Freeze Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Spring12" type="Control" parent="Freeze Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Spring13" type="Control" parent="Freeze Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Spring9" type="Control" parent="Freeze Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Spring10" type="Control" parent="Freeze Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="FireRate_png" type="TextureRect" parent="Freeze Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+texture = ExtResource("9_h1bnj")
+expand_mode = 2
+
+[node name="FireRate" type="Label" parent="Freeze Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "0.42/sec"
+
+[node name="Spring3" type="Control" parent="Freeze Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+
+[node name="Slow_png" type="TextureRect" parent="Freeze Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+texture = ExtResource("12_c3yfl")
+expand_mode = 2
+
+[node name="Slow" type="Label" parent="Freeze Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "75%"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Freeze Tower Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Freeze Tower Panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Cost:"
+
+[node name="Wood" type="Label" parent="Freeze Tower Panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "16"
+
+[node name="TextureRect" type="TextureRect" parent="Freeze Tower Panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("10_fgvhj")
+expand_mode = 2
+
+[node name="Stone" type="Label" parent="Freeze Tower Panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "16"
+
+[node name="TextureRect2" type="TextureRect" parent="Freeze Tower Panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("11_y72v8")
+expand_mode = 2
+
+[node name="AOE Tower Panel" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 2.0
+offset_top = -182.0
+offset_right = 191.0
+offset_bottom = -27.0
+grow_vertical = 0
+scale = Vector2(1, 1.17572)
+theme = ExtResource("1_nocna")
+script = ExtResource("4_kjbb3")
+
+[node name="MarginContainer" type="MarginContainer" parent="AOE Tower Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="AOE Tower Panel"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="AOE Tower Panel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="TextureRect" type="TextureRect" parent="AOE Tower Panel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+texture = ExtResource("13_kobuc")
+expand_mode = 2
+
+[node name="Name" type="Label" parent="AOE Tower Panel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "AOE Tower"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextureRect2" type="TextureRect" parent="AOE Tower Panel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+texture = ExtResource("13_kobuc")
+expand_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="AOE Tower Panel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 75)
+layout_mode = 2
+columns = 5
+
+[node name="Dmg_png" type="TextureRect" parent="AOE Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+texture = ExtResource("3_7u7rf")
+expand_mode = 2
+stretch_mode = 6
+
+[node name="PanelContainer" type="PanelContainer" parent="AOE Tower Panel/VBoxContainer/GridContainer/Dmg_png"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = -13.0
+offset_right = 96.0
+offset_bottom = 38.0
+scale = Vector2(1.64552, 1.56776)
+theme = ExtResource("5_rbjlk")
+
+[node name="GridContainer" type="GridContainer" parent="AOE Tower Panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer"]
+layout_mode = 2
+columns = 3
+
+[node name="Name" type="Label" parent="AOE Tower Panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer/GridContainer"]
+layout_mode = 2
+text = "Damage"
+
+[node name="Control" type="Control" parent="AOE Tower Panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Name2" type="Label" parent="AOE Tower Panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer/GridContainer"]
+layout_mode = 2
+text = "Range"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Control3" type="Control" parent="AOE Tower Panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Control5" type="Control" parent="AOE Tower Panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Control4" type="Control" parent="AOE Tower Panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Name3" type="Label" parent="AOE Tower Panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer/GridContainer"]
+layout_mode = 2
+text = "Level"
+
+[node name="Control2" type="Control" parent="AOE Tower Panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Name4" type="Label" parent="AOE Tower Panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer/GridContainer"]
+layout_mode = 2
+text = "Health"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Control6" type="Control" parent="AOE Tower Panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Control7" type="Control" parent="AOE Tower Panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Control8" type="Control" parent="AOE Tower Panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Name5" type="Label" parent="AOE Tower Panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer/GridContainer"]
+layout_mode = 2
+text = "Fire Rate"
+
+[node name="Control9" type="Control" parent="AOE Tower Panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Name6" type="Label" parent="AOE Tower Panel/VBoxContainer/GridContainer/Dmg_png/PanelContainer/GridContainer"]
+layout_mode = 2
+text = "AOE Dmg"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Dmg" type="Label" parent="AOE Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "40
+"
+
+[node name="Spring" type="Control" parent="AOE Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Range_png" type="TextureRect" parent="AOE Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+texture = ExtResource("6_x02uu")
+expand_mode = 2
+
+[node name="Range" type="Label" parent="AOE Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "3"
+
+[node name="Spring4" type="Control" parent="AOE Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Spring5" type="Control" parent="AOE Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Spring6" type="Control" parent="AOE Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Spring7" type="Control" parent="AOE Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Spring8" type="Control" parent="AOE Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Lvl_png" type="TextureRect" parent="AOE Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+texture = ExtResource("7_t1mn4")
+expand_mode = 2
+
+[node name="Lvl" type="Label" parent="AOE Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "1"
+
+[node name="Spring2" type="Control" parent="AOE Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Health_png" type="TextureRect" parent="AOE Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+texture = ExtResource("8_7lpng")
+expand_mode = 2
+
+[node name="Health" type="Label" parent="AOE Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "1
+"
+
+[node name="Spring11" type="Control" parent="AOE Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Spring12" type="Control" parent="AOE Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Spring13" type="Control" parent="AOE Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Spring9" type="Control" parent="AOE Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Spring10" type="Control" parent="AOE Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="FireRate_png" type="TextureRect" parent="AOE Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+texture = ExtResource("9_h1bnj")
+expand_mode = 2
+
+[node name="FireRate" type="Label" parent="AOE Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "0.5/sec"
+
+[node name="Spring3" type="Control" parent="AOE Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+
+[node name="AOE_png" type="TextureRect" parent="AOE Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+texture = ExtResource("13_kobuc")
+expand_mode = 2
+
+[node name="AOE" type="Label" parent="AOE Tower Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "25%"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="AOE Tower Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="AOE Tower Panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Cost:"
+
+[node name="Wood" type="Label" parent="AOE Tower Panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "50"
+
+[node name="TextureRect" type="TextureRect" parent="AOE Tower Panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("10_fgvhj")
+expand_mode = 2
+
+[node name="Stone" type="Label" parent="AOE Tower Panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "50"
+
+[node name="TextureRect2" type="TextureRect" parent="AOE Tower Panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("11_y72v8")
+expand_mode = 2
+
+[node name="Wood building panel" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = -164.0
+offset_right = 172.0
+offset_bottom = -34.0
+grow_vertical = 0
+scale = Vector2(1, 1.17572)
+theme = ExtResource("1_nocna")
+script = ExtResource("4_kjbb3")
+
+[node name="MarginContainer" type="MarginContainer" parent="Wood building panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Wood building panel"]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Wood building panel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="TextureRect" type="TextureRect" parent="Wood building panel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+texture = ExtResource("10_fgvhj")
+expand_mode = 2
+
+[node name="Name" type="Label" parent="Wood building panel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Lumbermill"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextureRect2" type="TextureRect" parent="Wood building panel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+texture = ExtResource("10_fgvhj")
+expand_mode = 2
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Wood building panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="Type_png" type="TextureRect" parent="Wood building panel/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+texture = ExtResource("10_fgvhj")
+expand_mode = 2
+stretch_mode = 6
+
+[node name="PanelContainer" type="PanelContainer" parent="Wood building panel/VBoxContainer/HBoxContainer3/Type_png"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = -8.0
+offset_right = 97.0
+offset_bottom = 39.0
+scale = Vector2(1.6479, 0.887325)
+theme = ExtResource("5_rbjlk")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Wood building panel/VBoxContainer/HBoxContainer3/Type_png/PanelContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Wood building panel/VBoxContainer/HBoxContainer3/Type_png/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Name" type="Label" parent="Wood building panel/VBoxContainer/HBoxContainer3/Type_png/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Type"
+
+[node name="Control" type="Control" parent="Wood building panel/VBoxContainer/HBoxContainer3/Type_png/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Name2" type="Label" parent="Wood building panel/VBoxContainer/HBoxContainer3/Type_png/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Production"
+
+[node name="Spring" type="Control" parent="Wood building panel/VBoxContainer/HBoxContainer3/Type_png/PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Name3" type="Label" parent="Wood building panel/VBoxContainer/HBoxContainer3/Type_png/PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "Reduced Production"
+
+[node name="Type" type="Label" parent="Wood building panel/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+text = "Wood"
+
+[node name="Spring" type="Control" parent="Wood building panel/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Production_png" type="TextureRect" parent="Wood building panel/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+texture = ExtResource("14_aunhg")
+expand_mode = 2
+
+[node name="Production" type="Label" parent="Wood building panel/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+text = "2/3sec"
+
+[node name="Spring2" type="Control" parent="Wood building panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="Wood building panel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Production_reduced_png" type="TextureRect" parent="Wood building panel/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+texture = ExtResource("15_20pmp")
+expand_mode = 2
+
+[node name="Production_reduced" type="Label" parent="Wood building panel/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+text = "1/3sec"
+
+[node name="Spring3" type="Control" parent="Wood building panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="Wood building panel/VBoxContainer"]
+layout_mode = 2
+text = "Reduced when
+near mine"
+horizontal_alignment = 1
+
+[node name="Spring4" type="Control" parent="Wood building panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Wood building panel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Label" type="Label" parent="Wood building panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Cost:"
+
+[node name="People" type="Label" parent="Wood building panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "1"
+
+[node name="TextureRect" type="TextureRect" parent="Wood building panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("19_goru2")
+expand_mode = 2
+
+[node name="Wheat building panel" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = -164.0
+offset_right = 172.0
+offset_bottom = -34.0
+grow_vertical = 0
+scale = Vector2(1, 1.17572)
+theme = ExtResource("1_nocna")
+script = ExtResource("4_kjbb3")
+
+[node name="MarginContainer" type="MarginContainer" parent="Wheat building panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Wheat building panel"]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Wheat building panel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="TextureRect" type="TextureRect" parent="Wheat building panel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+texture = ExtResource("16_o1gu3")
+expand_mode = 2
+
+[node name="Name" type="Label" parent="Wheat building panel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Farm"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextureRect2" type="TextureRect" parent="Wheat building panel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+texture = ExtResource("16_o1gu3")
+expand_mode = 2
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Wheat building panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="Type_png" type="TextureRect" parent="Wheat building panel/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+texture = ExtResource("16_o1gu3")
+expand_mode = 2
+stretch_mode = 6
+
+[node name="PanelContainer" type="PanelContainer" parent="Wheat building panel/VBoxContainer/HBoxContainer3/Type_png"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = -8.0
+offset_right = 97.0
+offset_bottom = 36.0
+scale = Vector2(1.6479, 0.921347)
+theme = ExtResource("5_rbjlk")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Wheat building panel/VBoxContainer/HBoxContainer3/Type_png/PanelContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Wheat building panel/VBoxContainer/HBoxContainer3/Type_png/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Name" type="Label" parent="Wheat building panel/VBoxContainer/HBoxContainer3/Type_png/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Type"
+
+[node name="Control" type="Control" parent="Wheat building panel/VBoxContainer/HBoxContainer3/Type_png/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Name2" type="Label" parent="Wheat building panel/VBoxContainer/HBoxContainer3/Type_png/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Production"
+
+[node name="Spring" type="Control" parent="Wheat building panel/VBoxContainer/HBoxContainer3/Type_png/PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Name3" type="Label" parent="Wheat building panel/VBoxContainer/HBoxContainer3/Type_png/PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "Reduced Production"
+
+[node name="Type" type="Label" parent="Wheat building panel/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+text = "Wheat"
+
+[node name="Spring" type="Control" parent="Wheat building panel/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Production_png" type="TextureRect" parent="Wheat building panel/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+texture = ExtResource("14_aunhg")
+expand_mode = 2
+
+[node name="Production" type="Label" parent="Wheat building panel/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+text = "2/3sec"
+
+[node name="Spring2" type="Control" parent="Wheat building panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="Wheat building panel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Production_reduced_png" type="TextureRect" parent="Wheat building panel/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+texture = ExtResource("15_20pmp")
+expand_mode = 2
+
+[node name="Production_reduced" type="Label" parent="Wheat building panel/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+text = "1/3sec"
+
+[node name="Spring4" type="Control" parent="Wheat building panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="Wheat building panel/VBoxContainer"]
+layout_mode = 2
+text = "Reduced when
+bottom right corner
+is empty"
+horizontal_alignment = 1
+
+[node name="Spring3" type="Control" parent="Wheat building panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Wheat building panel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Label" type="Label" parent="Wheat building panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Cost:"
+
+[node name="People" type="Label" parent="Wheat building panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "1"
+
+[node name="TextureRect" type="TextureRect" parent="Wheat building panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("19_goru2")
+expand_mode = 2
+
+[node name="Stone building panel" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = -164.0
+offset_right = 172.0
+offset_bottom = -34.0
+grow_vertical = 0
+scale = Vector2(1, 1.17572)
+theme = ExtResource("1_nocna")
+script = ExtResource("4_kjbb3")
+
+[node name="MarginContainer" type="MarginContainer" parent="Stone building panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Stone building panel"]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Stone building panel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="TextureRect" type="TextureRect" parent="Stone building panel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+texture = ExtResource("11_y72v8")
+expand_mode = 2
+
+[node name="Name" type="Label" parent="Stone building panel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Quarry"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextureRect2" type="TextureRect" parent="Stone building panel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+texture = ExtResource("11_y72v8")
+expand_mode = 2
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Stone building panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="Type_png" type="TextureRect" parent="Stone building panel/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+texture = ExtResource("11_y72v8")
+expand_mode = 2
+stretch_mode = 6
+
+[node name="PanelContainer" type="PanelContainer" parent="Stone building panel/VBoxContainer/HBoxContainer3/Type_png"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = -8.0
+offset_right = 97.0
+offset_bottom = 37.0
+scale = Vector2(1.6479, 0.921347)
+theme = ExtResource("5_rbjlk")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Stone building panel/VBoxContainer/HBoxContainer3/Type_png/PanelContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Stone building panel/VBoxContainer/HBoxContainer3/Type_png/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Name" type="Label" parent="Stone building panel/VBoxContainer/HBoxContainer3/Type_png/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Type"
+
+[node name="Control" type="Control" parent="Stone building panel/VBoxContainer/HBoxContainer3/Type_png/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Name2" type="Label" parent="Stone building panel/VBoxContainer/HBoxContainer3/Type_png/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Production"
+
+[node name="Spring" type="Control" parent="Stone building panel/VBoxContainer/HBoxContainer3/Type_png/PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Name3" type="Label" parent="Stone building panel/VBoxContainer/HBoxContainer3/Type_png/PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "Reduced Production"
+
+[node name="Type" type="Label" parent="Stone building panel/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+text = "Stone"
+
+[node name="Spring" type="Control" parent="Stone building panel/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Production_png" type="TextureRect" parent="Stone building panel/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+texture = ExtResource("14_aunhg")
+expand_mode = 2
+
+[node name="Production" type="Label" parent="Stone building panel/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+text = "2/3sec"
+
+[node name="Spring2" type="Control" parent="Stone building panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="Stone building panel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Production_reduced_png" type="TextureRect" parent="Stone building panel/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+texture = ExtResource("15_20pmp")
+expand_mode = 2
+
+[node name="Production_reduced" type="Label" parent="Stone building panel/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+text = "1/3sec"
+
+[node name="Spring4" type="Control" parent="Stone building panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="Stone building panel/VBoxContainer"]
+layout_mode = 2
+text = "Reduced when
+near lumbermill"
+horizontal_alignment = 1
+
+[node name="Spring3" type="Control" parent="Stone building panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Stone building panel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Label" type="Label" parent="Stone building panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Cost:"
+
+[node name="People" type="Label" parent="Stone building panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "1"
+
+[node name="TextureRect" type="TextureRect" parent="Stone building panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("19_goru2")
+expand_mode = 2
+
+[node name="Beer building panel" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = -164.0
+offset_right = 176.0
+offset_bottom = -34.0
+grow_vertical = 0
+scale = Vector2(1, 1.17572)
+theme = ExtResource("1_nocna")
+script = ExtResource("4_kjbb3")
+
+[node name="MarginContainer" type="MarginContainer" parent="Beer building panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Beer building panel"]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Beer building panel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="TextureRect" type="TextureRect" parent="Beer building panel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+texture = ExtResource("17_pwa12")
+expand_mode = 2
+
+[node name="Name" type="Label" parent="Beer building panel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Brewery"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextureRect2" type="TextureRect" parent="Beer building panel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+texture = ExtResource("17_pwa12")
+expand_mode = 2
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Beer building panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="Type_png" type="TextureRect" parent="Beer building panel/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+texture = ExtResource("17_pwa12")
+expand_mode = 2
+stretch_mode = 6
+
+[node name="PanelContainer" type="PanelContainer" parent="Beer building panel/VBoxContainer/HBoxContainer3/Type_png"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = -7.0
+offset_right = 97.0
+offset_bottom = 37.0
+scale = Vector2(1.6479, 0.921347)
+theme = ExtResource("5_rbjlk")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Beer building panel/VBoxContainer/HBoxContainer3/Type_png/PanelContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Beer building panel/VBoxContainer/HBoxContainer3/Type_png/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Name" type="Label" parent="Beer building panel/VBoxContainer/HBoxContainer3/Type_png/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Type"
+
+[node name="Control" type="Control" parent="Beer building panel/VBoxContainer/HBoxContainer3/Type_png/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Name2" type="Label" parent="Beer building panel/VBoxContainer/HBoxContainer3/Type_png/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Production"
+
+[node name="Spring" type="Control" parent="Beer building panel/VBoxContainer/HBoxContainer3/Type_png/PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Name3" type="Label" parent="Beer building panel/VBoxContainer/HBoxContainer3/Type_png/PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "Reduced Production"
+
+[node name="Type" type="Label" parent="Beer building panel/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+text = "Beer"
+
+[node name="Spring" type="Control" parent="Beer building panel/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Production_png" type="TextureRect" parent="Beer building panel/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+texture = ExtResource("14_aunhg")
+expand_mode = 2
+
+[node name="Production" type="Label" parent="Beer building panel/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+text = "2/5sec"
+
+[node name="Spring2" type="Control" parent="Beer building panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="Beer building panel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Production_reduced_png" type="TextureRect" parent="Beer building panel/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+texture = ExtResource("15_20pmp")
+expand_mode = 2
+
+[node name="Production_reduced" type="Label" parent="Beer building panel/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+text = "1/5sec"
+
+[node name="Spring4" type="Control" parent="Beer building panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="Beer building panel/VBoxContainer"]
+layout_mode = 2
+text = "Reduced when
+NOT near farm"
+horizontal_alignment = 1
+
+[node name="Spring3" type="Control" parent="Beer building panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Beer building panel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Label" type="Label" parent="Beer building panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Cost:"
+
+[node name="People" type="Label" parent="Beer building panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "1"
+
+[node name="TextureRect" type="TextureRect" parent="Beer building panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("19_goru2")
+expand_mode = 2
+
+[node name="Tetris building panel" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = -164.0
+offset_right = 172.0
+offset_bottom = -34.0
+grow_vertical = 0
+scale = Vector2(1, 1.17572)
+theme = ExtResource("1_nocna")
+script = ExtResource("4_kjbb3")
+
+[node name="MarginContainer" type="MarginContainer" parent="Tetris building panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Tetris building panel"]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Tetris building panel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="TextureRect" type="TextureRect" parent="Tetris building panel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+texture = ExtResource("19_3m6pb")
+expand_mode = 3
+
+[node name="Name" type="Label" parent="Tetris building panel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Wall"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextureRect2" type="TextureRect" parent="Tetris building panel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+texture = ExtResource("19_3m6pb")
+expand_mode = 3
+
+[node name="Spring3" type="Control" parent="Tetris building panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="Tetris building panel/VBoxContainer"]
+layout_mode = 2
+text = "Q and E to rotate"
+horizontal_alignment = 1
+
+[node name="Spring2" type="Control" parent="Tetris building panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Tetris building panel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Label" type="Label" parent="Tetris building panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Cost:"
+
+[node name="Wood" type="Label" parent="Tetris building panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "2"
+
+[node name="TextureRect" type="TextureRect" parent="Tetris building panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("10_fgvhj")
+expand_mode = 2
+
+[node name="Stone" type="Label" parent="Tetris building panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "2"
+
+[node name="TextureRect2" type="TextureRect" parent="Tetris building panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("11_y72v8")
+expand_mode = 2
+
+[node name="Workers buying panel" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = -164.0
+offset_right = 172.0
+offset_bottom = -34.0
+grow_vertical = 0
+scale = Vector2(1, 1.17572)
+theme = ExtResource("1_nocna")
+script = ExtResource("4_kjbb3")
+
+[node name="MarginContainer" type="MarginContainer" parent="Workers buying panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Workers buying panel"]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Workers buying panel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="TextureRect" type="TextureRect" parent="Workers buying panel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+texture = ExtResource("19_goru2")
+expand_mode = 3
+
+[node name="Name" type="Label" parent="Workers buying panel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Worker"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextureRect2" type="TextureRect" parent="Workers buying panel/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+texture = ExtResource("19_goru2")
+expand_mode = 3
+
+[node name="Spring3" type="Control" parent="Workers buying panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Workers buying panel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Label" type="Label" parent="Workers buying panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Cost:"
+
+[node name="Wheat" type="Label" parent="Workers buying panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "1"
+
+[node name="TextureRect" type="TextureRect" parent="Workers buying panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("16_o1gu3")
+expand_mode = 2
+
+[node name="Spring2" type="Control" parent="Workers buying panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[connection signal="mouse_entered" from="Normal tower panel/VBoxContainer/GridContainer/Dmg_png" to="Normal tower panel" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Normal tower panel/VBoxContainer/GridContainer/Dmg_png" to="Normal tower panel" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Normal tower panel/VBoxContainer/GridContainer/Range_png" to="Normal tower panel" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Normal tower panel/VBoxContainer/GridContainer/Range_png" to="Normal tower panel" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Normal tower panel/VBoxContainer/GridContainer/Lvl_png" to="Normal tower panel" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Normal tower panel/VBoxContainer/GridContainer/Lvl_png" to="Normal tower panel" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Normal tower panel/VBoxContainer/GridContainer/Health_png" to="Normal tower panel" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Normal tower panel/VBoxContainer/GridContainer/Health_png" to="Normal tower panel" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Normal tower panel/VBoxContainer/GridContainer/FireRate_png" to="Normal tower panel" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Normal tower panel/VBoxContainer/GridContainer/FireRate_png" to="Normal tower panel" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Freeze Tower Panel/VBoxContainer/GridContainer/Dmg_png" to="Freeze Tower Panel" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Freeze Tower Panel/VBoxContainer/GridContainer/Dmg_png" to="Freeze Tower Panel" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Freeze Tower Panel/VBoxContainer/GridContainer/Range_png" to="Freeze Tower Panel" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Freeze Tower Panel/VBoxContainer/GridContainer/Range_png" to="Freeze Tower Panel" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Freeze Tower Panel/VBoxContainer/GridContainer/Lvl_png" to="Freeze Tower Panel" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Freeze Tower Panel/VBoxContainer/GridContainer/Lvl_png" to="Freeze Tower Panel" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Freeze Tower Panel/VBoxContainer/GridContainer/Health_png" to="Freeze Tower Panel" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Freeze Tower Panel/VBoxContainer/GridContainer/Health_png" to="Freeze Tower Panel" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Freeze Tower Panel/VBoxContainer/GridContainer/FireRate_png" to="Freeze Tower Panel" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Freeze Tower Panel/VBoxContainer/GridContainer/FireRate_png" to="Freeze Tower Panel" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Freeze Tower Panel/VBoxContainer/GridContainer/Slow_png" to="Freeze Tower Panel" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Freeze Tower Panel/VBoxContainer/GridContainer/Slow_png" to="Freeze Tower Panel" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="AOE Tower Panel/VBoxContainer/GridContainer/Dmg_png" to="AOE Tower Panel" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="AOE Tower Panel/VBoxContainer/GridContainer/Dmg_png" to="AOE Tower Panel" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="AOE Tower Panel/VBoxContainer/GridContainer/Range_png" to="AOE Tower Panel" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="AOE Tower Panel/VBoxContainer/GridContainer/Range_png" to="AOE Tower Panel" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="AOE Tower Panel/VBoxContainer/GridContainer/Lvl_png" to="AOE Tower Panel" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="AOE Tower Panel/VBoxContainer/GridContainer/Lvl_png" to="AOE Tower Panel" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="AOE Tower Panel/VBoxContainer/GridContainer/Health_png" to="AOE Tower Panel" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="AOE Tower Panel/VBoxContainer/GridContainer/Health_png" to="AOE Tower Panel" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="AOE Tower Panel/VBoxContainer/GridContainer/FireRate_png" to="AOE Tower Panel" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="AOE Tower Panel/VBoxContainer/GridContainer/FireRate_png" to="AOE Tower Panel" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="AOE Tower Panel/VBoxContainer/GridContainer/AOE_png" to="AOE Tower Panel" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="AOE Tower Panel/VBoxContainer/GridContainer/AOE_png" to="AOE Tower Panel" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Wood building panel/VBoxContainer/HBoxContainer3/Type_png" to="Wood building panel" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Wood building panel/VBoxContainer/HBoxContainer3/Type_png" to="Wood building panel" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Wood building panel/VBoxContainer/HBoxContainer3/Production_png" to="Wood building panel" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Wood building panel/VBoxContainer/HBoxContainer3/Production_png" to="Wood building panel" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Wood building panel/VBoxContainer/HBoxContainer4/Production_reduced_png" to="Wood building panel" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Wood building panel/VBoxContainer/HBoxContainer4/Production_reduced_png" to="Wood building panel" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Wheat building panel/VBoxContainer/HBoxContainer3/Type_png" to="Wheat building panel" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Wheat building panel/VBoxContainer/HBoxContainer3/Type_png" to="Wheat building panel" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Wheat building panel/VBoxContainer/HBoxContainer3/Production_png" to="Wheat building panel" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Wheat building panel/VBoxContainer/HBoxContainer3/Production_png" to="Wheat building panel" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Wheat building panel/VBoxContainer/HBoxContainer4/Production_reduced_png" to="Wheat building panel" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Wheat building panel/VBoxContainer/HBoxContainer4/Production_reduced_png" to="Wheat building panel" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Stone building panel/VBoxContainer/HBoxContainer3/Type_png" to="Stone building panel" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Stone building panel/VBoxContainer/HBoxContainer3/Type_png" to="Stone building panel" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Stone building panel/VBoxContainer/HBoxContainer3/Production_png" to="Stone building panel" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Stone building panel/VBoxContainer/HBoxContainer3/Production_png" to="Stone building panel" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Stone building panel/VBoxContainer/HBoxContainer4/Production_reduced_png" to="Stone building panel" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Stone building panel/VBoxContainer/HBoxContainer4/Production_reduced_png" to="Stone building panel" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Beer building panel/VBoxContainer/HBoxContainer3/Type_png" to="Beer building panel" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Beer building panel/VBoxContainer/HBoxContainer3/Type_png" to="Beer building panel" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Beer building panel/VBoxContainer/HBoxContainer3/Production_png" to="Beer building panel" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Beer building panel/VBoxContainer/HBoxContainer3/Production_png" to="Beer building panel" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Beer building panel/VBoxContainer/HBoxContainer4/Production_reduced_png" to="Beer building panel" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Beer building panel/VBoxContainer/HBoxContainer4/Production_reduced_png" to="Beer building panel" method="_on_mouse_exited"]

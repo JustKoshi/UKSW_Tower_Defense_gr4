@@ -1,3 +1,4 @@
+class_name Lumbermill
 extends MeshInstance3D
 var game_script
 
@@ -5,6 +6,7 @@ var generator_on = true
 var resource_type = "wood"
 
 var generation_depleted = false
+
 
 var shape = [Vector3(0,0,0), Vector3(1,0,0), Vector3(1,0,1), Vector3(0,0,1)]
 

@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://dtfmr0chw8civ"]
+
+[ext_resource type="Script" path="res://Scripts/boss_path.gd" id="1_62h0e"]
+[ext_resource type="PackedScene" uid="uid://tdpmokt6myob" path="res://Scenes/skeleton_boss.tscn" id="1_l1nmk"]
+
+[node name="PathFollow3D" type="PathFollow3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40, 0, 40)
+loop = false
+script = ExtResource("1_62h0e")
+
+[node name="Skeleton_Warrior" parent="." groups=["Enemies"] instance=ExtResource("1_l1nmk")]

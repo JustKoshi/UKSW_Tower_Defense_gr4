@@ -13,16 +13,18 @@ transparency = 1
 albedo_texture = ExtResource("2_muqog")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ccfuv"]
-size = Vector3(1, 0.567505, 1)
+size = Vector3(0.86119, 2.2778, 1)
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_ke3xq"]
 radius = 5.0
 
-[sub_resource type="SphereMesh" id="SphereMesh_26rvo"]
-radius = 5.0
+[sub_resource type="CylinderMesh" id="CylinderMesh_fevqt"]
+top_radius = 5.0
+bottom_radius = 5.0
 height = 0.001
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ksthd"]
+render_priority = 2
 transparency = 1
 albedo_color = Color(0, 0, 0, 0.537255)
 
@@ -33,9 +35,11 @@ surface_material_override/1 = SubResource("StandardMaterial3D_rjsrd")
 script = ExtResource("3_0d14h")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
+collision_layer = 2
+collision_mask = 2
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.216248, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.90222e-05, 1.04169, 0)
 shape = SubResource("BoxShape3D_ccfuv")
 
 [node name="MobDetector" type="Area3D" parent="."]
@@ -44,7 +48,8 @@ shape = SubResource("BoxShape3D_ccfuv")
 shape = SubResource("SphereShape3D_ke3xq")
 
 [node name="Ran" type="MeshInstance3D" parent="MobDetector"]
-mesh = SubResource("SphereMesh_26rvo")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2, 0)
+mesh = SubResource("CylinderMesh_fevqt")
 surface_material_override/0 = SubResource("StandardMaterial3D_ksthd")
 
 [node name="Shooting CD" type="Timer" parent="."]
@@ -55,6 +60,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_ksthd")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.60146, 0)
 gizmo_extents = 0.7
 
+[connection signal="input_event" from="StaticBody3D" to="." method="_on_static_body_3d_input_event"]
 [connection signal="body_entered" from="MobDetector" to="." method="_on_mob_detector_body_entered"]
 [connection signal="body_exited" from="MobDetector" to="." method="_on_mob_detector_body_exited"]
 [connection signal="timeout" from="Shooting CD" to="." method="_on_shooting_cd_timeout"]

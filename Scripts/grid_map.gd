@@ -84,14 +84,16 @@ func _ready() -> void:
 		tile_state.append(row)
 	for i in range(10):
 		castle_state.append([0,0,0,0])#array[10][4]
-	generate_start_end_points()
+	var end_point_w = generate_start_end_points()
 	shortest_path = find_shortest_path(start_point, end_point)
 	convert_path_to_grid_map()
 	mark_shortest_path()
+	gen_walls(end_point_w)
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
 	pass
+	
 	
 func rotate_block_forward():
 	index += 1
@@ -144,22 +146,22 @@ func can_place_block(pos_vector: Vector3) -> bool:
 	return true
 
 #places temporary block in tilemap for further analysis
-func place_block_in_tilemap_temp(position: Vector3):
-	if is_within_bounds(position):
-		var tile_pos = Vector3(position.x+map_size, position.y, position.z+map_size)
+func place_block_in_tilemap_temp(pos: Vector3):
+	if is_within_bounds(pos):
+		var tile_pos = Vector3(pos.x+map_size, pos.y, pos.z+map_size)
 		if(tile_state[tile_pos.z][tile_pos.x] == 0):
 			tile_state[tile_pos.z][tile_pos.x] = 1
 
 #replaces temporary block in tilemap with pernament one		
-func place_block_in_tilemap_permanent(position: Vector3):
-	if is_within_bounds(position):
-		var tile_pos = Vector3(position.x+map_size, position.y, position.z+map_size)
+func place_block_in_tilemap_permanent(pos: Vector3):
+	if is_within_bounds(pos):
+		var tile_pos = Vector3(pos.x+map_size, pos.y, pos.z+map_size)
 		tile_state[tile_pos.z][tile_pos.x] = 2
 
 #removes invalid block from tilemap	
-func remove_block_from_tilemap(position: Vector3):
-	if is_within_bounds(position):
-		var tile_pos = Vector3(position.x+map_size, position.y, position.z+map_size)
+func remove_block_from_tilemap(pos: Vector3):
+	if is_within_bounds(pos):
+		var tile_pos = Vector3(pos.x+map_size, pos.y, pos.z+map_size)
 		if(tile_state[tile_pos.z][tile_pos.x]==1):
 			tile_state[tile_pos.z][tile_pos.x] = 0
 
@@ -241,7 +243,7 @@ func place_tetris_block(position_tetris: Vector3, shape):
 			#print(row)
 		
 #generates start/end points and places them in map
-func generate_start_end_points():
+func generate_start_end_points()->Vector3:
 	end_point = Vector3((-map_size)-1 ,0, randi()%10 - map_size)
 	start_point = Vector3(map_size,0, randi()%10 - map_size)
 	self.set_cell_item(start_point, 4)
@@ -250,7 +252,23 @@ func generate_start_end_points():
 	end_point = Vector3(end_point.x+1,end_point.y+1, end_point.z)
 	print("Start_point" + str(start_point))
 	print("end_point" + str(end_point))
+	return end_point
+
+func gen_walls(ends:Vector3):
+	for x in range(-10,-6):
+		set_cell_item(Vector3(x,1,-6),12,10)
+		set_cell_item(Vector3(x,1,5),12)
+	for x in range(-5,5):
+		set_cell_item(Vector3(-11,1,x),12,22)
+		set_cell_item(Vector3(-6,1,x),12,16)
+	set_cell_item(Vector3(-11,1,-6),13,10)
+	set_cell_item(Vector3(-11,1,5),13,22)
+	set_cell_item(Vector3(-6,1,-6),13,16)
+	set_cell_item(Vector3(-6,1,5),13)
 	
+	var end=ends
+	end.x-=1
+	set_cell_item(end,14,16)
 
 #func print_used_tiles():
 	#for x in range(-5, 5):
@@ -349,31 +367,16 @@ func can_place_resource(grid_pos: Vector3, shape)->bool:
 		#print(tile_pos)
 		if not is_within_castle(new_pos):
 			flag = false
-		elif castle_state[tile_pos.z][tile_pos.x] in [1,2]:
+		elif castle_state[tile_pos.z][tile_pos.x] in [1,2,3,4]:
 			flag = false
 	return flag
 
-func place_resource_in_tilemap(col_point: Vector3, resource_type)->bool:#zwraca true gdy jest adjacent rival
-	var flag = false
+func place_resource_in_tilemap(col_point: Vector3, resource_type):
 	var grid_pos = self.local_to_map(col_point)
 	var tile_pos = Vector3(grid_pos.x+10, grid_pos.y, grid_pos.z+5)
-
 	castle_state[tile_pos.z][tile_pos.x] = resource_type
-	castle_state[tile_pos.z+1][tile_pos.x] = resource_type
-	castle_state[tile_pos.z+1][tile_pos.x+1] = resource_type
-	castle_state[tile_pos.z][tile_pos.x+1] = resource_type
-	
-	if tile_pos.z-1>=0:
-		if not (castle_state[tile_pos.z-1][tile_pos.x] in [0,resource_type] and castle_state[tile_pos.z-1][tile_pos.x+1] in [0,resource_type]):
-			flag = true
-	if tile_pos.z+2<=9:
-		if not (castle_state[tile_pos.z+2][tile_pos.x] in [0,resource_type] and castle_state[tile_pos.z+2][tile_pos.x+1] in [0,resource_type]):
-			flag = true
-	if tile_pos.x-1>=0:
-		if not (castle_state[tile_pos.z][tile_pos.x-1] in [0,resource_type] and castle_state[tile_pos.z+1][tile_pos.x-1] in [0, resource_type]):
-			flag = true
-	if tile_pos.x+2<=3:
-		if not (castle_state[tile_pos.z][tile_pos.x+2] in [0,resource_type] and castle_state[tile_pos.z+1][tile_pos.x+2] in [0,resource_type]):
-			flag = true
-
-	return flag
+	if resource_type in [1,2,3]:
+		castle_state[tile_pos.z+1][tile_pos.x] = resource_type
+		castle_state[tile_pos.z][tile_pos.x+1] = resource_type
+	if resource_type in [1,2]:
+		castle_state[tile_pos.z+1][tile_pos.x+1] = resource_type

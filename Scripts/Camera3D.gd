@@ -17,9 +17,9 @@ func _ready():
 func _process(delta):
 	# Sprawdzanie naciśnięcia klawiszy
 	if Input.is_action_pressed("move_left"):
-		angle -= speed * delta  # W lewo (klawisz "Q")
+			angle -= speed * delta  # W lewo (klawisz "Q")
 	elif Input.is_action_pressed("move_right"):
-		angle += speed * delta  # W prawo (klawisz "E")
+			angle += speed * delta  # W prawo (klawisz "E")
 	
 	# Obliczanie nowej pozycji kamery na okręgu
 	var new_x = center.x + radius * sin(angle)
