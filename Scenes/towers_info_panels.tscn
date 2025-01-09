@@ -172,6 +172,7 @@ text = "....."
 
 [node name="Dmg" type="Label" parent="Tower panel/VBoxContainer/GridContainer"]
 layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
 text = "0"
 
 [node name="Spring" type="Control" parent="Tower panel/VBoxContainer/GridContainer"]
@@ -185,6 +186,7 @@ expand_mode = 2
 
 [node name="Range" type="Label" parent="Tower panel/VBoxContainer/GridContainer"]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.976471, 1, 1, 1)
 text = "0"
 
 [node name="Spring4" type="Control" parent="Tower panel/VBoxContainer/GridContainer"]
@@ -219,6 +221,7 @@ expand_mode = 2
 
 [node name="Lvl" type="Label" parent="Tower panel/VBoxContainer/GridContainer"]
 layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
 text = "0"
 
 [node name="Spring2" type="Control" parent="Tower panel/VBoxContainer/GridContainer"]
@@ -232,6 +235,7 @@ expand_mode = 2
 
 [node name="Health" type="Label" parent="Tower panel/VBoxContainer/GridContainer"]
 layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
 text = "0"
 
 [node name="Spring11" type="Control" parent="Tower panel/VBoxContainer/GridContainer"]
@@ -266,6 +270,7 @@ expand_mode = 2
 
 [node name="FireRate" type="Label" parent="Tower panel/VBoxContainer/GridContainer"]
 layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
 text = "0/sec"
 
 [node name="Spring14" type="Control" parent="Tower panel/VBoxContainer/GridContainer"]
@@ -280,6 +285,7 @@ expand_mode = 2
 
 [node name="Special thing" type="Label" parent="Tower panel/VBoxContainer/GridContainer"]
 layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
 text = "0%"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Tower panel/VBoxContainer"]
@@ -366,4 +372,6 @@ text = "Destroy"
 [connection signal="mouse_exited" from="Tower panel/VBoxContainer/GridContainer/FireRate_png" to="Tower panel" method="_on_mouse_exited"]
 [connection signal="mouse_entered" from="Tower panel/VBoxContainer/GridContainer/Special thing_png" to="Tower panel" method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="Tower panel/VBoxContainer/GridContainer/Special thing_png" to="Tower panel" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Tower panel/VBoxContainer/Upgrade_button" to="Tower panel" method="_on_upgrade_button_mouse_entered"]
+[connection signal="mouse_exited" from="Tower panel/VBoxContainer/Upgrade_button" to="Tower panel" method="_on_upgrade_button_mouse_exited"]
 [connection signal="pressed" from="Tower panel/VBoxContainer/Upgrade_button" to="Tower panel" method="_on_upgrade_button_pressed"]

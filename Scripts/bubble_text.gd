@@ -4,6 +4,8 @@ var object
 
 signal X_button_pressed
 signal upgrade_pressed(object)
+signal upgrade_hovered(object)
+signal upgrade_unhovered(object)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -24,3 +26,11 @@ func _on_texture_button_pressed() -> void:
 
 func _on_upgrade_button_pressed() -> void:
 	emit_signal("upgrade_pressed",object)
+
+
+func _on_upgrade_button_mouse_entered() -> void:
+	emit_signal("upgrade_hovered",object)
+
+
+func _on_upgrade_button_mouse_exited() -> void:
+	emit_signal("upgrade_unhovered",object)

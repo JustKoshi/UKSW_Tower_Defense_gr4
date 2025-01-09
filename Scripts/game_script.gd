@@ -92,17 +92,13 @@ var normal_mat_range = StandardMaterial3D.new()
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	#testing chagnes: 
-	#enemy_spawner.current_wave = 5
-	game_resources.wood = 999
-	game_resources.stone = 999
-	game_resources.wheat = 999
-	
+	#starting resources
+	game_resources.wood = 10
+	game_resources.stone = 10
 	current_health = max_health
 	game = false
 	GameOver.visible = false
 	$CanvasLayer/UI/GameOverScreen/VBoxContainer/MainMenu_button.disabled = true
-	$CanvasLayer/UI/GameOverScreen/VBoxContainer/PlayAgain_button.disabled = true
 	number_of_tetris_placed = 0
 	game_resources.workers = 2
 	red_mat.albedo_color = Color(1,0,0,0.55)
@@ -127,7 +123,12 @@ func _ready() -> void:
 	convert_path_to_local()
 	enemy_spawner.set_path(short_path)
 	UI.update_enemy_count_labels(enemy_spawner.basic_enemies_per_wave, enemy_spawner.fast_enemies_per_wave, enemy_spawner.boss_enemies_per_wave)
-
+	
+	#testing chagnes: 
+	#enemy_spawner.current_wave = 5
+	game_resources.wood = 999
+	game_resources.stone = 999
+	game_resources.wheat = 999
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -251,7 +252,7 @@ func get_collision_point(): #returns raycast collision point with map
 #function places block on raycast position
 func place_block_on_click():
 	var collision_point = get_collision_point()
-	var needed_res = 2*(number_of_tetris_placed + 1)
+	var needed_res = 3*(number_of_tetris_placed + 1)
 	#checking if raycast detected any block if so place block on gridmap
 	if collision_point != null and is_enough_resources(needed_res,needed_res,0,0,0):
 		var grid_pos = grid_map.local_to_map(collision_point)
@@ -269,24 +270,19 @@ func place_tower_on_click(tower_type:int):
 	if tower_hover_holder != null:
 		tower_hover_holder.free()#deleting hover tower before getting collision point
 	var collision_point = get_collision_point()
-	var needed_wood = 0
-	var needed_stone = 0
-	var needed_wheat = 0
-	if tower_type == 1:
-		needed_wood = 10
-		needed_stone = 10
-	elif tower_type == 2:
-		needed_wood = 16
-		needed_stone = 16
+	var tower
+	if(tower_type==1):
+		tower = NormalTowerScene.instantiate()
+	elif(tower_type==2):
+		tower = FreezeTowerScene.instantiate()
+		tower.get_node("MobDetector").get_child(0).disabled=false
+	self.get_node("Tower Holder").add_child(tower)
+	var needed_wood = tower.wood_to_upgrade[0]
+	var needed_stone = tower.stone_to_upgrade[0]
+	var needed_wheat = tower.wheat_to_upgrade[0]
 	#checking if raycast detected any block if so place block on gridmap
 	if collision_point != null and grid_map.can_place_tower(collision_point) and is_enough_resources(needed_wood,needed_stone,needed_wheat,0,0):
 	#if tower can be placed instantiate tower and change its cordinates and turn off range and turning of hover transparency
-		var tower
-		if(tower_type==1):
-			tower = NormalTowerScene.instantiate()
-		elif(tower_type==2):
-			tower = FreezeTowerScene.instantiate()
-			tower.get_node("MobDetector").get_child(0).disabled=false
 		tower.can_shoot = true
 		var grid_pos = grid_map.local_to_map(collision_point)
 		var place_pos = grid_map.map_to_local(grid_pos)
@@ -301,13 +297,14 @@ func place_tower_on_click(tower_type:int):
 		tower.get_node("MobDetector").visible=false
 		tower.connect("tower_info",UI._on_normal_tower_lvl_1_tower_info)
 		grid_map.place_tower_in_tilemap(collision_point)
-		self.get_node("Tower Holder").add_child(tower)
 		#print("Added tower in position: ",grid_pos)
 		game_resources.wood -= needed_wood
 		game_resources.stone -= needed_stone
 		game_resources.wheat -= needed_wheat
 		tower_hover_holder = null
 		hovering_tower = 0
+	else:
+		tower.queue_free()
 
 #function that hover towers over the map showing where it can be placed and its range
 func hover_tower(_tower_type:int):
@@ -707,6 +704,7 @@ func _on_enemy_spawner_wave_ended() -> void:
 	enemy_spawner.current_wave += 1
 	enemy_spawner.update_wave_enemy_count()
 	UI.update_enemy_count_labels(enemy_spawner.basic_enemies_per_wave, enemy_spawner.fast_enemies_per_wave, enemy_spawner.boss_enemies_per_wave)
+	UI.enemies_scaling()
 	if game:
 		reset_build_timer()
 		UI.switch_skip_button_visiblity()
@@ -726,7 +724,6 @@ func take_damage(dmg) -> void:
 		GameOver.visible = true
 		$CanvasLayer/UI/GameOverScreen/VBoxContainer/GameOverText.text = "Game Over!\nYou failed at\n wave number\n %d." % enemy_spawner.current_wave
 		$CanvasLayer/UI/GameOverScreen/VBoxContainer/MainMenu_button.disabled = false
-		$CanvasLayer/UI/GameOverScreen/VBoxContainer/PlayAgain_button.disabled = false
 		for i in range(get_node("Tower Holder").get_child_count()):
 			var tower = get_node("Tower Holder").get_child(i)
 			tower.get_node("MobDetector").get_child(0).disabled=true
