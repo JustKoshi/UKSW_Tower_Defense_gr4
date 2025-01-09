@@ -11,7 +11,7 @@ var freezing = false
 @onready var animation_player = $AnimationPlayer
 
 func _physics_process(_delta):
-	print("walk: ",finished_walk, " progress: ",get_parent_node_3d().progress, " max: ",get_parent_node_3d().curve_length, " hp: ",health)
+	#print("walk: ",finished_walk, " progress: ",get_parent_node_3d().progress, " max: ",get_parent_node_3d().curve_length, " hp: ",health)
 	if finished_walk:
 		play_attack_animation()
 		if can_attack:

@@ -283,6 +283,7 @@ func _on_normal_tower_lvl_1_tower_info(obj) -> void:
 			help_panel.connect("upgrade_pressed",self.upgrade_tower)
 			help_panel.connect("upgrade_hovered",self.hover_upgrade)
 			help_panel.connect("upgrade_unhovered",self.unhover_upgrade)
+			help_panel.connect("destroy_pressed",self.destroy_tower)
 			help_panel.get_child(1).get_child(0).get_child(1).text = str(obj.title)
 			help_panel.get_child(1).get_child(1).get_node("Dmg").text = str(obj.damage[obj.level-1])
 			help_panel.get_child(1).get_child(1).get_node("Range").text = str(obj.tower_range[obj.level-1])
@@ -483,3 +484,13 @@ func enemies_scaling() ->void:
 	if game_script.get_node("Enemy Spawner").current_wave % 10 == 0 and game_script.get_node("Enemy Spawner").current_wave > 10:
 		boss_enemy.health *= 1.1
 		boss_enemy.speed += 0.0025
+		
+func destroy_tower(tower) ->void:
+	game_script.game_resources.wood +=tower.return_wood
+	game_script.game_resources.stone +=tower.return_stone
+	tower.queue_free()
+	var col_point = tower.position
+	var grid_pos = game_script.grid_map.local_to_map(col_point)
+	var tile_pos = Vector3(grid_pos.x+game_script.grid_map.map_size, grid_pos.y, grid_pos.z+game_script.grid_map.map_size)
+	game_script.grid_map.tile_state[tile_pos.z][tile_pos.x] = 2
+	_on_X_button()
