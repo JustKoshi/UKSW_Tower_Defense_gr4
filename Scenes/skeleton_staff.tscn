@@ -6,4 +6,4 @@
 [node name="Skeleton_Staff2" instance=ExtResource("1_7gu0v")]
 
 [node name="vfx_fire_red" parent="." index="1" instance=ExtResource("2_jsuq6")]
-transform = Transform3D(0.6, 0, 0, 0, 0.6, 0, 0, 0, 0.6, -0.285645, 0.768287, 0)
+transform = Transform3D(0.6, 0, 0, 0, 0.6, 0, 0, 0, 0.6, -0.151, 0.818, 0.02)

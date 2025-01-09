@@ -5,6 +5,7 @@ var curve_length = 0.0
 var timer = 0.0
 var fast_timer = 0.0
 var boss_timer = 0.0
+var pyro_timer = 0.0
 
 var basic_enemy_spawn_cd = 2.0
 
@@ -14,27 +15,33 @@ var fast_enemy_spawn_cd = 3.0
 var boss_enemy_initial_delay = 5.0
 var boss_enemy_spawn_cd = 5.0
 
+var pyro_enemy_initial_delay = 3.0
+var pyro_enemy_spawn_cd = 5.0
 
 var current_wave = 1
+
 var basic_enemies_per_wave = 4
 var fast_enemies_per_wave = 0
 var boss_enemies_per_wave = 0
 var basic_enemy_increment = 2
+var pyro_enemies_per_wave = 0
 
 var enemy_count = 0 #current alive enemies count
 var fast_enemy_count = 0 # how many fast enemies spawned
 var basic_enemy_count = 0
 var boss_enemy_count = 0
+var pyro_enemy_count = 0
 var spawned_enemy_count = 0
 
 var follower = preload("res://Scenes/enemy_path.tscn")
 var fast_follower = preload("res://Scenes/fast_enemy_path.tscn")
 var boss_follower = preload("res://Scenes/boss_path.tscn")
+var pyro_follower = preload("res://Scenes/pyro_enemy_path.tscn")
 
 var wave_in_progress = false
 var fast_enemy_spawn_started = false
 var boss_enemy_spawn_started = false
-
+var pyro_enemy_spawn_started = false
 signal wave_ended(wave_number)
 
 # Called when the node enters the scene tree for the first time.
@@ -87,8 +94,22 @@ func _process(delta: float) -> void:
 		spawn_enemy(boss_follower)
 		
 	
+	if not pyro_enemy_spawn_started and wave_in_progress:
+		
+		if pyro_timer >= pyro_enemy_initial_delay:
+			pyro_timer = 0
+			pyro_enemy_spawn_started = true
+			print("Pyro enemy spawn started!")
+			
+	if pyro_enemies_per_wave > 0:
+		pyro_timer+=delta
+		
+	if pyro_enemy_spawn_started and pyro_timer > pyro_enemy_spawn_cd and pyro_enemy_count < pyro_enemies_per_wave and wave_in_progress:
+		pyro_enemy_count += 1
+		pyro_timer = 0
+		spawn_enemy(pyro_follower)	
 	#ends wave when spawned enemy count is equal to total enemy count tbc
-	if spawned_enemy_count >= basic_enemies_per_wave + fast_enemies_per_wave + boss_enemies_per_wave and enemy_count == 0 and wave_in_progress:
+	if spawned_enemy_count >= basic_enemies_per_wave + fast_enemies_per_wave + boss_enemies_per_wave + pyro_enemies_per_wave and enemy_count == 0 and wave_in_progress:
 		end_wave()
 	
 func set_path(points: Array) -> void:
@@ -133,6 +154,10 @@ func start_wave():
 	boss_enemy_spawn_started = false
 	boss_enemy_count = 0
 	
+	pyro_timer = 0
+	pyro_enemy_spawn_started = false
+	pyro_enemy_count = 0
+	
 	basic_enemy_count = 0
 	
 #ends wave and emits signal to main scene	
@@ -149,7 +174,9 @@ func update_wave_enemy_count():
 	print("Fast przeciwnicy: " + str(fast_enemies_per_wave))
 	boss_enemies_per_wave = int((current_wave/10))
 	print("Boss przeciwnicy: " + str(boss_enemies_per_wave))
-
+	pyro_enemies_per_wave = int(current_wave/2)
+	print("Pyro przeciwnicy: " + str(pyro_enemies_per_wave))
+	
 func randomize_fast_enemy_cd():
 	fast_enemy_spawn_cd = randf_range(3.0, 6.0)
 
