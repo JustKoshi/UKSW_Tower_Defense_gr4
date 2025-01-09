@@ -162,4 +162,7 @@ func randomize_fast_enemy_cd():
 	fast_enemy_spawn_cd = randf_range(2.0, 4.0)
 
 func randomize_basic_enemy_cd():
-	basic_enemy_spawn_cd = randf_range(0.7, 1.5)
+	if current_wave < 5:
+		basic_enemy_spawn_cd  = randf_range(1.5,2.25)
+	else:
+		basic_enemy_spawn_cd = randf_range(0.75, 1.5)
