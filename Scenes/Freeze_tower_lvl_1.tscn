@@ -14,7 +14,7 @@ albedo_texture = ExtResource("2_prlpv")
 size = Vector3(0.919067, 1.57929, 1)
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_j4ndu"]
-radius = 3.0
+radius = 2.5
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_kvpl4"]
 top_radius = 2.5

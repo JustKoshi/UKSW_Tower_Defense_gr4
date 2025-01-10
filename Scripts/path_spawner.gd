@@ -7,9 +7,9 @@ var fast_timer = 0.0
 var boss_timer = 0.0
 var pyro_timer = 0.0
 
-var basic_enemy_spawn_cd = 2.0
+var basic_enemy_spawn_cd = 1.0
 
-var fast_enemy_initial_delay = 20.0
+var fast_enemy_initial_delay = 4.0
 var fast_enemy_spawn_cd = 3.0
 
 var boss_enemy_initial_delay = 5.0
@@ -23,7 +23,6 @@ var current_wave = 1
 var basic_enemies_per_wave = 4
 var fast_enemies_per_wave = 0
 var boss_enemies_per_wave = 0
-var basic_enemy_increment = 2
 var pyro_enemies_per_wave = 0
 
 var enemy_count = 0 #current alive enemies count
@@ -168,20 +167,32 @@ func end_wave():
 	
 #here updates each of enemy count based on current wave
 func update_wave_enemy_count():
-	basic_enemies_per_wave = 4 + (current_wave-1)*basic_enemy_increment
+	basic_enemies_per_wave = 0
+	fast_enemies_per_wave = 0
+	for i in range(current_wave):
+		basic_enemies_per_wave += 2+2*int(i/5)
+		fast_enemies_per_wave += 1+int(i/10) 
+	basic_enemies_per_wave += 2
+	fast_enemies_per_wave -= 2
+	if fast_enemies_per_wave < 0:
+		fast_enemies_per_wave = 0
 	print("basic przeciwnicy: " + str(basic_enemies_per_wave))
-	fast_enemies_per_wave = int((current_wave/ 3))
 	print("Fast przeciwnicy: " + str(fast_enemies_per_wave))
-	boss_enemies_per_wave = int((current_wave/10))
+	boss_enemies_per_wave = (int(current_wave/5)-1)
+	if boss_enemies_per_wave < 0:
+		boss_enemies_per_wave = 0
 	print("Boss przeciwnicy: " + str(boss_enemies_per_wave))
 	pyro_enemies_per_wave = int(current_wave/2)
 	print("Pyro przeciwnicy: " + str(pyro_enemies_per_wave))
 	
 func randomize_fast_enemy_cd():
-	fast_enemy_spawn_cd = randf_range(3.0, 6.0)
+	fast_enemy_spawn_cd = randf_range(2.0, 4.0)
 
 func randomize_basic_enemy_cd():
-	basic_enemy_spawn_cd = randf_range(1.5, 2.5)
+	if current_wave < 5:
+		basic_enemy_spawn_cd  = randf_range(1.5,2.25)
+	else:
+		basic_enemy_spawn_cd = randf_range(0.75, 1.5)
 
 
 func _on_timer_timeout() -> void:

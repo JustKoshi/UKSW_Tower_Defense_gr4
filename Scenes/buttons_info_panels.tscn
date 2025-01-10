@@ -224,7 +224,7 @@ expand_mode = 2
 
 [node name="Health" type="Label" parent="Normal tower panel/VBoxContainer/GridContainer"]
 layout_mode = 2
-text = "5"
+text = "4"
 
 [node name="Spring11" type="Control" parent="Normal tower panel/VBoxContainer/GridContainer"]
 layout_mode = 2
@@ -269,7 +269,7 @@ text = "Cost:"
 
 [node name="Wood" type="Label" parent="Normal tower panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "10"
+text = "20"
 
 [node name="TextureRect" type="TextureRect" parent="Normal tower panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -278,7 +278,7 @@ expand_mode = 2
 
 [node name="Stone" type="Label" parent="Normal tower panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "10"
+text = "20"
 
 [node name="TextureRect2" type="TextureRect" parent="Normal tower panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -548,7 +548,7 @@ text = "Cost:"
 
 [node name="Wood" type="Label" parent="Freeze Tower Panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "16"
+text = "30"
 
 [node name="TextureRect" type="TextureRect" parent="Freeze Tower Panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -557,7 +557,7 @@ expand_mode = 2
 
 [node name="Stone" type="Label" parent="Freeze Tower Panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "16"
+text = "30"
 
 [node name="TextureRect2" type="TextureRect" parent="Freeze Tower Panel/VBoxContainer/HBoxContainer"]
 layout_mode = 2

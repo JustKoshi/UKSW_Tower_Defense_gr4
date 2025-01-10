@@ -1272,12 +1272,12 @@ layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -112.0
-offset_right = 113.0
+offset_left = -225.0
+offset_right = 225.0
 offset_bottom = 103.0
 grow_horizontal = 2
 theme = ExtResource("7_dqtye")
-text = "Time for building: 30s"
+horizontal_alignment = 1
 
 [node name="FPS_label" type="Label" parent="CanvasLayer/UI"]
 layout_mode = 1
@@ -1356,11 +1356,15 @@ layout_mode = 2
 size_flags_vertical = 3
 
 [node name="skip_button" type="Button" parent="CanvasLayer/UI"]
-layout_mode = 2
-offset_left = 1189.0
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = 235.0
 offset_top = 7.0
-offset_right = 1324.0
+offset_right = 365.0
 offset_bottom = 71.0
+grow_horizontal = 2
 focus_mode = 0
 theme = ExtResource("18_tdln6")
 theme_override_colors/font_hover_color = Color(0, 0.560784, 0.368627, 1)
@@ -1444,6 +1448,12 @@ text = "Game is paused..."
 [connection signal="pressed" from="CanvasLayer/Menu/Menu Buttons/MarginContainer/VBoxContainer/About" to="CanvasLayer/UI" method="_on_about_pressed"]
 [connection signal="pressed" from="CanvasLayer/Menu/Menu Buttons/MarginContainer/VBoxContainer/Quit" to="." method="_on_quit_pressed"]
 [connection signal="pressed" from="CanvasLayer/Menu/How to Play/Close" to="CanvasLayer/UI" method="_on_close_pressed"]
+[connection signal="mouse_entered" from="CanvasLayer/UI/EnemyPanelContainer/MarginContainer/GridContainer/Basic enemy" to="CanvasLayer/UI" method="_open_normal_enemy_info_panels"]
+[connection signal="mouse_exited" from="CanvasLayer/UI/EnemyPanelContainer/MarginContainer/GridContainer/Basic enemy" to="CanvasLayer/UI" method="_close_enemy_info_panels"]
+[connection signal="mouse_entered" from="CanvasLayer/UI/EnemyPanelContainer/MarginContainer/GridContainer/Fast enemy" to="CanvasLayer/UI" method="_open_fast_enemy_info_panel"]
+[connection signal="mouse_exited" from="CanvasLayer/UI/EnemyPanelContainer/MarginContainer/GridContainer/Fast enemy" to="CanvasLayer/UI" method="_close_enemy_info_panels"]
+[connection signal="mouse_entered" from="CanvasLayer/UI/EnemyPanelContainer/MarginContainer/GridContainer/Boss" to="CanvasLayer/UI" method="_on_boss_enemy_info_panel"]
+[connection signal="mouse_exited" from="CanvasLayer/UI/EnemyPanelContainer/MarginContainer/GridContainer/Boss" to="CanvasLayer/UI" method="_close_enemy_info_panels"]
 [connection signal="pressed" from="CanvasLayer/UI/Workers_buy/VBoxContainer/HBoxContainer/Yes" to="." method="buy_workers"]
 [connection signal="pressed" from="CanvasLayer/UI/Workers_buy/VBoxContainer/HBoxContainer/No" to="CanvasLayer/UI" method="_on_no_pressed"]
 [connection signal="pressed" from="CanvasLayer/UI/Bottom_panel/Main panel/HBoxContainer/Resource build button" to="CanvasLayer/UI" method="_on_resource_build_button_pressed"]
