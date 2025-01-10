@@ -242,6 +242,10 @@ transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 7.8
 curve = SubResource("Curve3D_xbv8h")
 script = ExtResource("6_p3rev")
 
+[node name="Timer" type="Timer" parent="Enemy Spawner"]
+wait_time = 0.5
+autostart = true
+
 [node name="Front camera" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 18)
 
@@ -712,6 +716,7 @@ theme = ExtResource("7_dqtye")
 layout_mode = 2
 theme_override_constants/margin_left = 15
 theme_override_constants/margin_top = 25
+theme_override_constants/margin_bottom = 10
 
 [node name="GridContainer" type="GridContainer" parent="CanvasLayer/UI/EnemyPanelContainer/MarginContainer"]
 layout_mode = 2
@@ -741,6 +746,19 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 36
 theme_override_styles/normal = SubResource("StyleBoxEmpty_mwxa0")
 text = "0"
+
+[node name="Pyro" type="TextureRect" parent="CanvasLayer/UI/EnemyPanelContainer/MarginContainer/GridContainer"]
+layout_mode = 2
+texture = ExtResource("16_1vtdw")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="Pyro count Label" type="Label" parent="CanvasLayer/UI/EnemyPanelContainer/MarginContainer/GridContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = SubResource("StyleBoxEmpty_1a7p5")
+text = "0"
+vertical_alignment = 2
 
 [node name="Boss" type="TextureRect" parent="CanvasLayer/UI/EnemyPanelContainer/MarginContainer/GridContainer"]
 layout_mode = 2
@@ -1333,6 +1351,10 @@ layout_mode = 2
 focus_mode = 0
 text = "Main Menu"
 
+[node name="spring2" type="Control" parent="CanvasLayer/UI/GameOverScreen/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
 [node name="skip_button" type="Button" parent="CanvasLayer/UI"]
 layout_mode = 2
 offset_left = 1189.0
@@ -1415,6 +1437,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_eu65f")
 text = "Game is paused..."
 
 [connection signal="wave_ended" from="Enemy Spawner" to="." method="_on_enemy_spawner_wave_ended"]
+[connection signal="timeout" from="Enemy Spawner/Timer" to="Enemy Spawner" method="_on_timer_timeout"]
 [connection signal="timeout" from="Build Timer" to="." method="prepare_wave"]
 [connection signal="timeout" from="Switch Label Timer" to="." method="_on_switch_label_timer_timeout"]
 [connection signal="pressed" from="CanvasLayer/Menu/Menu Buttons/MarginContainer/VBoxContainer/Play" to="." method="_on_play_pressed"]

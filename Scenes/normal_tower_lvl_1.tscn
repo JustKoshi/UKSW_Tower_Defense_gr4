@@ -28,13 +28,13 @@ render_priority = 2
 transparency = 1
 albedo_color = Color(0, 0, 0, 0.537255)
 
-[node name="Normal_tower_lvl1" type="MeshInstance3D"]
+[node name="Normal_tower_lvl1" type="MeshInstance3D" groups=["towers"]]
 mesh = ExtResource("1_4qhrg")
 surface_material_override/0 = SubResource("StandardMaterial3D_iyvvs")
 surface_material_override/1 = SubResource("StandardMaterial3D_rjsrd")
 script = ExtResource("3_0d14h")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="."]
+[node name="StaticBody3D" type="StaticBody3D" parent="." groups=["towers"]]
 collision_layer = 2
 collision_mask = 2
 

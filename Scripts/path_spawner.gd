@@ -129,7 +129,7 @@ func delete_enemy()->void:
 
 #spawns enemy of type enemy_scene and adds it overall enemy count
 func spawn_enemy(enemy_scene):
-	if spawned_enemy_count >= basic_enemies_per_wave + fast_enemies_per_wave:
+	if spawned_enemy_count >= basic_enemies_per_wave + fast_enemies_per_wave + boss_enemies_per_wave + pyro_enemies_per_wave:
 		return
 	var new_enemy = enemy_scene.instantiate()
 	add_child(new_enemy)
@@ -182,3 +182,8 @@ func randomize_fast_enemy_cd():
 
 func randomize_basic_enemy_cd():
 	basic_enemy_spawn_cd = randf_range(1.5, 2.5)
+
+
+func _on_timer_timeout() -> void:
+	print(str(spawned_enemy_count)+ "- spawned enemy count")
+	print(str(basic_enemies_per_wave + fast_enemies_per_wave + boss_enemies_per_wave + pyro_enemies_per_wave) + "- expected enemies")

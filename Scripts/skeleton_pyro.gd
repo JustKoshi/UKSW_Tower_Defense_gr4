@@ -1,14 +1,24 @@
 extends CharacterBody3D
 
 var health=300
-var damage = 10
+var damage = 1
 var finished_walk = false
 var can_attack = true
 var freezing = false
+var targeting_tower = false
 @onready var animation_player = $AnimationPlayer
 
+var target:StaticBody3D = null
+
 func _physics_process(_delta):
-	print("walk: ",finished_walk, " progress: ",get_parent_node_3d().progress, " max: ",get_parent_node_3d().curve_length, " hp: ",health)
+	if target != null and not finished_walk:
+		if calculate_distance(self.global_position, target.global_position) <= 2.85:
+			
+			finished_walk = true
+			self.get_parent_node_3d().speed = 0
+			self.look_at(target.global_position)
+			rotate_y(deg_to_rad(180))
+			
 	if finished_walk:
 		play_attack_animation()
 		if can_attack:
@@ -40,5 +50,18 @@ func take_damage(dmg: int) -> void:
 #Resetting attacking 
 func _on_attack_cd_timeout() -> void:
 	take_damage(150)
-	get_parent_node_3d().get_parent_node_3d().get_parent_node_3d().take_damage(damage)
+	if not targeting_tower:
+		get_parent_node_3d().get_parent_node_3d().get_parent_node_3d().take_damage(damage)
 	can_attack=true
+
+
+func _on_area_3d_body_entered(body: Node3D) -> void:
+	if body.is_in_group("towers") and target==null:
+		print("tower detected")
+		target = body
+		targeting_tower = true
+		print(str(body.global_position))
+	
+
+func calculate_distance(vec1: Vector3, vec2: Vector3)->float:
+	return vec1.distance_to(vec2)

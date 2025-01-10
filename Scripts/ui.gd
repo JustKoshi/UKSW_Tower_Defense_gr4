@@ -3,6 +3,8 @@ extends Control
 @onready var basic_enemy_count = $"EnemyPanelContainer/MarginContainer/GridContainer/BE count Label"
 @onready var fast_enemy_count = $"EnemyPanelContainer/MarginContainer/GridContainer/FE count Label"
 @onready var boss_enemy_count = $"EnemyPanelContainer/MarginContainer/GridContainer/Boss count Label"
+@onready var pyro_count: Label = $"EnemyPanelContainer/MarginContainer/GridContainer/Pyro count Label"
+
 
 @onready var bottom_panel: PanelContainer = $Bottom_panel
 
@@ -103,11 +105,11 @@ func _process(_delta: float) -> void:
 	else:
 		worker_bonus_panel.visible = false
 
-func update_enemy_count_labels(basic_enemy_num , fast_enemy_num, boss_num):
+func update_enemy_count_labels(basic_enemy_num , fast_enemy_num, boss_num, pyro_num):
 	basic_enemy_count.text = str(basic_enemy_num)
 	fast_enemy_count.text = str(fast_enemy_num)
 	boss_enemy_count.text = str(boss_num)
-
+	pyro_count.text = str(pyro_num)
 
 func _on_back_button_pressed() -> void:
 	resource_buildings.visible = false
