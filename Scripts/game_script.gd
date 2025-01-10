@@ -1,7 +1,7 @@
 extends Node3D
 
 #List containing all cameras and current cam index
-@onready var cameras = [$"Main Camera", $"Top Camera", $"Front camera", $"Front camera2", $"Resource Camera"]
+@onready var cameras = [$"Main Camera", $"Top Camera", $"Front camera", $"Front camera2", $"Resource Camera",$"Debug camera",$"Ship/Path3D2/PathFollow3D/SM_Galleon_MI_Base_Wood_Dark_0/Debug camera2"]
 
 #variable to contain main GridMap
 @onready var grid_map = $GridMap
@@ -30,6 +30,7 @@ var Lumbermill = preload("res://Scenes/lumbermill.tscn")
 var Mine = preload("res://Scenes/mine.tscn")
 var Windmill = preload("res://Scenes/windmill.tscn")
 var Tavern = preload("res://Scenes/tavern.tscn")
+var Ship = preload("res://Scenes/ship.tscn")
 
 var tower_build = false
 var tetris_build_mode = false
@@ -54,6 +55,12 @@ var tower_to_hover = 0#Which tower is picked with button 0-none 1-normal 2-freez
 var hovering_resource = 0
 var resource_to_hover = 0#0 for none, 1 for lumbermill, 2 for mine, 3 for windmill, 4 for tavern
 var resource_shape
+
+#Vars for ship fadeout func
+var value = 1.0  # Startowa wartość
+var duration = 4.0  # Czas w sekundach
+var time_passed = 0.0  # Licznik czasu
+
 
 var current_cam_index = 0
 var coordinates_check_mode = false
@@ -92,6 +99,8 @@ var normal_mat_range = StandardMaterial3D.new()
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	
+
 	#testing chagnes: 
 	#enemy_spawner.current_wave = 5
 	print("2")
@@ -131,6 +140,7 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	
 	update_resource_timers()
 	if Input.is_action_just_pressed("Camera_F1") and game:
 		if current_cam_index >0 :
@@ -140,7 +150,7 @@ func _process(delta: float) -> void:
 		
 	elif Input.is_action_just_pressed("Camera_F2") and game:
 		current_cam_index += 1
-		current_cam_index = current_cam_index%4
+		current_cam_index = current_cam_index%5
 		set_camera()
 		
 	elif Input.is_action_just_pressed("Camera_F9") and game:
@@ -192,6 +202,14 @@ func _process(delta: float) -> void:
 		resource_to_hover = 0
 	if is_build_phase:
 		update_label_build_time()
+		
+	if game and is_build_phase:
+		ship_sailin(delta)
+	elif game:
+		if value > 0:
+			time_passed += delta
+			value = clamp(1.0 - time_passed / duration, 0.0, 1.0)
+		ship_fadeout()
 	
 	if not game:
 		get_node("Main Camera").angle += 0.1 * delta
@@ -600,6 +618,32 @@ func hover_resource(resource_type:int):
 		resource_hover_holder.queue_free()
 		resource_hover_holder = null
 
+func ship_sailin(delta: float)->void:
+	var move_speed = 20
+	get_node("Ship/Path3D2/PathFollow3D").progress +=move_speed*delta
+
+func ship_fadeout() -> void:
+	var mesh = get_node("Ship/Path3D2/PathFollow3D/SM_Galleon_MI_Base_Wood_Dark_0").mesh
+	for i in range(mesh.get_surface_count()):
+		var mat = mesh.surface_get_material(i)
+		var mat_dupe = mat.duplicate()
+		mat_dupe.flags_transparent = true
+		mat_dupe.albedo_color.a = value  
+		mesh.surface_set_material(i, mat_dupe)
+
+func ship_reset()->void:
+	var mesh = get_node("Ship/Path3D2/PathFollow3D/SM_Galleon_MI_Base_Wood_Dark_0").mesh
+	for i in range(mesh.get_surface_count()):
+		var mat = mesh.surface_get_material(i)
+		var mat_dupe = mat.duplicate()
+		mat_dupe.albedo_color.a = 1  
+		mat_dupe.flags_transparent = false
+		mat_dupe.transparency=BaseMaterial3D.TRANSPARENCY_DISABLED
+		mesh.surface_set_material(i, mat_dupe)
+		
+		get_node("Ship/Path3D2/PathFollow3D").progress = 0
+		value=1.0
+		time_passed = 0.0
 
 #Signal to enter build mode
 func _on_tetris_build_button_pressed() -> void:
@@ -671,6 +715,7 @@ func is_enough_resources(wo:int, st:int, wh:int, be:int, pe:int) -> bool:
 #resets build timer and enables buttons
 func reset_build_timer():
 	is_build_phase = true
+	ship_reset()
 	UI.show_first_panel()
 	UI.bottom_panel.visible = true
 	build_timer.start()
@@ -754,6 +799,8 @@ func _on_skip_button_pressed() -> void:
 	build_timer.stop()
 	prepare_wave()
 	
+	get_node("Ship/Path3D2/PathFollow3D").progress = 565.87
+
 func start_game():
 	game = true
 	print("1")
@@ -765,6 +812,9 @@ func _on_play_pressed() -> void:
 	start_game()
 	if how_to_play.visible:
 		how_to_play.visible = false
+		
+		value = 1.0
+		time_passed = 0.0
 
 func _on_quit_pressed() -> void:
 	get_tree().quit()
@@ -773,7 +823,7 @@ func _on_continue_pressed()->void:
 	get_tree().paused = false
 	pause_menu.visible = false
 	UI.visible = true
-	
+
 
 #fuction to buy workers
 func buy_workers() -> void:
