@@ -5,13 +5,16 @@ var damage = [3,3,5]
 var health = [3,4,6]
 var tower_range= [1,1,1]
 var level = 1
-var firerate = [round_to_decimals(1/2.4,2),round_to_decimals(1/2.4,2),round_to_decimals(1/2.4,2)] 
+var firerate = [round_to_decimals(1/2.4,2),round_to_decimals(1/2.4,2),round_to_decimals(1/2.4,2)]
+var current_health
 var title = "Freeze Tower"
 var enemies = []
 var can_shoot = true
 
 var return_wood
 var return_stone
+var repair_wood
+var repair_stone
 var wood_to_upgrade = [25,30,90,0]
 var stone_to_upgrade = [25,30,90,0]
 var wheat_to_upgrade = [0,30,90,0]
@@ -24,8 +27,11 @@ var mage_lvl3 = load("res://Resources/Icons/Heart.png")
 signal tower_info(object)
 
 func _ready() -> void:
+	current_health = health[level-1]
 	return_wood = 6
 	return_stone = 6
+	repair_wood = 5
+	repair_stone = 5
 	get_node("MobDetector").get_child(0).shape.radius = 2*tower_range[level-1]+1
 	get_node("MobDetector").get_child(1).mesh.top_radius = 2*tower_range[level-1]+1
 	get_node("MobDetector").get_child(1).mesh.bottom_radius = 2*tower_range[level-1]+1
@@ -108,4 +114,5 @@ func upgrade() ->void:
 		particle_dup.material.albedo_color = Color(1,0,0)
 		get_node("Mage").get_node("GPUParticles3D").draw_pass_1 = particle_dup
 	level += 1
+	current_health = health[level-1]
 	

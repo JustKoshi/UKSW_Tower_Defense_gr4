@@ -284,11 +284,12 @@ func _on_normal_tower_lvl_1_tower_info(obj) -> void:
 			help_panel.connect("upgrade_hovered",self.hover_upgrade)
 			help_panel.connect("upgrade_unhovered",self.unhover_upgrade)
 			help_panel.connect("destroy_pressed",self.destroy_tower)
+			help_panel.connect("repair_pressed",self.repair_tower)
 			help_panel.get_child(1).get_child(0).get_child(1).text = str(obj.title)
 			help_panel.get_child(1).get_child(1).get_node("Dmg").text = str(obj.damage[obj.level-1])
 			help_panel.get_child(1).get_child(1).get_node("Range").text = str(obj.tower_range[obj.level-1])
 			help_panel.get_child(1).get_child(1).get_node("Lvl").text = str(obj.level)
-			help_panel.get_child(1).get_child(1).get_node("Health").text = str(obj.health[obj.level-1])
+			help_panel.get_child(1).get_child(1).get_node("Health").text = str(obj.current_health)+"/"+str(obj.health[obj.level-1])
 			help_panel.get_child(1).get_child(1).get_node("FireRate").text = str(obj.firerate[obj.level-1])+"/sec"
 			help_panel.get_child(1).get_child(1).get_child(0).get_child(0).size.x = help_panel.size.x/2 + 25
 			if obj.title == "Normal Tower":
@@ -312,8 +313,22 @@ func _on_normal_tower_lvl_1_tower_info(obj) -> void:
 				for i in help_panel.get_child(1).get_child(2).get_child_count():
 					if i>0:
 						help_panel.get_child(1).get_child(2).get_child(i).visible = false
-			help_panel.get_child(1).get_child(4).get_node("Wood").text = "+"+str(obj.return_wood * obj.level)
-			help_panel.get_child(1).get_child(4).get_node("Stone").text = "+"+str(obj.return_stone * obj.level)
+			if obj.current_health < obj.health[obj.level-1]:
+				help_panel.get_child(1).get_child(5).get_node("Destroy_button").visible = false
+				help_panel.get_child(1).get_child(5).get_node("Repair_button").visible = true
+				help_panel.get_child(1).get_child(4).get_node("Label").text = "Repair: "
+				help_panel.get_child(1).get_child(4).get_node("Wood").text = str(obj.repair_wood * (obj.health[obj.level-1]-obj.current_health))
+				help_panel.get_child(1).get_child(4).get_node("Stone").text = str(obj.repair_stone * (obj.health[obj.level-1]-obj.current_health))
+				if not game_script.is_enough_resources(obj.repair_wood,obj.repair_stone,0,0,0):
+					help_panel.get_child(1).get_child(5).get_node("Repair_button").disabled = true
+				else:
+					help_panel.get_child(1).get_child(5).get_node("Repair_button").disabled = false
+			else:
+				help_panel.get_child(1).get_child(5).get_node("Destroy_button").visible = true
+				help_panel.get_child(1).get_child(5).get_node("Repair_button").visible = false
+				help_panel.get_child(1).get_child(4).get_node("Label").text = "Destroy: "
+				help_panel.get_child(1).get_child(4).get_node("Wood").text = "+"+str(obj.return_wood * obj.level)
+				help_panel.get_child(1).get_child(4).get_node("Stone").text = "+"+str(obj.return_stone * obj.level)
 			if not game_script.is_enough_resources(needed_wood,needed_stone,needed_wheat,0,0) or obj.level == 3:
 				help_panel.get_child(1).get_child(3).disabled = true
 			else:
@@ -339,7 +354,7 @@ func hover_upgrade(tower) ->void:
 			help_panel.get_child(1).get_child(1).get_node("Range").text = str(tower.tower_range[tower.level])
 			help_panel.get_child(1).get_child(1).get_node("Range").set("theme_override_colors/font_color",Color(0,1,0))
 		if tower.health[tower.level-1] != tower.health[tower.level]:
-			help_panel.get_child(1).get_child(1).get_node("Health").text = str(tower.health[tower.level])
+			help_panel.get_child(1).get_child(1).get_node("Health").text = str(tower.health[tower.level])+"/"+str(tower.health[tower.level])
 			help_panel.get_child(1).get_child(1).get_node("Health").set("theme_override_colors/font_color",Color(0,1,0))
 		if tower.firerate[tower.level-1] != tower.firerate[tower.level]:
 			help_panel.get_child(1).get_child(1).get_node("FireRate").text = str(tower.firerate[tower.level])
@@ -366,7 +381,7 @@ func unhover_upgrade(tower) ->void:
 			help_panel.get_child(1).get_child(1).get_node("Range").text = str(tower.tower_range[tower.level-1])
 			help_panel.get_child(1).get_child(1).get_node("Range").set("theme_override_colors/font_color",Color(1,1,1))
 		if tower.health[tower.level-1] != tower.health[tower.level]:
-			help_panel.get_child(1).get_child(1).get_node("Health").text = str(tower.health[tower.level-1])
+			help_panel.get_child(1).get_child(1).get_node("Health").text = str(tower.current_health)+"/"+str(tower.health[tower.level-1])
 			help_panel.get_child(1).get_child(1).get_node("Health").set("theme_override_colors/font_color",Color(1,1,1))
 		if tower.firerate[tower.level-1] != tower.firerate[tower.level]:
 			help_panel.get_child(1).get_child(1).get_node("FireRate").text = str(tower.firerate[tower.level-1])
@@ -493,4 +508,11 @@ func destroy_tower(tower) ->void:
 	var grid_pos = game_script.grid_map.local_to_map(col_point)
 	var tile_pos = Vector3(grid_pos.x+game_script.grid_map.map_size, grid_pos.y, grid_pos.z+game_script.grid_map.map_size)
 	game_script.grid_map.tile_state[tile_pos.z][tile_pos.x] = 2
+	_on_X_button()
+	
+func repair_tower(tower) ->void:
+	var missing_health = tower.health[tower.level-1]-tower.current_health
+	game_script.game_resources.wood -= (tower.repair_wood * missing_health)
+	game_script.game_resources.stone -= (tower.repair_stone * missing_health)
+	tower.current_health = tower.health[tower.level-1]
 	_on_X_button()

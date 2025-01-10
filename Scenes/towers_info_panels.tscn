@@ -20,8 +20,9 @@ anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -184.0
+offset_left = -195.0
 offset_top = -123.0
+offset_right = -11.0
 offset_bottom = 123.0
 grow_horizontal = 0
 grow_vertical = 2
@@ -354,10 +355,22 @@ layout_mode = 2
 texture = ExtResource("11_vq3ly")
 expand_mode = 2
 
-[node name="Destroy_button" type="Button" parent="Tower panel/VBoxContainer"]
+[node name="Last_button" type="VBoxContainer" parent="Tower panel/VBoxContainer"]
+custom_minimum_size = Vector2(218, 19)
+layout_mode = 2
+
+[node name="Destroy_button" type="Button" parent="Tower panel/VBoxContainer/Last_button"]
+custom_minimum_size = Vector2(218, 19)
 layout_mode = 2
 focus_mode = 0
 text = "Destroy"
+
+[node name="Repair_button" type="Button" parent="Tower panel/VBoxContainer/Last_button"]
+visible = false
+custom_minimum_size = Vector2(218, 19)
+layout_mode = 2
+focus_mode = 0
+text = "Repair"
 
 [connection signal="pressed" from="Tower panel/VBoxContainer/HBoxContainer2/TextureButton" to="Tower panel" method="_on_texture_button_pressed"]
 [connection signal="mouse_entered" from="Tower panel/VBoxContainer/GridContainer/Dmg_png" to="Tower panel" method="_on_mouse_entered"]
@@ -375,4 +388,5 @@ text = "Destroy"
 [connection signal="mouse_entered" from="Tower panel/VBoxContainer/Upgrade_button" to="Tower panel" method="_on_upgrade_button_mouse_entered"]
 [connection signal="mouse_exited" from="Tower panel/VBoxContainer/Upgrade_button" to="Tower panel" method="_on_upgrade_button_mouse_exited"]
 [connection signal="pressed" from="Tower panel/VBoxContainer/Upgrade_button" to="Tower panel" method="_on_upgrade_button_pressed"]
-[connection signal="pressed" from="Tower panel/VBoxContainer/Destroy_button" to="Tower panel" method="_on_destroy_button_pressed"]
+[connection signal="pressed" from="Tower panel/VBoxContainer/Last_button/Destroy_button" to="Tower panel" method="_on_destroy_button_pressed"]
+[connection signal="pressed" from="Tower panel/VBoxContainer/Last_button/Repair_button" to="Tower panel" method="_on_repair_button_pressed"]

@@ -7,6 +7,7 @@ signal upgrade_pressed(object)
 signal upgrade_hovered(object)
 signal upgrade_unhovered(object)
 signal destroy_pressed(object)
+signal repair_pressed(object)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -39,3 +40,7 @@ func _on_upgrade_button_mouse_exited() -> void:
 
 func _on_destroy_button_pressed() -> void:
 	emit_signal("destroy_pressed",object)
+
+
+func _on_repair_button_pressed() -> void:
+	emit_signal("repair_pressed",object)

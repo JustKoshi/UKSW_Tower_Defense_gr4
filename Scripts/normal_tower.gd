@@ -7,12 +7,15 @@ var tower_range = [2,2,3]
 var level = 1
 var firerate = [1,1.1,1.2]
 var title = "Normal Tower"
+var current_health
 var enemies = []
 var current_enemy
 var can_shoot = true
 
 var return_wood
 var return_stone
+var repair_wood
+var repair_stone
 var wood_to_upgrade = [20,25,75,0]
 var stone_to_upgrade = [20,25,75,0]
 var wheat_to_upgrade = [0,25,75,0]
@@ -23,8 +26,11 @@ var mesh_lvl3 = load("res://Resources/Towers/normalTower lvl1/normal_tower_lvl3.
 signal tower_info(object)
 
 func _ready() -> void:
+	current_health = health[level-1]
 	return_wood = 4
 	return_stone = 4
+	repair_wood = 4
+	repair_stone = 4
 	get_node("MobDetector").get_child(0).shape.radius = 2*tower_range[level-1]+1
 	get_node("MobDetector").get_child(1).mesh.top_radius = 2*tower_range[level-1]+1
 	get_node("MobDetector").get_child(1).mesh.bottom_radius = 2*tower_range[level-1]+1
@@ -109,3 +115,4 @@ func upgrade() ->void:
 		get_node("MobDetector").get_child(1).mesh.bottom_radius = (2*tower_range[level]+1)/1.2/1.2
 		get_node("MobDetector").get_child(1).position.y = -1.38
 	level += 1
+	current_health = health[level-1]
