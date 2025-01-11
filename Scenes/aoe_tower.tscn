@@ -1,0 +1,75 @@
+[gd_scene load_steps=11 format=3 uid="uid://sfaaga5hhy7m"]
+
+[ext_resource type="ArrayMesh" uid="uid://b3aenin7rwiir" path="res://Resources/Towers/AOETower/AOETower_lvl1.obj" id="1_tyhxf"]
+[ext_resource type="Texture2D" uid="uid://b1ms4h5mcmjd0" path="res://Resources/Towers/hexagons_medieval.png" id="2_sfxmv"]
+[ext_resource type="PackedScene" uid="uid://byooo7pu1h2fn" path="res://Scenes/arm_aoe_tower_lvl_1.tscn" id="4_3eddm"]
+[ext_resource type="Script" path="res://Scripts/aoe_tower.gd" id="4_fixjl"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vx341"]
+transparency = 1
+albedo_texture = ExtResource("2_sfxmv")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wmxo8"]
+albedo_texture = ExtResource("2_sfxmv")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_poiry"]
+size = Vector3(0.919067, 2.02597, 1)
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_vna8e"]
+radius = 7.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_pde3o"]
+top_radius = 1.0
+bottom_radius = 1.0
+height = 0.001
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xf7ej"]
+render_priority = 1
+transparency = 1
+albedo_color = Color(0, 0, 0, 0.537255)
+
+[node name="AOE_Tower" type="MeshInstance3D" groups=["towers"]]
+mesh = ExtResource("1_tyhxf")
+surface_material_override/0 = SubResource("StandardMaterial3D_vx341")
+surface_material_override/1 = SubResource("StandardMaterial3D_wmxo8")
+script = ExtResource("4_fixjl")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." groups=["towers"]]
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00775146, 0.941497, 0)
+shape = SubResource("BoxShape3D_poiry")
+
+[node name="MobDetector" type="Area3D" parent="."]
+
+[node name="Range" type="CollisionShape3D" parent="MobDetector"]
+shape = SubResource("SphereShape3D_vna8e")
+
+[node name="Color_range" type="MeshInstance3D" parent="MobDetector"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2, 0)
+mesh = SubResource("CylinderMesh_pde3o")
+surface_material_override/0 = SubResource("StandardMaterial3D_xf7ej")
+
+[node name="Damage CD" type="Timer" parent="."]
+wait_time = 4.0
+
+[node name="Stones" type="Node" parent="."]
+
+[node name="Aim2" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.32871, 0)
+gizmo_extents = 0.7
+
+[node name="arm" parent="." instance=ExtResource("4_3eddm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.87, 0)
+
+[node name="Animation_time" type="Timer" parent="arm"]
+wait_time = 0.85
+one_shot = true
+
+[connection signal="input_event" from="StaticBody3D" to="." method="_on_static_body_3d_input_event"]
+[connection signal="body_entered" from="MobDetector" to="." method="_on_mob_detector_body_entered"]
+[connection signal="body_exited" from="MobDetector" to="." method="_on_mob_detector_body_exited"]
+[connection signal="timeout" from="Damage CD" to="." method="_on_shooting_cd_timeout"]
+[connection signal="timeout" from="arm/Animation_time" to="." method="_on_animation_time_timeout"]

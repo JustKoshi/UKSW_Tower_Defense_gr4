@@ -196,5 +196,6 @@ func randomize_basic_enemy_cd():
 
 
 func _on_timer_timeout() -> void:
-	print(str(spawned_enemy_count)+ "- spawned enemy count")
-	print(str(basic_enemies_per_wave + fast_enemies_per_wave + boss_enemies_per_wave + pyro_enemies_per_wave) + "- expected enemies")
+	1
+	#print(str(spawned_enemy_count)+ "- spawned enemy count")
+	#print(str(basic_enemies_per_wave + fast_enemies_per_wave + boss_enemies_per_wave + pyro_enemies_per_wave) + "- expected enemies")

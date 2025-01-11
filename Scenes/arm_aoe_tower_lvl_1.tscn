@@ -1,0 +1,19 @@
+[gd_scene load_steps=6 format=3 uid="uid://byooo7pu1h2fn"]
+
+[ext_resource type="PackedScene" uid="uid://c4d4gbnm2ln3m" path="res://Resources/Towers/AOE arm/reka_aoe_tower_lvl_1.glb" id="1_crqv5"]
+[ext_resource type="Texture2D" uid="uid://b1ms4h5mcmjd0" path="res://Resources/Towers/hexagons_medieval.png" id="2_ya682"]
+[ext_resource type="Texture2D" uid="uid://cu3y2odbdvqag" path="res://Resources/Towers/Stone/Gravel040_1K-JPG_Color.jpg" id="3_3lnp0"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mhceg"]
+albedo_texture = ExtResource("2_ya682")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_muumw"]
+albedo_color = Color(0, 0, 1, 1)
+albedo_texture = ExtResource("3_3lnp0")
+
+[node name="reka_aoe_tower_lvl_1" instance=ExtResource("1_crqv5")]
+
+[node name="catapult_arm_blue" parent="." index="0"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+surface_material_override/0 = SubResource("StandardMaterial3D_mhceg")
+surface_material_override/1 = SubResource("StandardMaterial3D_muumw")
