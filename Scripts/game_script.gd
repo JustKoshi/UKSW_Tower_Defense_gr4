@@ -23,6 +23,8 @@ extends Node3D
 @onready var how_to_play: Control = $"CanvasLayer/Menu/How to Play"
 @onready var pause_menu: Control = $"CanvasLayer/Pause Menu"
 
+@onready var resource_holder: Node = $"Resource Holder"
+
 
 var NormalTowerScene = preload("res://Scenes/normal_tower_lvl_1.tscn")
 var FreezeTowerScene = preload("res://Scenes/Freeze_tower_lvl_1.tscn")
@@ -137,7 +139,7 @@ func _process(delta: float) -> void:
 			current_cam_index -= 1
 		current_cam_index = current_cam_index%3
 		set_camera()
-		
+	
 	elif Input.is_action_just_pressed("Camera_F2") and game:
 		current_cam_index += 1
 		current_cam_index = current_cam_index%4
@@ -637,7 +639,9 @@ func convert_path_to_local()-> void:
 	for vect in grid_map.shortest_path:
 			vect.y += 1
 			short_path.append(grid_map.map_to_local(vect))
-	#short_path.append(grid_map.map_to_local(path_end))
+	var new_end = grid_map.map_to_local(path_end)
+	new_end.x+=1
+	short_path.append(new_end)
 
 func update_label_build_time():
 	build_time_label.text = "Time for building: " + str(ceil(build_timer.time_left)) + "s"
@@ -780,3 +784,12 @@ func buy_workers() -> void:
 	game_resources.wheat -= (30 * (game_resources.workers - 2))
 	game_resources.workers += 1
 	UI._on_no_pressed()
+
+func rand_builiding_to_destroy():
+	return randi_range(0, resource_holder.get_child_count()-1)
+
+func destoy_resource_building():
+	if resource_holder.get_child_count()>0:
+		resource_holder.get_child(rand_builiding_to_destroy()).queue_free()
+		game_resources.used_workers-=1
+		game_resources.workers-=1

@@ -166,6 +166,7 @@ func end_wave():
 	wave_in_progress = false
 	emit_signal("wave_ended")
 	
+	
 #here updates each of enemy count based on current wave
 func update_wave_enemy_count():
 	basic_enemies_per_wave = 4 + (current_wave-1)*basic_enemy_increment
@@ -183,7 +184,6 @@ func randomize_fast_enemy_cd():
 func randomize_basic_enemy_cd():
 	basic_enemy_spawn_cd = randf_range(1.5, 2.5)
 
-
-func _on_timer_timeout() -> void:
-	print(str(spawned_enemy_count)+ "- spawned enemy count")
-	print(str(basic_enemies_per_wave + fast_enemies_per_wave + boss_enemies_per_wave + pyro_enemies_per_wave) + "- expected enemies")
+#func _on_timer_timeout() -> void:
+	#print(str(spawned_enemy_count)+ "- spawned enemy count")
+	#print(str(basic_enemies_per_wave + fast_enemies_per_wave + boss_enemies_per_wave + pyro_enemies_per_wave) + "- expected enemies")

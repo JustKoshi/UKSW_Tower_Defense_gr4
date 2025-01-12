@@ -6,9 +6,14 @@ var finished_walk = false
 var can_attack = true
 var freezing = false
 var targeting_tower = false
+var title = "Pyro"
+var speed = 4.0/2
+var description = "Enemy targeting\ntowers and resource\nbuildings"
 @onready var animation_player = $AnimationPlayer
 
 var target:StaticBody3D = null
+
+
 
 func _physics_process(_delta):
 	if target != null and not finished_walk:
@@ -49,9 +54,15 @@ func take_damage(dmg: int) -> void:
 
 #Resetting attacking 
 func _on_attack_cd_timeout() -> void:
-	take_damage(150)
+	
 	if not targeting_tower:
 		get_parent_node_3d().get_parent_node_3d().get_parent_node_3d().take_damage(damage)
+		get_parent_node_3d().get_parent_node_3d().get_parent_node_3d().destoy_resource_building()
+		take_damage(300)
+		
+	else:
+		target.get_parent_node_3d().take_damage(damage)
+		take_damage(150)
 	can_attack=true
 
 
@@ -65,3 +76,11 @@ func _on_area_3d_body_entered(body: Node3D) -> void:
 
 func calculate_distance(vec1: Vector3, vec2: Vector3)->float:
 	return vec1.distance_to(vec2)
+
+	
+
+
+func _on_area_3d_body_exited(body: Node3D) -> void:
+	if body.is_in_group("towers") and target != null:
+		print("invalid target removed")
+		target = null

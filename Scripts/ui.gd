@@ -42,14 +42,36 @@ var aoe_png = load("res://Resources/Icons/catapult.png")
 
 var info_panels = preload("res://Scenes/buttons_info_panels.tscn")
 var tower_info = preload("res://Scenes/towers_info_panels.tscn")
+var enemy_info = preload("res://Scenes/Enemy_info_panel.tscn")
 var panel_info_holder
 var ui_tower_panel
+var enemy_panel_holder
+
+const basic_enemies = preload("res://Scripts/enemy_basic.gd")
+const fast_enemies = preload("res://Scripts/fast_enemy.gd")
+const boss_enemies = preload("res://Scripts/skeleton_boss.gd")
+const pyro_enemies = preload("res://Scripts/skeleton_pyro.gd")
+var basic_enemy
+var fast_enemy
+var boss_enemy
+var pyro_enemy
+var basic_enemy_png = load("res://Resources/Icons/basic head.png")
+var fast_enemy_png = load("res://Resources/Icons/Hood head.png")
+var boss_enemy_png = load("res://Resources/Icons/boss head.png")
+var pyro_enemy_png = load("res://Resources/Icons/Pyro head.png")
 
 var original_positions = {}
 var panel_number
 @onready var locked_buttons = [$"Bottom_panel/Resource buildings/HBoxContainer/Workers", $"Bottom_panel/Resource buildings/HBoxContainer/Wheat building", $"Bottom_panel/Resource buildings/HBoxContainer/Beer building"]
+var resolution
 
 func _ready() -> void:
+	
+	basic_enemy = basic_enemies.new()
+	fast_enemy = fast_enemies.new()
+	boss_enemy = boss_enemies.new()
+	pyro_enemy = pyro_enemies.new()
+	
 	panel_info_holder = null
 	ui_tower_panel = null
 	worker_bonus_panel.position.x += 235
@@ -92,10 +114,10 @@ func _process(_delta: float) -> void:
 	wheat_count_label.set_text("%d" % game_script.game_resources.wheat)
 	beer_count_label.set_text("%d" % game_script.game_resources.beer)
 	worker_count_label.set_text("%d/%d" % [game_script.game_resources.used_workers, game_script.game_resources.workers])
-		
+	
 	if panel_info_holder != null and panel_number == 7:
-		panel_info_holder.get_child(7).get_child(1).get_child(4).get_node("Wood").text = str(2*(game_script.number_of_tetris_placed + 1))
-		panel_info_holder.get_child(7).get_child(1).get_child(4).get_node("Stone").text = str(2*(game_script.number_of_tetris_placed + 1))
+		panel_info_holder.get_child(7).get_child(1).get_child(4).get_node("Wood").text = str(3*(game_script.number_of_tetris_placed + 1))
+		panel_info_holder.get_child(7).get_child(1).get_child(4).get_node("Stone").text = str(3*(game_script.number_of_tetris_placed + 1))
 	if panel_info_holder != null and panel_number == 8:
 		panel_info_holder.get_child(8).get_child(1).get_child(2).get_node("Wheat").text = str(30 * (game_script.game_resources.workers - 2))
 		if game_script.is_enough_resources(0,0,30 * (game_script.game_resources.workers - 2),0,0):
@@ -256,57 +278,63 @@ func _on_normal_tower_lvl_1_tower_info(obj) -> void:
 			ui_tower_panel = tower_info.instantiate()
 			add_child(ui_tower_panel)
 			var help_panel
-			var needed_wood = 0
-			var needed_stone = 0
-			var needed_wheat = 0
-			if obj.level == 1:
-				needed_wood = obj.wood_to_upgrade_lvl2
-				needed_stone = obj.stone_to_upgrade_lvl2
-				needed_wheat = obj.wheat_to_upgrade_lvl2
-			elif obj.level == 2:
-				needed_wood = obj.wood_to_upgrade_lvl3
-				needed_stone = obj.stone_to_upgrade_lvl3
-				needed_wheat = obj.wheat_to_upgrade_lvl3
+			var needed_wood = obj.wood_to_upgrade[obj.level]
+			var needed_stone = obj.stone_to_upgrade[obj.level]
+			var needed_wheat = obj.wheat_to_upgrade[obj.level]
 			help_panel = ui_tower_panel.get_child(0)
 			help_panel.visible = true
 			help_panel.size.x-=10
 			help_panel.object = obj
 			help_panel.connect("X_button_pressed",self._on_X_button)
 			help_panel.connect("upgrade_pressed",self.upgrade_tower)
+			help_panel.connect("upgrade_hovered",self.hover_upgrade)
+			help_panel.connect("upgrade_unhovered",self.unhover_upgrade)
+			help_panel.connect("destroy_pressed",self.destroy_tower)
+			help_panel.connect("repair_pressed",self.repair_tower)
 			help_panel.get_child(1).get_child(0).get_child(1).text = str(obj.title)
-			help_panel.get_child(1).get_child(1).get_node("Dmg").text = str(obj.damage)
-			help_panel.get_child(1).get_child(1).get_node("Range").text = str(obj.tower_range)
+			help_panel.get_child(1).get_child(1).get_node("Dmg").text = str(obj.damage[obj.level-1])
+			help_panel.get_child(1).get_child(1).get_node("Range").text = str(obj.tower_range[obj.level-1])
 			help_panel.get_child(1).get_child(1).get_node("Lvl").text = str(obj.level)
-			help_panel.get_child(1).get_child(1).get_node("Health").text = str(obj.health)
-			help_panel.get_child(1).get_child(1).get_node("FireRate").text = str(obj.firerate)+"/sec"
+			help_panel.get_child(1).get_child(1).get_node("Health").text = str(obj.current_health)+"/"+str(obj.health[obj.level-1])
+			help_panel.get_child(1).get_child(1).get_node("FireRate").text = str(obj.firerate[obj.level-1])+"/sec"
 			help_panel.get_child(1).get_child(1).get_child(0).get_child(0).size.x = help_panel.size.x/2 + 25
 			if obj.title == "Normal Tower":
 				help_panel.get_child(1).get_child(1).get_node("Special thing").visible = false
 				help_panel.get_child(1).get_child(1).get_node("Special thing_png").visible = false
 				help_panel.get_child(1).get_child(1).get_child(0).get_child(0).get_child(0).get_node("Name6").visible = false
 			if obj.title == "Freeze Tower":
-				help_panel.get_child(1).get_child(1).get_node("Special thing").text = str(obj.slow*100)+"%"
+				help_panel.get_child(1).get_child(1).get_node("Special thing").text = "-" + str((1-obj.slow[obj.level-1])*100) + "%"
 				help_panel.get_child(1).get_child(1).get_node("Special thing_png").texture = slow_png
 				help_panel.get_child(1).get_child(1).get_child(0).get_child(0).get_child(0).get_node("Name6").text = "slow"
 			if obj.title == "AOE Tower":
-				help_panel.get_child(1).get_child(1).get_node("Special thing").text = str(obj.aoe*100)+"%"
+				help_panel.get_child(1).get_child(1).get_node("Special thing").text = str(obj.aoe[obj.level-1]*100)+"%"
 				help_panel.get_child(1).get_child(1).get_node("Special thing_png").texture = aoe_png
 				help_panel.get_child(1).get_child(1).get_child(0).get_child(0).get_child(0).get_node("Name6").text = "AOE dmg"
-			if obj.level == 1:
-				help_panel.get_child(1).get_child(2).get_node("Wood").text = str(obj.wood_to_upgrade_lvl2)
-				help_panel.get_child(1).get_child(2).get_node("Stone").text = str(obj.stone_to_upgrade_lvl2)
-				help_panel.get_child(1).get_child(2).get_node("Wheat").text = str(obj.wheat_to_upgrade_lvl2)
-			elif obj.level == 2:
-				help_panel.get_child(1).get_child(2).get_node("Wood").text = str(obj.wood_to_upgrade_lvl3)
-				help_panel.get_child(1).get_child(2).get_node("Stone").text = str(obj.stone_to_upgrade_lvl3)
-				help_panel.get_child(1).get_child(2).get_node("Wheat").text = str(obj.wheat_to_upgrade_lvl3)
+			if obj.level < 3:
+				help_panel.get_child(1).get_child(2).get_node("Wood").text = str(obj.wood_to_upgrade[obj.level])
+				help_panel.get_child(1).get_child(2).get_node("Stone").text = str(obj.stone_to_upgrade[obj.level])
+				help_panel.get_child(1).get_child(2).get_node("Wheat").text = str(obj.wheat_to_upgrade[obj.level])
 			else:
 				help_panel.get_child(1).get_child(2).get_node("Label").text = "MAX LEVEL!"
 				for i in help_panel.get_child(1).get_child(2).get_child_count():
 					if i>0:
 						help_panel.get_child(1).get_child(2).get_child(i).visible = false
-			help_panel.get_child(1).get_child(4).get_node("Wood").text = "+"+str(obj.return_wood * obj.level)
-			help_panel.get_child(1).get_child(4).get_node("Stone").text = "+"+str(obj.return_stone * obj.level)
+			if obj.current_health < obj.health[obj.level-1]:
+				help_panel.get_child(1).get_child(5).get_node("Destroy_button").visible = false
+				help_panel.get_child(1).get_child(5).get_node("Repair_button").visible = true
+				help_panel.get_child(1).get_child(4).get_node("Label").text = "Repair: "
+				help_panel.get_child(1).get_child(4).get_node("Wood").text = str(obj.repair_wood * (obj.health[obj.level-1]-obj.current_health))
+				help_panel.get_child(1).get_child(4).get_node("Stone").text = str(obj.repair_stone * (obj.health[obj.level-1]-obj.current_health))
+				if not game_script.is_enough_resources(obj.repair_wood,obj.repair_stone,0,0,0):
+					help_panel.get_child(1).get_child(5).get_node("Repair_button").disabled = true
+				else:
+					help_panel.get_child(1).get_child(5).get_node("Repair_button").disabled = false
+			else:
+				help_panel.get_child(1).get_child(5).get_node("Destroy_button").visible = true
+				help_panel.get_child(1).get_child(5).get_node("Repair_button").visible = false
+				help_panel.get_child(1).get_child(4).get_node("Label").text = "Destroy: "
+				help_panel.get_child(1).get_child(4).get_node("Wood").text = "+"+str(obj.return_wood * obj.level)
+				help_panel.get_child(1).get_child(4).get_node("Stone").text = "+"+str(obj.return_stone * obj.level)
 			if not game_script.is_enough_resources(needed_wood,needed_stone,needed_wheat,0,0) or obj.level == 3:
 				help_panel.get_child(1).get_child(3).disabled = true
 			else:
@@ -322,18 +350,66 @@ func _on_X_button() ->void:
 		ui_tower_panel.queue_free()
 		ui_tower_panel = null
 		
-		
+func hover_upgrade(tower) ->void:
+	if tower.level < 3 and ui_tower_panel != null:
+		var help_panel = ui_tower_panel.get_child(0)
+		if tower.damage[tower.level-1] != tower.damage[tower.level]:
+			help_panel.get_child(1).get_child(1).get_node("Dmg").text = str(tower.damage[tower.level])
+			help_panel.get_child(1).get_child(1).get_node("Dmg").set("theme_override_colors/font_color",Color(0,1,0))
+		if tower.tower_range[tower.level-1] != tower.tower_range[tower.level]:
+			help_panel.get_child(1).get_child(1).get_node("Range").text = str(tower.tower_range[tower.level])
+			help_panel.get_child(1).get_child(1).get_node("Range").set("theme_override_colors/font_color",Color(0,1,0))
+		if tower.health[tower.level-1] != tower.health[tower.level]:
+			help_panel.get_child(1).get_child(1).get_node("Health").text = str(tower.health[tower.level])+"/"+str(tower.health[tower.level])
+			help_panel.get_child(1).get_child(1).get_node("Health").set("theme_override_colors/font_color",Color(0,1,0))
+		if tower.firerate[tower.level-1] != tower.firerate[tower.level]:
+			help_panel.get_child(1).get_child(1).get_node("FireRate").text = str(tower.firerate[tower.level])
+			help_panel.get_child(1).get_child(1).get_node("FireRate").set("theme_override_colors/font_color",Color(0,1,0))
+		help_panel.get_child(1).get_child(1).get_node("Lvl").text = str(tower.level+1)
+		help_panel.get_child(1).get_child(1).get_node("Lvl").set("theme_override_colors/font_color",Color(0,1,0))
+		if tower.title =="Freeze Tower":
+			if tower.slow[tower.level-1] != tower.slow[tower.level]:
+				help_panel.get_child(1).get_child(1).get_node("Special thing").text = "-" + str((1-tower.slow[tower.level])*100) + "%"
+				help_panel.get_child(1).get_child(1).get_node("Special thing").set("theme_override_colors/font_color",Color(0,1,0))
+		if tower.title =="AOE Tower":
+			if tower.aoe[tower.level-1] != tower.aoe[tower.level]:
+				help_panel.get_child(1).get_child(1).get_node("Special thing").text = str(tower.aoe[tower.level]*100)+"%"
+				help_panel.get_child(1).get_child(1).get_node("Special thing").set("theme_override_colors/font_color",Color(0,1,0))
+			
+	
+func unhover_upgrade(tower) ->void:
+	if tower.level < 3 and ui_tower_panel != null:
+		var help_panel = ui_tower_panel.get_child(0)
+		if tower.damage[tower.level-1] != tower.damage[tower.level]:
+			help_panel.get_child(1).get_child(1).get_node("Dmg").text = str(tower.damage[tower.level-1])
+			help_panel.get_child(1).get_child(1).get_node("Dmg").set("theme_override_colors/font_color",Color(1,1,1))
+		if tower.tower_range[tower.level-1] != tower.tower_range[tower.level]:
+			help_panel.get_child(1).get_child(1).get_node("Range").text = str(tower.tower_range[tower.level-1])
+			help_panel.get_child(1).get_child(1).get_node("Range").set("theme_override_colors/font_color",Color(1,1,1))
+		if tower.health[tower.level-1] != tower.health[tower.level]:
+			help_panel.get_child(1).get_child(1).get_node("Health").text = str(tower.current_health)+"/"+str(tower.health[tower.level-1])
+			help_panel.get_child(1).get_child(1).get_node("Health").set("theme_override_colors/font_color",Color(1,1,1))
+		if tower.firerate[tower.level-1] != tower.firerate[tower.level]:
+			help_panel.get_child(1).get_child(1).get_node("FireRate").text = str(tower.firerate[tower.level-1])
+			help_panel.get_child(1).get_child(1).get_node("FireRate").set("theme_override_colors/font_color",Color(1,1,1))
+		help_panel.get_child(1).get_child(1).get_node("Lvl").text = str(tower.level)
+		help_panel.get_child(1).get_child(1).get_node("Lvl").set("theme_override_colors/font_color",Color(1,1,1))
+		if tower.title =="Freeze Tower":
+			if tower.slow[tower.level-1] != tower.slow[tower.level]:
+				help_panel.get_child(1).get_child(1).get_node("Special thing").text =  "-" + str((1-tower.slow[tower.level-1])*100) + "%"
+				help_panel.get_child(1).get_child(1).get_node("Special thing").set("theme_override_colors/font_color",Color(1,1,1))
+		if tower.title =="AOE Tower":
+			if tower.aoe[tower.level-1] != tower.aoe[tower.level]:
+				help_panel.get_child(1).get_child(1).get_node("Special thing").text = str(tower.aoe[tower.level-1]*100)+"%"
+				help_panel.get_child(1).get_child(1).get_node("Special thing").set("theme_override_colors/font_color",Color(1,1,1))
+	
+	
 func upgrade_tower(tower) ->void:
 	#print("upgrading: ",tower)
 	_on_X_button()
-	if tower.level == 1:
-		game_script.game_resources.wood -= tower.wood_to_upgrade_lvl2
-		game_script.game_resources.stone -= tower.stone_to_upgrade_lvl2
-		game_script.game_resources.wheat -= tower.wheat_to_upgrade_lvl2
-	elif tower.level == 2:
-		game_script.game_resources.wood -= tower.wood_to_upgrade_lvl3
-		game_script.game_resources.stone -= tower.stone_to_upgrade_lvl3
-		game_script.game_resources.wheat -= tower.wheat_to_upgrade_lvl3
+	game_script.game_resources.wood -= tower.wood_to_upgrade[tower.level]
+	game_script.game_resources.stone -= tower.stone_to_upgrade[tower.level]
+	game_script.game_resources.wheat -= tower.wheat_to_upgrade[tower.level]
 	tower.upgrade()
 
 func switch_skip_button_visiblity() -> void:
@@ -376,3 +452,86 @@ func _button_to_main_menu() -> void:
 func _on_quit_in_pause_pressed() -> void:
 	get_tree().paused = false
 	_button_to_main_menu()
+
+
+func _open_normal_enemy_info_panels() -> void:
+	if enemy_panel_holder == null:
+		enemy_panel_holder = enemy_info.instantiate()
+		add_child(enemy_panel_holder)
+		enemy_panel_holder.get_child(0).get_child(1).get_child(0).get_child(2).text = basic_enemy.title
+		enemy_panel_holder.get_child(0).get_child(1).get_child(1).get_node("Damage").text = str(basic_enemy.damage)
+		enemy_panel_holder.get_child(0).get_child(1).get_child(1).get_node("Health").text = str(basic_enemy.health)
+		enemy_panel_holder.get_child(0).get_child(1).get_child(3).get_node("Speed").text = str(basic_enemy.speed) + " blocks/s"
+		enemy_panel_holder.get_child(0).get_child(1).get_node("Label").text = basic_enemy.description
+		enemy_panel_holder.get_child(0).get_child(1).get_child(0).get_child(0).texture = basic_enemy_png
+		enemy_panel_holder.get_child(0).get_child(1).get_child(0).get_child(4).texture = basic_enemy_png
+
+func _open_fast_enemy_info_panel() -> void:
+	if enemy_panel_holder == null:
+		enemy_panel_holder = enemy_info.instantiate()
+		add_child(enemy_panel_holder)
+		enemy_panel_holder.get_child(0).get_child(1).get_child(0).get_child(2).text = fast_enemy.title
+		enemy_panel_holder.get_child(0).get_child(1).get_child(1).get_node("Damage").text = str(fast_enemy.damage)
+		enemy_panel_holder.get_child(0).get_child(1).get_child(1).get_node("Health").text = str(fast_enemy.health)
+		enemy_panel_holder.get_child(0).get_child(1).get_child(3).get_node("Speed").text = str(fast_enemy.speed) + " blocks/s"
+		enemy_panel_holder.get_child(0).get_child(1).get_node("Label").text = fast_enemy.description
+		enemy_panel_holder.get_child(0).get_child(1).get_child(0).get_child(0).texture = fast_enemy_png
+		enemy_panel_holder.get_child(0).get_child(1).get_child(0).get_child(4).texture = fast_enemy_png
+
+
+func _on_boss_enemy_info_panel() -> void:
+	if enemy_panel_holder == null:
+		enemy_panel_holder = enemy_info.instantiate()
+		add_child(enemy_panel_holder)
+		enemy_panel_holder.get_child(0).get_child(1).get_child(0).get_child(2).text = boss_enemy.title
+		enemy_panel_holder.get_child(0).get_child(1).get_child(1).get_node("Damage").text = str(boss_enemy.damage)
+		enemy_panel_holder.get_child(0).get_child(1).get_child(1).get_node("Health").text = str(boss_enemy.health)
+		enemy_panel_holder.get_child(0).get_child(1).get_child(3).get_node("Speed").text = str(boss_enemy.speed) + " blocks/s"
+		enemy_panel_holder.get_child(0).get_child(1).get_node("Label").text = boss_enemy.description
+		enemy_panel_holder.get_child(0).get_child(1).get_child(0).get_child(0).texture = boss_enemy_png
+		enemy_panel_holder.get_child(0).get_child(1).get_child(0).get_child(4).texture = boss_enemy_png
+
+func _on_pyro_enemy_info_panel() -> void:
+	if enemy_panel_holder == null:
+		enemy_panel_holder = enemy_info.instantiate()
+		add_child(enemy_panel_holder)
+		enemy_panel_holder.get_child(0).get_child(1).get_child(0).get_child(2).text = pyro_enemy.title
+		enemy_panel_holder.get_child(0).get_child(1).get_child(1).get_node("Damage").text = str(pyro_enemy.damage)
+		enemy_panel_holder.get_child(0).get_child(1).get_child(1).get_node("Health").text = str(pyro_enemy.health)
+		enemy_panel_holder.get_child(0).get_child(1).get_child(3).get_node("Speed").text = str(pyro_enemy.speed) + " blocks/s"
+		enemy_panel_holder.get_child(0).get_child(1).get_node("Label").text = pyro_enemy.description
+		enemy_panel_holder.get_child(0).get_child(1).get_child(0).get_child(0).texture = pyro_enemy_png
+		enemy_panel_holder.get_child(0).get_child(1).get_child(0).get_child(4).texture = pyro_enemy_png
+
+func _close_enemy_info_panels() -> void:
+	if enemy_panel_holder != null:
+		enemy_panel_holder.queue_free()
+		enemy_panel_holder = null
+	
+func enemies_scaling() ->void:
+	if game_script.get_node("Enemy Spawner").current_wave % 5 == 0:
+		basic_enemy.health *= 1.1
+		basic_enemy.speed += 0.05
+	if game_script.get_node("Enemy Spawner").current_wave % 10 == 0:
+		fast_enemy.health *= 1.1
+		fast_enemy.speed += 0.1
+	if game_script.get_node("Enemy Spawner").current_wave % 10 == 0 and game_script.get_node("Enemy Spawner").current_wave > 10:
+		boss_enemy.health *= 1.1
+		boss_enemy.speed += 0.0025
+		
+func destroy_tower(tower) ->void:
+	game_script.game_resources.wood +=tower.return_wood
+	game_script.game_resources.stone +=tower.return_stone
+	tower.queue_free()
+	var col_point = tower.position
+	var grid_pos = game_script.grid_map.local_to_map(col_point)
+	var tile_pos = Vector3(grid_pos.x+game_script.grid_map.map_size, grid_pos.y, grid_pos.z+game_script.grid_map.map_size)
+	game_script.grid_map.tile_state[tile_pos.z][tile_pos.x] = 2
+	_on_X_button()
+	
+func repair_tower(tower) ->void:
+	var missing_health = tower.health[tower.level-1]-tower.current_health
+	game_script.game_resources.wood -= (tower.repair_wood * missing_health)
+	game_script.game_resources.stone -= (tower.repair_stone * missing_health)
+	tower.current_health = tower.health[tower.level-1]
+	_on_X_button()

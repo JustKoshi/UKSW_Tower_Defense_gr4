@@ -126,3 +126,7 @@ func upgrade() ->void:
 		get_node("Mage").get_node("GPUParticles3D").draw_pass_1 = particle_dup
 	level += 1
 	
+func take_damage(dmg: int) -> void:
+	current_health-=dmg
+	if current_health<=0 and (current_health+dmg) > 0:
+		queue_free()
