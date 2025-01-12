@@ -19,8 +19,8 @@ var wood_to_upgrade = [25,30,90,0]
 var stone_to_upgrade = [25,30,90,0]
 var wheat_to_upgrade = [0,30,90,0]
 
-var mesh_lvl2 = load("res://Resources/Towers/FreezeTowerlvl1/building_tower_A_green.obj")
-var mesh_lvl3 = load("res://Resources/Towers/FreezeTowerlvl1/building_tower_A_red.obj")
+var mesh_lvl2 = load("res://Resources/Towers/FreezeTower/building_tower_A_green.obj")
+var mesh_lvl3 = load("res://Resources/Towers/FreezeTower/building_tower_A_red.obj")
 var mage_lvl2 = load("res://Resources/Icons/green_heart.png")
 var mage_lvl3 = load("res://Resources/Icons/Heart.png")
 

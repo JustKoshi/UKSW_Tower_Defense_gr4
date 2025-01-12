@@ -1,12 +1,12 @@
 [gd_scene load_steps=11 format=3 uid="uid://drdc5fk6ym8f2"]
 
-[ext_resource type="ArrayMesh" path="res://Resources/Towers/FreezeTowerlvl1/building_tower_A_blue.obj" id="1_r4xco"]
+[ext_resource type="ArrayMesh" uid="uid://dj6t1svcnei6i" path="res://Resources/Towers/FreezeTower/building_tower_A_blue.obj" id="1_kx8ke"]
 [ext_resource type="Texture2D" uid="uid://b1ms4h5mcmjd0" path="res://Resources/Towers/hexagons_medieval.png" id="2_prlpv"]
 [ext_resource type="Script" path="res://Scripts/freeze_tower_lvl_1.gd" id="3_veq11"]
 [ext_resource type="PackedScene" uid="uid://cgqma0vn5it54" path="res://Scenes/mage.tscn" id="4_sl6ly"]
 [ext_resource type="Script" path="res://Scripts/Camera3D.gd" id="5_3bdpw"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lf0sh"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t0664"]
 transparency = 1
 albedo_texture = ExtResource("2_prlpv")
 
@@ -27,8 +27,8 @@ transparency = 1
 albedo_color = Color(0, 0, 0, 0.537255)
 
 [node name="Freeze_tower" type="MeshInstance3D" groups=["towers"]]
-mesh = ExtResource("1_r4xco")
-surface_material_override/0 = SubResource("StandardMaterial3D_lf0sh")
+mesh = ExtResource("1_kx8ke")
+surface_material_override/0 = SubResource("StandardMaterial3D_t0664")
 script = ExtResource("3_veq11")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="." groups=["towers"]]

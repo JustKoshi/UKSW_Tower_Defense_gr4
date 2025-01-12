@@ -20,8 +20,8 @@ var wood_to_upgrade = [20,25,75,0]
 var stone_to_upgrade = [20,25,75,0]
 var wheat_to_upgrade = [0,25,75,0]
 
-var mesh_lvl2 = load("res://Resources/Towers/normalTower lvl1/normal_tower_lvl2.obj")
-var mesh_lvl3 = load("res://Resources/Towers/normalTower lvl1/normal_tower_lvl3.obj")
+var mesh_lvl2 = load("res://Resources/Towers/normalTower/normal_tower_lvl2.obj")
+var mesh_lvl3 = load("res://Resources/Towers/normalTower/normal_tower_lvl3.obj")
 
 signal tower_info(object)
 

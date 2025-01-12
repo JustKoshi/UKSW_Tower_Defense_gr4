@@ -1,14 +1,14 @@
 [gd_scene load_steps=10 format=3 uid="uid://chpr27lm25485"]
 
-[ext_resource type="ArrayMesh" path="res://Resources/Towers/normalTower lvl1/normal_tower_lvl1.obj" id="1_4qhrg"]
+[ext_resource type="ArrayMesh" uid="uid://b7nb05oipn7ic" path="res://Resources/Towers/normalTower/normal_tower_lvl1.obj" id="1_1agug"]
 [ext_resource type="Texture2D" uid="uid://b1ms4h5mcmjd0" path="res://Resources/Towers/hexagons_medieval.png" id="2_muqog"]
 [ext_resource type="Script" path="res://Scripts/normal_tower.gd" id="3_0d14h"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_iyvvs"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2s2kb"]
 transparency = 1
 albedo_texture = ExtResource("2_muqog")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rjsrd"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6dkr0"]
 transparency = 1
 albedo_texture = ExtResource("2_muqog")
 
@@ -29,9 +29,9 @@ transparency = 1
 albedo_color = Color(0, 0, 0, 0.537255)
 
 [node name="Normal_tower_lvl1" type="MeshInstance3D" groups=["towers"]]
-mesh = ExtResource("1_4qhrg")
-surface_material_override/0 = SubResource("StandardMaterial3D_iyvvs")
-surface_material_override/1 = SubResource("StandardMaterial3D_rjsrd")
+mesh = ExtResource("1_1agug")
+surface_material_override/0 = SubResource("StandardMaterial3D_2s2kb")
+surface_material_override/1 = SubResource("StandardMaterial3D_6dkr0")
 script = ExtResource("3_0d14h")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="." groups=["towers"]]
