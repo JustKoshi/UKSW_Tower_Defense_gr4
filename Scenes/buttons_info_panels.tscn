@@ -708,7 +708,7 @@ vertical_alignment = 1
 
 [node name="Dmg" type="Label" parent="AOE Tower Panel/VBoxContainer/GridContainer"]
 layout_mode = 2
-text = "40
+text = "33
 "
 
 [node name="Spring" type="Control" parent="AOE Tower Panel/VBoxContainer/GridContainer"]
@@ -769,7 +769,7 @@ expand_mode = 2
 
 [node name="Health" type="Label" parent="AOE Tower Panel/VBoxContainer/GridContainer"]
 layout_mode = 2
-text = "1
+text = "2
 "
 
 [node name="Spring11" type="Control" parent="AOE Tower Panel/VBoxContainer/GridContainer"]
@@ -804,7 +804,7 @@ expand_mode = 2
 
 [node name="FireRate" type="Label" parent="AOE Tower Panel/VBoxContainer/GridContainer"]
 layout_mode = 2
-text = "0.5/sec"
+text = "0.25/sec"
 
 [node name="Spring3" type="Control" parent="AOE Tower Panel/VBoxContainer/GridContainer"]
 layout_mode = 2

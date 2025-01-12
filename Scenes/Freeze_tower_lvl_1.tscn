@@ -1,6 +1,6 @@
 [gd_scene load_steps=11 format=3 uid="uid://drdc5fk6ym8f2"]
 
-[ext_resource type="ArrayMesh" uid="uid://dj6t1svcnei6i" path="res://Resources/Towers/FreezeTowerlvl1/building_tower_A_blue.obj" id="1_r4xco"]
+[ext_resource type="ArrayMesh" path="res://Resources/Towers/FreezeTowerlvl1/building_tower_A_blue.obj" id="1_r4xco"]
 [ext_resource type="Texture2D" uid="uid://b1ms4h5mcmjd0" path="res://Resources/Towers/hexagons_medieval.png" id="2_prlpv"]
 [ext_resource type="Script" path="res://Scripts/freeze_tower_lvl_1.gd" id="3_veq11"]
 [ext_resource type="PackedScene" uid="uid://cgqma0vn5it54" path="res://Scenes/mage.tscn" id="4_sl6ly"]

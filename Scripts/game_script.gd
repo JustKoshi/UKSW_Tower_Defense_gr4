@@ -26,6 +26,7 @@ extends Node3D
 
 var NormalTowerScene = preload("res://Scenes/normal_tower_lvl_1.tscn")
 var FreezeTowerScene = preload("res://Scenes/Freeze_tower_lvl_1.tscn")
+var AOETowerScene = preload("res://Scenes/aoe_tower.tscn")
 var Lumbermill = preload("res://Scenes/lumbermill.tscn")
 var Mine = preload("res://Scenes/mine.tscn")
 var Windmill = preload("res://Scenes/windmill.tscn")
@@ -170,7 +171,11 @@ func _process(delta: float) -> void:
 		tower_to_hover = 2
 		hover_tower(tower_to_hover)
 		set_build_cam()
-	if not normal_tower_build and not freeze_tower_build:
+	if aoe_tower_build:
+		tower_to_hover = 3
+		hover_tower(tower_to_hover)
+		set_build_cam()
+	if not normal_tower_build and not freeze_tower_build and not aoe_tower_build:
 		tower_to_hover = 0
 	if wood_build:
 		set_resource_cam()
@@ -210,7 +215,7 @@ func _input(event: InputEvent) -> void:
 	if coordinates_check_mode and event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
 			check_coordinates()
-	if (normal_tower_build or freeze_tower_build) and event is InputEventMouseButton:
+	if (normal_tower_build or freeze_tower_build or aoe_tower_build) and event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
 			place_tower_on_click(hovering_tower)
 	if (wood_build or stone_build or wheat_build or beer_build) and event is InputEventMouseButton:
@@ -277,6 +282,8 @@ func place_tower_on_click(tower_type:int):
 	elif(tower_type==2):
 		tower = FreezeTowerScene.instantiate()
 		tower.get_node("MobDetector").get_child(0).disabled=false
+	elif(tower_type==3):
+		tower = AOETowerScene.instantiate()
 	self.get_node("Tower Holder").add_child(tower)
 	var needed_wood = tower.wood_to_upgrade[0]
 	var needed_stone = tower.stone_to_upgrade[0]
@@ -294,6 +301,8 @@ func place_tower_on_click(tower_type:int):
 		mat_dup.transparency=BaseMaterial3D.TRANSPARENCY_DISABLED
 		tower.set_surface_override_material(0,mat_dup)
 		if tower_type == 1:
+			tower.set_surface_override_material(1,mat_dup)
+		if tower_type == 3:
 			tower.set_surface_override_material(1,mat_dup)
 		tower.get_node("MobDetector").visible=false
 		tower.connect("tower_info",UI._on_normal_tower_lvl_1_tower_info)
@@ -314,11 +323,14 @@ func hover_tower(_tower_type:int):
 	var needed_stone = 0
 	var needed_wheat = 0
 	if tower_to_hover == 1:
-		needed_wood = 10
-		needed_stone = 10
+		needed_wood = 20
+		needed_stone = 20
 	elif tower_to_hover == 2:
-		needed_wood = 16
-		needed_stone = 16
+		needed_wood = 30
+		needed_stone = 30
+	elif tower_to_hover == 3:
+		needed_wood = 50
+		needed_stone = 50
 	if tower_hover_holder==null or tower_to_hover!=hovering_tower:
 		#if there was no hover instantiate 1 hover tower and making its opacity = 0.5
 		if(tower_to_hover==1):
@@ -327,6 +339,9 @@ func hover_tower(_tower_type:int):
 		elif(tower_to_hover==2):
 			tower_hover_holder = FreezeTowerScene.instantiate()
 			hovering_tower = 2
+		elif(tower_to_hover==3):
+			tower_hover_holder = AOETowerScene.instantiate()
+			hovering_tower = 3
 		tower_hover_holder.can_shoot=false
 		tower_hover_holder.get_node("MobDetector").visible = true
 		get_node("Tower Holder").add_child(tower_hover_holder)
@@ -335,6 +350,8 @@ func hover_tower(_tower_type:int):
 			tower_hover_holder.set_surface_override_material(1,normal_mat)
 		if tower_to_hover == 2:
 			tower_hover_holder.get_node("Mage").visible = false
+		if tower_to_hover == 3:
+			tower_hover_holder.set_surface_override_material(1,normal_mat)
 	if collision_point != null:
 		tower_hover_holder.visible=true
 		var grid_pos = grid_map.local_to_map(collision_point)
@@ -348,12 +365,16 @@ func hover_tower(_tower_type:int):
 			tower_hover_holder.set_surface_override_material(0,normal_mat)
 			if tower_to_hover == 1:
 				tower_hover_holder.set_surface_override_material(1,normal_mat)
+			if tower_to_hover == 3:
+				tower_hover_holder.set_surface_override_material(1,normal_mat)
 		else:
 			#if it cant be placed change its color to red
 			#print("Red tower")
 			tower_hover_holder.get_node("MobDetector").get_child(1).set_surface_override_material(0,red_mat_range)
 			tower_hover_holder.set_surface_override_material(0,red_mat)
 			if tower_to_hover == 1:
+				tower_hover_holder.set_surface_override_material(1,red_mat)
+			elif tower_to_hover == 3:
 				tower_hover_holder.set_surface_override_material(1,red_mat)
 	else:
 		#free hover if cursor is out of gridmap
