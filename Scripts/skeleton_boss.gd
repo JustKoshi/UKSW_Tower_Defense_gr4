@@ -1,7 +1,10 @@
 extends CharacterBody3D
 
+var title = "Boss Enemy"
 var health=1000
 var damage = 5
+var speed = 0.5/2
+var description = "This enemy has tons\nof health and moves\nmuch slower."
 var finished_walk = false
 var can_attack = true
 var freezing = false

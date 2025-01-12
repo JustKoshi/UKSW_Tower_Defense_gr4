@@ -1,0 +1,22 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://b3aenin7rwiir"
+path="res://.godot/imported/AOETower_lvl1.obj-f081cf71c8fd01a98a7f9bcc77de0cac.mesh"
+
+[deps]
+
+files=["res://.godot/imported/AOETower_lvl1.obj-f081cf71c8fd01a98a7f9bcc77de0cac.mesh"]
+
+source_file="res://Resources/Towers/AOETower/AOETower_lvl1.obj"
+dest_files=["res://.godot/imported/AOETower_lvl1.obj-f081cf71c8fd01a98a7f9bcc77de0cac.mesh", "res://.godot/imported/AOETower_lvl1.obj-f081cf71c8fd01a98a7f9bcc77de0cac.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true
+force_disable_mesh_compression=false

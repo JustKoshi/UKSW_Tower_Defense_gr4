@@ -1,7 +1,7 @@
 extends Node3D
 
 #List containing all cameras and current cam index
-@onready var cameras = [$"Main Camera", $"Top Camera", $"Front camera", $"Front camera2", $"Resource Camera"]
+@onready var cameras = [$"Main Camera", $"Top Camera", $"Front camera", $"Front camera2", $"Resource Camera",$"Debug camera",$"Ship/Path3D2/PathFollow3D/SM_Galleon_MI_Base_Wood_Dark_0/Debug camera2"]
 
 #variable to contain main GridMap
 @onready var grid_map = $GridMap
@@ -28,10 +28,12 @@ extends Node3D
 
 var NormalTowerScene = preload("res://Scenes/normal_tower_lvl_1.tscn")
 var FreezeTowerScene = preload("res://Scenes/Freeze_tower_lvl_1.tscn")
+var AOETowerScene = preload("res://Scenes/aoe_tower.tscn")
 var Lumbermill = preload("res://Scenes/lumbermill.tscn")
 var Mine = preload("res://Scenes/mine.tscn")
 var Windmill = preload("res://Scenes/windmill.tscn")
 var Tavern = preload("res://Scenes/tavern.tscn")
+var Ship = preload("res://Scenes/ship.tscn")
 
 var tower_build = false
 var tetris_build_mode = false
@@ -56,6 +58,12 @@ var tower_to_hover = 0#Which tower is picked with button 0-none 1-normal 2-freez
 var hovering_resource = 0
 var resource_to_hover = 0#0 for none, 1 for lumbermill, 2 for mine, 3 for windmill, 4 for tavern
 var resource_shape
+
+#Vars for ship fadeout func
+var value = 1.0  # Startowa wartość
+var duration = 4.0  # Czas w sekundach
+var time_passed = 0.0  # Licznik czasu
+
 
 var current_cam_index = 0
 var coordinates_check_mode = false
@@ -94,13 +102,10 @@ var normal_mat_range = StandardMaterial3D.new()
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	#testing chagnes: 
-	#enemy_spawner.current_wave = 5
-	print("2")
-	game_resources.wood = 999
-	game_resources.stone = 999
-	game_resources.wheat = 999
-	
+	#starting resources
+	game_resources.wood = 10
+	game_resources.stone = 10
+
 	current_health = max_health
 	game = false
 	GameOver.visible = false
@@ -129,10 +134,16 @@ func _ready() -> void:
 	convert_path_to_local()
 	enemy_spawner.set_path(short_path)
 	UI.update_enemy_count_labels(enemy_spawner.basic_enemies_per_wave, enemy_spawner.fast_enemies_per_wave, enemy_spawner.boss_enemies_per_wave, enemy_spawner.pyro_enemies_per_wave)
-
+	
+	#testing chagnes: 
+	#enemy_spawner.current_wave = 5
+	game_resources.wood = 999
+	game_resources.stone = 999
+	game_resources.wheat = 999
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	
 	update_resource_timers()
 	if Input.is_action_just_pressed("Camera_F1") and game:
 		if current_cam_index >0 :
@@ -142,7 +153,7 @@ func _process(delta: float) -> void:
 	
 	elif Input.is_action_just_pressed("Camera_F2") and game:
 		current_cam_index += 1
-		current_cam_index = current_cam_index%4
+		current_cam_index = current_cam_index%5
 		set_camera()
 		
 	elif Input.is_action_just_pressed("Camera_F9") and game:
@@ -170,7 +181,11 @@ func _process(delta: float) -> void:
 		tower_to_hover = 2
 		hover_tower(tower_to_hover)
 		set_build_cam()
-	if not normal_tower_build and not freeze_tower_build:
+	if aoe_tower_build:
+		tower_to_hover = 3
+		hover_tower(tower_to_hover)
+		set_build_cam()
+	if not normal_tower_build and not freeze_tower_build and not aoe_tower_build:
 		tower_to_hover = 0
 	if wood_build:
 		set_resource_cam()
@@ -194,6 +209,14 @@ func _process(delta: float) -> void:
 		resource_to_hover = 0
 	if is_build_phase:
 		update_label_build_time()
+		
+	if game and is_build_phase:
+		ship_sailin(delta)
+	elif game:
+		if value > 0:
+			time_passed += delta
+			value = clamp(1.0 - time_passed / duration, 0.0, 1.0)
+		ship_fadeout()
 	
 	if not game:
 		get_node("Main Camera").angle += 0.1 * delta
@@ -210,7 +233,7 @@ func _input(event: InputEvent) -> void:
 	if coordinates_check_mode and event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
 			check_coordinates()
-	if (normal_tower_build or freeze_tower_build) and event is InputEventMouseButton:
+	if (normal_tower_build or freeze_tower_build or aoe_tower_build) and event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
 			place_tower_on_click(hovering_tower)
 	if (wood_build or stone_build or wheat_build or beer_build) and event is InputEventMouseButton:
@@ -253,7 +276,7 @@ func get_collision_point(): #returns raycast collision point with map
 #function places block on raycast position
 func place_block_on_click():
 	var collision_point = get_collision_point()
-	var needed_res = 2*(number_of_tetris_placed + 1)
+	var needed_res = 3*(number_of_tetris_placed + 1)
 	#checking if raycast detected any block if so place block on gridmap
 	if collision_point != null and is_enough_resources(needed_res,needed_res,0,0,0):
 		var grid_pos = grid_map.local_to_map(collision_point)
@@ -271,24 +294,21 @@ func place_tower_on_click(tower_type:int):
 	if tower_hover_holder != null:
 		tower_hover_holder.free()#deleting hover tower before getting collision point
 	var collision_point = get_collision_point()
-	var needed_wood = 0
-	var needed_stone = 0
-	var needed_wheat = 0
-	if tower_type == 1:
-		needed_wood = 10
-		needed_stone = 10
-	elif tower_type == 2:
-		needed_wood = 16
-		needed_stone = 16
+	var tower
+	if(tower_type==1):
+		tower = NormalTowerScene.instantiate()
+	elif(tower_type==2):
+		tower = FreezeTowerScene.instantiate()
+		tower.get_node("MobDetector").get_child(0).disabled=false
+	elif(tower_type==3):
+		tower = AOETowerScene.instantiate()
+	self.get_node("Tower Holder").add_child(tower)
+	var needed_wood = tower.wood_to_upgrade[0]
+	var needed_stone = tower.stone_to_upgrade[0]
+	var needed_wheat = tower.wheat_to_upgrade[0]
 	#checking if raycast detected any block if so place block on gridmap
 	if collision_point != null and grid_map.can_place_tower(collision_point) and is_enough_resources(needed_wood,needed_stone,needed_wheat,0,0):
 	#if tower can be placed instantiate tower and change its cordinates and turn off range and turning of hover transparency
-		var tower
-		if(tower_type==1):
-			tower = NormalTowerScene.instantiate()
-		elif(tower_type==2):
-			tower = FreezeTowerScene.instantiate()
-			tower.get_node("MobDetector").get_child(0).disabled=false
 		tower.can_shoot = true
 		var grid_pos = grid_map.local_to_map(collision_point)
 		var place_pos = grid_map.map_to_local(grid_pos)
@@ -300,16 +320,19 @@ func place_tower_on_click(tower_type:int):
 		tower.set_surface_override_material(0,mat_dup)
 		if tower_type == 1:
 			tower.set_surface_override_material(1,mat_dup)
+		if tower_type == 3:
+			tower.set_surface_override_material(1,mat_dup)
 		tower.get_node("MobDetector").visible=false
 		tower.connect("tower_info",UI._on_normal_tower_lvl_1_tower_info)
 		grid_map.place_tower_in_tilemap(collision_point)
-		self.get_node("Tower Holder").add_child(tower)
 		#print("Added tower in position: ",grid_pos)
 		game_resources.wood -= needed_wood
 		game_resources.stone -= needed_stone
 		game_resources.wheat -= needed_wheat
 		tower_hover_holder = null
 		hovering_tower = 0
+	else:
+		tower.queue_free()
 
 #function that hover towers over the map showing where it can be placed and its range
 func hover_tower(_tower_type:int):
@@ -318,11 +341,14 @@ func hover_tower(_tower_type:int):
 	var needed_stone = 0
 	var needed_wheat = 0
 	if tower_to_hover == 1:
-		needed_wood = 10
-		needed_stone = 10
+		needed_wood = 20
+		needed_stone = 20
 	elif tower_to_hover == 2:
-		needed_wood = 16
-		needed_stone = 16
+		needed_wood = 30
+		needed_stone = 30
+	elif tower_to_hover == 3:
+		needed_wood = 50
+		needed_stone = 50
 	if tower_hover_holder==null or tower_to_hover!=hovering_tower:
 		#if there was no hover instantiate 1 hover tower and making its opacity = 0.5
 		if(tower_to_hover==1):
@@ -331,6 +357,9 @@ func hover_tower(_tower_type:int):
 		elif(tower_to_hover==2):
 			tower_hover_holder = FreezeTowerScene.instantiate()
 			hovering_tower = 2
+		elif(tower_to_hover==3):
+			tower_hover_holder = AOETowerScene.instantiate()
+			hovering_tower = 3
 		tower_hover_holder.can_shoot=false
 		tower_hover_holder.get_node("MobDetector").visible = true
 		get_node("Tower Holder").add_child(tower_hover_holder)
@@ -339,6 +368,8 @@ func hover_tower(_tower_type:int):
 			tower_hover_holder.set_surface_override_material(1,normal_mat)
 		if tower_to_hover == 2:
 			tower_hover_holder.get_node("Mage").visible = false
+		if tower_to_hover == 3:
+			tower_hover_holder.set_surface_override_material(1,normal_mat)
 	if collision_point != null:
 		tower_hover_holder.visible=true
 		var grid_pos = grid_map.local_to_map(collision_point)
@@ -352,12 +383,16 @@ func hover_tower(_tower_type:int):
 			tower_hover_holder.set_surface_override_material(0,normal_mat)
 			if tower_to_hover == 1:
 				tower_hover_holder.set_surface_override_material(1,normal_mat)
+			if tower_to_hover == 3:
+				tower_hover_holder.set_surface_override_material(1,normal_mat)
 		else:
 			#if it cant be placed change its color to red
 			#print("Red tower")
 			tower_hover_holder.get_node("MobDetector").get_child(1).set_surface_override_material(0,red_mat_range)
 			tower_hover_holder.set_surface_override_material(0,red_mat)
 			if tower_to_hover == 1:
+				tower_hover_holder.set_surface_override_material(1,red_mat)
+			elif tower_to_hover == 3:
 				tower_hover_holder.set_surface_override_material(1,red_mat)
 	else:
 		#free hover if cursor is out of gridmap
@@ -602,6 +637,32 @@ func hover_resource(resource_type:int):
 		resource_hover_holder.queue_free()
 		resource_hover_holder = null
 
+func ship_sailin(delta: float)->void:
+	var move_speed = 20
+	get_node("Ship/Path3D2/PathFollow3D").progress +=move_speed*delta
+
+func ship_fadeout() -> void:
+	var mesh = get_node("Ship/Path3D2/PathFollow3D/SM_Galleon_MI_Base_Wood_Dark_0").mesh
+	for i in range(mesh.get_surface_count()):
+		var mat = mesh.surface_get_material(i)
+		var mat_dupe = mat.duplicate()
+		mat_dupe.flags_transparent = true
+		mat_dupe.albedo_color.a = value  
+		mesh.surface_set_material(i, mat_dupe)
+
+func ship_reset()->void:
+	var mesh = get_node("Ship/Path3D2/PathFollow3D/SM_Galleon_MI_Base_Wood_Dark_0").mesh
+	for i in range(mesh.get_surface_count()):
+		var mat = mesh.surface_get_material(i)
+		var mat_dupe = mat.duplicate()
+		mat_dupe.albedo_color.a = 1  
+		mat_dupe.flags_transparent = false
+		mat_dupe.transparency=BaseMaterial3D.TRANSPARENCY_DISABLED
+		mesh.surface_set_material(i, mat_dupe)
+		
+		get_node("Ship/Path3D2/PathFollow3D").progress = 0
+		value=1.0
+		time_passed = 0.0
 
 #Signal to enter build mode
 func _on_tetris_build_button_pressed() -> void:
@@ -675,6 +736,7 @@ func is_enough_resources(wo:int, st:int, wh:int, be:int, pe:int) -> bool:
 #resets build timer and enables buttons
 func reset_build_timer():
 	is_build_phase = true
+	ship_reset()
 	UI.show_first_panel()
 	UI.bottom_panel.visible = true
 	build_timer.start()
@@ -711,6 +773,8 @@ func _on_enemy_spawner_wave_ended() -> void:
 	enemy_spawner.current_wave += 1
 	enemy_spawner.update_wave_enemy_count()
 	UI.update_enemy_count_labels(enemy_spawner.basic_enemies_per_wave, enemy_spawner.fast_enemies_per_wave, enemy_spawner.boss_enemies_per_wave, enemy_spawner.pyro_enemies_per_wave)
+	UI.enemies_scaling()
+
 	if game:
 		reset_build_timer()
 		UI.switch_skip_button_visiblity()
@@ -758,6 +822,8 @@ func _on_skip_button_pressed() -> void:
 	build_timer.stop()
 	prepare_wave()
 	
+	get_node("Ship/Path3D2/PathFollow3D").progress = 565.87
+
 func start_game():
 	game = true
 	print("1")
@@ -769,6 +835,9 @@ func _on_play_pressed() -> void:
 	start_game()
 	if how_to_play.visible:
 		how_to_play.visible = false
+		
+		value = 1.0
+		time_passed = 0.0
 
 func _on_quit_pressed() -> void:
 	get_tree().quit()
@@ -777,7 +846,7 @@ func _on_continue_pressed()->void:
 	get_tree().paused = false
 	pause_menu.visible = false
 	UI.visible = true
-	
+
 
 #fuction to buy workers
 func buy_workers() -> void:
