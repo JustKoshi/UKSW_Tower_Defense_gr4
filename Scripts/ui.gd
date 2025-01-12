@@ -1,5 +1,8 @@
 extends Control
 
+const MIN_DB := -50.0  
+const MAX_DB := 15
+
 @onready var basic_enemy_count = $"EnemyPanelContainer/MarginContainer/GridContainer/BE count Label"
 @onready var fast_enemy_count = $"EnemyPanelContainer/MarginContainer/GridContainer/FE count Label"
 @onready var boss_enemy_count = $"EnemyPanelContainer/MarginContainer/GridContainer/Boss count Label"
@@ -32,7 +35,9 @@ var defence_group = ButtonGroup.new()
 
 @onready var menu_buttons: PanelContainer = $"../Menu/Menu Buttons"
 @onready var how_to_play: Control = $"../Menu/How to Play"
+@onready var options: Control = $"../Menu/Options"
 @onready var title: Label = $"../Menu/Title"
+@onready var h_slider: HSlider = $"../Menu/Options/HTP/VBoxContainer/MarginContainer/PanelContainer/VBoxContainer/HSlider"
 
 
 var full_heart = load("res://Resources/Icons/Heart.png")
@@ -65,7 +70,14 @@ var panel_number
 @onready var locked_buttons = [$"Bottom_panel/Resource buildings/HBoxContainer/Workers", $"Bottom_panel/Resource buildings/HBoxContainer/Wheat building", $"Bottom_panel/Resource buildings/HBoxContainer/Beer building"]
 var resolution
 
+@export
+var bus_name: String
+var bus_index: int
+
 func _ready() -> void:
+	AudioServer.set_bus_volume_db(bus_index, (MIN_DB + (MAX_DB - MIN_DB) * pow(h_slider.value, 2)))
+	
+	bus_index = AudioServer.get_bus_index("Master")
 	
 	basic_enemy = basic_enemies.new()
 	fast_enemy = fast_enemies.new()
@@ -432,15 +444,26 @@ func _on_no_pressed() -> void:
 
 
 func _on_about_pressed() -> void:
-	if !how_to_play.visible:
-		how_to_play.visible = true
+	if !how_to_play.visible and !options.visible:
 		title.global_position.x -= 500
 		menu_buttons.global_position.x -= 500
+	elif !how_to_play.visible and options.visible:
+		options.visible = false
+		
+	how_to_play.visible = true	
 	
-
+func _on_options_pressed() -> void:
+	if !how_to_play.visible and !options.visible:
+		title.global_position.x -= 500
+		menu_buttons.global_position.x -= 500
+	elif how_to_play.visible and !options.visible:
+		how_to_play.visible = false
+		
+	options.visible = true	
 
 func _on_close_pressed() -> void:
 	how_to_play.visible = false
+	options.visible = false
 	title.global_position.x += 500
 	menu_buttons.global_position.x += 500
 
@@ -535,3 +558,8 @@ func repair_tower(tower) ->void:
 	game_script.game_resources.stone -= (tower.repair_stone * missing_health)
 	tower.current_health = tower.health[tower.level-1]
 	_on_X_button()
+
+
+func _on_h_slider_value_changed(value: float) -> void:
+	var db_value = (MIN_DB + (MAX_DB - MIN_DB) * pow(h_slider.value, 2))
+	AudioServer.set_bus_volume_db(bus_index, db_value)

@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://hwogrt6w0sn7"
+path="res://.godot/imported/15619784_battle-loop-7_by_gameaudiosource_preview (2).mp3-6ceb304d88d3b25459f0dc9b51af1420.mp3str"
+
+[deps]
+
+source_file="res://Resources/Music/15619784_battle-loop-7_by_gameaudiosource_preview (2).mp3"
+dest_files=["res://.godot/imported/15619784_battle-loop-7_by_gameaudiosource_preview (2).mp3-6ceb304d88d3b25459f0dc9b51af1420.mp3str"]
+
+[params]
+
+loop=true
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

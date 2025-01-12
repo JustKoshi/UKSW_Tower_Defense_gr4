@@ -62,8 +62,9 @@ func _on_attack_cd_timeout() -> void:
 		take_damage(300)
 		
 	else:
-		target.get_parent_node_3d().take_damage(damage_to_tower)
-		take_damage(150)
+		if target.get_parent_node_3d().current_health>0:
+			target.get_parent_node_3d().take_damage(damage_to_tower)
+			take_damage(150)
 	can_attack=true
 
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=101 format=3 uid="uid://chdc08c7ct8xv"]
+[gd_scene load_steps=115 format=3 uid="uid://chdc08c7ct8xv"]
 
 [ext_resource type="Script" path="res://Scripts/game_script.gd" id="1_wclms"]
 [ext_resource type="MeshLibrary" uid="uid://746jf5hii373" path="res://mesh_lib.tres" id="2_5f8px"]
@@ -30,11 +30,14 @@
 [ext_resource type="Texture2D" uid="uid://ceyur06fyam64" path="res://Resources/Icons/boss head.png" id="16_1vtdw"]
 [ext_resource type="FontFile" uid="uid://c65ghbnpummrm" path="res://Resources/Fonts/stormfaze.ttf" id="16_6tlrc"]
 [ext_resource type="Texture2D" uid="uid://bu83pixrfaoog" path="res://Resources/UI/exit/exit02.png" id="16_xoy66"]
+[ext_resource type="Texture2D" uid="uid://cq7qploiyjb8y" path="res://Resources/UI/leaderboard/342 px/leaderboard02.png" id="17_k7cxc"]
 [ext_resource type="Texture2D" uid="uid://dvyngax7xomjl" path="res://Resources/UI/exit/exit03.png" id="17_oanfy"]
 [ext_resource type="FontFile" uid="uid://b0sbud2angi6h" path="res://Resources/Fonts/buddychampionexpand.ttf" id="18_18u4r"]
+[ext_resource type="Texture2D" uid="uid://d13hg3gperj58" path="res://Resources/UI/leaderboard/342 px/leaderboard03.png" id="18_chhka"]
 [ext_resource type="Texture2D" uid="uid://cmoi6xfau3jc5" path="res://Resources/UI/exit/exit01.png" id="18_l85iy"]
 [ext_resource type="Theme" uid="uid://bk4rbmthy5fx8" path="res://Resources/Themes/UI_buttom_panel.tres" id="18_tdln6"]
 [ext_resource type="Texture2D" uid="uid://uesnqfipiql6" path="res://Resources/UI/UI board Small  stone.png" id="19_15ryl"]
+[ext_resource type="Texture2D" uid="uid://bq2axjmmqx5pe" path="res://Resources/UI/leaderboard/342 px/leaderboard01.png" id="19_umj2i"]
 [ext_resource type="Texture2D" uid="uid://4v5jwxcl5ofb" path="res://Resources/Icons/catapult.png" id="20_7ex20"]
 [ext_resource type="Texture2D" uid="uid://cj05we2vm5447" path="res://Resources/UI/close button circle/X_yellow.png" id="20_lkurd"]
 [ext_resource type="Texture2D" uid="uid://2drkytblndvj" path="res://Resources/UI/UI board Small  parchment vertical.png" id="20_m6hxk"]
@@ -51,6 +54,7 @@
 [ext_resource type="Texture2D" uid="uid://b7i53w4037ub2" path="res://Resources/Icons/snowflake.png" id="23_f26j8"]
 [ext_resource type="Texture2D" uid="uid://ixwxc2xljn2m" path="res://Resources/Icons/mouse-left-button-svgrepo-com.png" id="24_w81pv"]
 [ext_resource type="Texture2D" uid="uid://bty4jwolueqqq" path="res://Resources/UI/Buttons and keys/przycisk f1.png" id="26_14ls2"]
+[ext_resource type="Texture2D" uid="uid://dn62tm7h83tjk" path="res://Resources/UI/Buttons and keys/esc.png" id="27_0phth"]
 [ext_resource type="Texture2D" uid="uid://dmga3xf4bw28n" path="res://Resources/Icons/gate.png" id="27_gu03x"]
 [ext_resource type="Texture2D" uid="uid://rbfgyvb00sfk" path="res://Resources/UI/Buttons and keys/przycisk f2.png" id="27_h6b8d"]
 [ext_resource type="Theme" uid="uid://lg8ungoidciu" path="res://Resources/Themes/UI_Game_Over_theme.tres" id="28_j1bde"]
@@ -61,9 +65,13 @@
 [ext_resource type="Texture2D" uid="uid://belsu6xy0getj" path="res://Resources/UI/Buttons and keys/Close Button.png" id="30_go06m"]
 [ext_resource type="Texture2D" uid="uid://c8ryt5rt6tn52" path="res://Resources/UI/Buttons and keys/back przycisk_hover.png" id="35_7qcub"]
 [ext_resource type="Texture2D" uid="uid://bjilt7slgvpqs" path="res://Resources/UI/Buttons and keys/back przycisk_pressed.png" id="36_ctwot"]
+[ext_resource type="Texture2D" uid="uid://ckqgjf2yb1uk8" path="res://Resources/UI/Slider/grabber.png" id="37_e1h0a"]
 [ext_resource type="Texture2D" uid="uid://cqyqb0x3fl6qe" path="res://Resources/UI/Buttons and keys/back przycisk.png" id="37_h1ab3"]
+[ext_resource type="Texture2D" uid="uid://rcpriyo5al5g" path="res://Resources/UI/Slider/slider.png" id="37_p4sdc"]
+[ext_resource type="Texture2D" uid="uid://qwpbol5h81d2" path="res://Resources/UI/Slider/tick.png" id="38_qqkip"]
 [ext_resource type="Texture2D" uid="uid://cmtelb3ayg6in" path="res://Resources/Icons/Pyro head.png" id="43_qh4xf"]
 [ext_resource type="PackedScene" uid="uid://dbhys37c51ulo" path="res://Scenes/ship.tscn" id="63_w0lb2"]
+[ext_resource type="AudioStream" uid="uid://hwogrt6w0sn7" path="res://Resources/Music/15619784_battle-loop-7_by_gameaudiosource_preview (2).mp3" id="65_axqnv"]
 
 [sub_resource type="Gradient" id="Gradient_lq3fq"]
 offsets = PackedFloat32Array(0.438819, 0.810127)
@@ -126,6 +134,15 @@ texture = ExtResource("14_8xkrs")
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_48277"]
 texture = ExtResource("15_yauhd")
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_52mmr"]
+texture = ExtResource("17_k7cxc")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_iosni"]
+texture = ExtResource("18_chhka")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_g4uhh"]
+texture = ExtResource("19_umj2i")
+
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_s3n3l"]
 texture = ExtResource("16_xoy66")
 
@@ -157,6 +174,16 @@ texture = ExtResource("23_0f83b")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_g58j4"]
 texture = ExtResource("20_lkurd")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_6oejd"]
+texture = ExtResource("37_p4sdc")
+texture_margin_left = 15.0
+texture_margin_top = 35.0
+texture_margin_right = 10.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_lah0a"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_tltkk"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_y58hb"]
 
@@ -341,6 +368,14 @@ theme_override_styles/hover = SubResource("StyleBoxTexture_0a34y")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_7tg6c")
 theme_override_styles/normal = SubResource("StyleBoxTexture_48277")
 
+[node name="Leaderboard" type="Button" parent="CanvasLayer/Menu/Menu Buttons/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 135)
+layout_mode = 2
+focus_mode = 0
+theme_override_styles/hover = SubResource("StyleBoxTexture_52mmr")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_iosni")
+theme_override_styles/normal = SubResource("StyleBoxTexture_g4uhh")
+
 [node name="Quit" type="Button" parent="CanvasLayer/Menu/Menu Buttons/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 135)
 layout_mode = 2
@@ -356,10 +391,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -267.0
-offset_top = -372.0
-offset_right = 267.0
-offset_bottom = -174.0
+offset_left = -271.0
+offset_top = -442.0
+offset_right = 263.0
+offset_bottom = -244.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_fonts/font = ExtResource("16_6tlrc")
@@ -446,6 +481,21 @@ theme_override_fonts/font = ExtResource("22_8p45v")
 theme_override_font_sizes/font_size = 38
 text = "Default keybinds:"
 horizontal_alignment = 1
+
+[node name="HBoxContainer7" type="HBoxContainer" parent="CanvasLayer/Menu/How to Play/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/Menu/How to Play/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/HBoxContainer7"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("22_8p45v")
+theme_override_font_sizes/font_size = 32
+text = "Pause game: "
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Menu/How to Play/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/HBoxContainer7"]
+layout_mode = 2
+texture = ExtResource("27_0phth")
+expand_mode = 2
+stretch_mode = 5
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Menu/How to Play/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer"]
 layout_mode = 2
@@ -599,11 +649,188 @@ Tower Interaction:
        1. Upgrade: Enhance the tower's stats.
       2. Destroy: Remove the tower if you need to 
       reposition it or recover resources.
+      3. Repair: recover tower HP, consuming resources so you 
+      don't lose it !
 
 "
 clip_text = true
 
 [node name="Close" type="Button" parent="CanvasLayer/Menu/How to Play"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -91.0
+offset_top = -32.0
+offset_right = 29.0
+offset_bottom = 88.0
+grow_horizontal = 0
+focus_mode = 0
+theme_override_styles/hover = SubResource("StyleBoxTexture_5uhc1")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_0083v")
+theme_override_styles/normal = SubResource("StyleBoxTexture_g58j4")
+
+[node name="Options" type="Control" parent="CanvasLayer/Menu"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -160.0
+offset_top = -450.0
+offset_right = 850.0
+offset_bottom = 450.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("6_nh21e")
+
+[node name="HTP" type="PanelContainer" parent="CanvasLayer/Menu/Options"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -505.0
+offset_top = -450.0
+offset_right = 505.0
+offset_bottom = 450.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Menu/Options/HTP"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Menu/Options/HTP/VBoxContainer"]
+layout_mode = 2
+
+[node name="Spring2" type="Control" parent="CanvasLayer/Menu/Options/HTP/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Title2" type="Label" parent="CanvasLayer/Menu/Options/HTP/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("20_xetcj")
+theme_override_font_sizes/font_size = 64
+text = "Options"
+
+[node name="Spring" type="Control" parent="CanvasLayer/Menu/Options/HTP/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Menu/Options/HTP/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_right = 5
+
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/Menu/Options/HTP/VBoxContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxTexture_13q4d")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Menu/Options/HTP/VBoxContainer/MarginContainer/PanelContainer"]
+layout_mode = 2
+
+[node name="Title3" type="Label" parent="CanvasLayer/Menu/Options/HTP/VBoxContainer/MarginContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("20_xetcj")
+theme_override_font_sizes/font_size = 72
+text = "Music"
+horizontal_alignment = 1
+
+[node name="HSlider" type="HSlider" parent="CanvasLayer/Menu/Options/HTP/VBoxContainer/MarginContainer/PanelContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+theme_override_icons/grabber = ExtResource("37_e1h0a")
+theme_override_icons/grabber_highlight = ExtResource("37_e1h0a")
+theme_override_icons/tick = ExtResource("38_qqkip")
+theme_override_styles/slider = SubResource("StyleBoxTexture_6oejd")
+theme_override_styles/grabber_area = SubResource("StyleBoxEmpty_lah0a")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxEmpty_tltkk")
+max_value = 1.0
+step = 0.01
+value = 0.8
+tick_count = 11
+ticks_on_borders = true
+
+[node name="Close" type="Button" parent="CanvasLayer/Menu/Options"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -91.0
+offset_top = -32.0
+offset_right = 29.0
+offset_bottom = 88.0
+grow_horizontal = 0
+focus_mode = 0
+theme_override_styles/hover = SubResource("StyleBoxTexture_5uhc1")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_0083v")
+theme_override_styles/normal = SubResource("StyleBoxTexture_g58j4")
+
+[node name="Leaderboard" type="Control" parent="CanvasLayer/Menu"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -160.0
+offset_top = -450.0
+offset_right = 850.0
+offset_bottom = 450.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("6_nh21e")
+
+[node name="HTP" type="PanelContainer" parent="CanvasLayer/Menu/Leaderboard"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -505.0
+offset_top = -450.0
+offset_right = 505.0
+offset_bottom = 450.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Menu/Leaderboard/HTP"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer"]
+layout_mode = 2
+
+[node name="Spring2" type="Control" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Spring" type="Control" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_right = 5
+
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxTexture_13q4d")
+
+[node name="Close" type="Button" parent="CanvasLayer/Menu/Leaderboard"]
 custom_minimum_size = Vector2(30, 30)
 layout_mode = 1
 anchors_preset = 1
@@ -1449,19 +1676,29 @@ theme_override_font_sizes/font_size = 164
 theme_override_styles/normal = SubResource("StyleBoxFlat_eu65f")
 text = "Game is paused..."
 
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("65_axqnv")
+volume_db = -30.0
+autoplay = true
+
 [connection signal="wave_ended" from="Enemy Spawner" to="." method="_on_enemy_spawner_wave_ended"]
 [connection signal="timeout" from="Enemy Spawner/Timer" to="Enemy Spawner" method="_on_timer_timeout"]
 [connection signal="timeout" from="Build Timer" to="." method="prepare_wave"]
 [connection signal="timeout" from="Switch Label Timer" to="." method="_on_switch_label_timer_timeout"]
 [connection signal="pressed" from="CanvasLayer/Menu/Menu Buttons/MarginContainer/VBoxContainer/Play" to="." method="_on_play_pressed"]
+[connection signal="pressed" from="CanvasLayer/Menu/Menu Buttons/MarginContainer/VBoxContainer/Options" to="CanvasLayer/UI" method="_on_options_pressed"]
 [connection signal="pressed" from="CanvasLayer/Menu/Menu Buttons/MarginContainer/VBoxContainer/About" to="CanvasLayer/UI" method="_on_about_pressed"]
 [connection signal="pressed" from="CanvasLayer/Menu/Menu Buttons/MarginContainer/VBoxContainer/Quit" to="." method="_on_quit_pressed"]
 [connection signal="pressed" from="CanvasLayer/Menu/How to Play/Close" to="CanvasLayer/UI" method="_on_close_pressed"]
+[connection signal="value_changed" from="CanvasLayer/Menu/Options/HTP/VBoxContainer/MarginContainer/PanelContainer/VBoxContainer/HSlider" to="CanvasLayer/UI" method="_on_h_slider_value_changed"]
+[connection signal="pressed" from="CanvasLayer/Menu/Options/Close" to="CanvasLayer/UI" method="_on_close_pressed"]
+[connection signal="pressed" from="CanvasLayer/Menu/Leaderboard/Close" to="CanvasLayer/UI" method="_on_close_pressed"]
 [connection signal="mouse_entered" from="CanvasLayer/UI/EnemyPanelContainer/MarginContainer/GridContainer/Basic enemy" to="CanvasLayer/UI" method="_open_normal_enemy_info_panels"]
 [connection signal="mouse_exited" from="CanvasLayer/UI/EnemyPanelContainer/MarginContainer/GridContainer/Basic enemy" to="CanvasLayer/UI" method="_close_enemy_info_panels"]
 [connection signal="mouse_entered" from="CanvasLayer/UI/EnemyPanelContainer/MarginContainer/GridContainer/Fast enemy" to="CanvasLayer/UI" method="_open_fast_enemy_info_panel"]
 [connection signal="mouse_exited" from="CanvasLayer/UI/EnemyPanelContainer/MarginContainer/GridContainer/Fast enemy" to="CanvasLayer/UI" method="_close_enemy_info_panels"]
 [connection signal="mouse_entered" from="CanvasLayer/UI/EnemyPanelContainer/MarginContainer/GridContainer/Pyro" to="CanvasLayer/UI" method="_on_pyro_enemy_info_panel"]
+[connection signal="mouse_exited" from="CanvasLayer/UI/EnemyPanelContainer/MarginContainer/GridContainer/Pyro" to="CanvasLayer/UI" method="_close_enemy_info_panels"]
 [connection signal="mouse_entered" from="CanvasLayer/UI/EnemyPanelContainer/MarginContainer/GridContainer/Boss" to="CanvasLayer/UI" method="_on_boss_enemy_info_panel"]
 [connection signal="mouse_exited" from="CanvasLayer/UI/EnemyPanelContainer/MarginContainer/GridContainer/Boss" to="CanvasLayer/UI" method="_close_enemy_info_panels"]
 [connection signal="pressed" from="CanvasLayer/UI/Workers_buy/VBoxContainer/HBoxContainer/Yes" to="." method="buy_workers"]

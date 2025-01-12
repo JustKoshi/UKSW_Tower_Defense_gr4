@@ -8,4 +8,4 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40, 0, 0)
 loop = false
 script = ExtResource("1_g8ink")
 
-[node name="Skeleton_Pyro" parent="." instance=ExtResource("1_pvbcj")]
+[node name="Skeleton_Pyro" parent="." groups=["Enemies"] instance=ExtResource("1_pvbcj")]
