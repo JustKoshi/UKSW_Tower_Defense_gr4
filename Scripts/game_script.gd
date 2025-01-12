@@ -143,6 +143,10 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	#testing:
+	#print("fala: ",enemy_spawner.current_wave)
+	#enemy_spawner.update_wave_enemy_count()
+	#enemy_spawner.current_wave += 1
 	
 	update_resource_timers()
 	if Input.is_action_just_pressed("Camera_F1") and game:

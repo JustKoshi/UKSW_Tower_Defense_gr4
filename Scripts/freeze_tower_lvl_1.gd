@@ -2,7 +2,7 @@ extends MeshInstance3D
 
 var slow = [0.75,0.67,0.5]
 var damage = [3,3,5]
-var health = [3,4,6]
+var health = [3,4,7]
 var tower_range= [1,1,1]
 var level = 1
 var firerate = [round_to_decimals(1/2.4,2),round_to_decimals(1/2.4,2),round_to_decimals(1/2.4,2)]

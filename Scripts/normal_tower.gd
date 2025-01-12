@@ -2,7 +2,7 @@ extends MeshInstance3D
 
 var bullet = preload("res://Scenes/bullet.tscn")
 var damage = [20,25,33]
-var health = [4,5,6]
+var health = [4,5,7]
 var tower_range = [2,2,3]
 var level = 1
 var firerate = [1,1.1,1.2]
@@ -121,4 +121,3 @@ func take_damage(dmg: int) -> void:
 	current_health-=dmg
 	if current_health<=0 and (current_health+dmg) > 0:
 		queue_free()
-

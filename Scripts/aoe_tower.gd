@@ -3,7 +3,7 @@ extends MeshInstance3D
 var stone = preload("res://Scenes/stone.tscn")
 var aoe = [0.25,0.33,0.5]
 var damage = [75,85,100]
-var health = [2,3,4]
+var health = [3,3,4]
 var tower_range = [3,3,4]
 var level = 1
 var firerate = [0.25,0.25,0.33]
@@ -143,3 +143,8 @@ func _on_animation_time_timeout() -> void:
 	if current_enemy != null:
 		shooting()
 	$"Damage CD".start()
+	
+func take_damage(dmg: int) -> void:
+	current_health-=dmg
+	if current_health<=0 and (current_health+dmg) > 0:
+		queue_free()

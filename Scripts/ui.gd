@@ -50,7 +50,6 @@ var enemy_panel_holder
 const basic_enemies = preload("res://Scripts/enemy_basic.gd")
 const fast_enemies = preload("res://Scripts/fast_enemy.gd")
 const boss_enemies = preload("res://Scripts/skeleton_boss.gd")
-<<<<<<< HEAD
 const pyro_enemies = preload("res://Scripts/skeleton_pyro.gd")
 var basic_enemy
 var fast_enemy
@@ -60,14 +59,6 @@ var basic_enemy_png = load("res://Resources/Icons/basic head.png")
 var fast_enemy_png = load("res://Resources/Icons/Hood head.png")
 var boss_enemy_png = load("res://Resources/Icons/boss head.png")
 var pyro_enemy_png = load("res://Resources/Icons/Pyro head.png")
-=======
-var basic_enemy
-var fast_enemy
-var boss_enemy
-var basic_enemy_png = load("res://Resources/Icons/basic head.png")
-var fast_enemy_png = load("res://Resources/Icons/Hood head.png")
-var boss_enemy_png = load("res://Resources/Icons/boss head.png")
->>>>>>> 186588cdfbc1492db872e20523215b9cc60090cf
 
 var original_positions = {}
 var panel_number
@@ -79,10 +70,7 @@ func _ready() -> void:
 	basic_enemy = basic_enemies.new()
 	fast_enemy = fast_enemies.new()
 	boss_enemy = boss_enemies.new()
-<<<<<<< HEAD
 	pyro_enemy = pyro_enemies.new()
-=======
->>>>>>> 186588cdfbc1492db872e20523215b9cc60090cf
 	
 	panel_info_holder = null
 	ui_tower_panel = null
@@ -503,21 +491,18 @@ func _on_boss_enemy_info_panel() -> void:
 		enemy_panel_holder.get_child(0).get_child(1).get_child(0).get_child(0).texture = boss_enemy_png
 		enemy_panel_holder.get_child(0).get_child(1).get_child(0).get_child(4).texture = boss_enemy_png
 
-<<<<<<< HEAD
 func _on_pyro_enemy_info_panel() -> void:
 	if enemy_panel_holder == null:
 		enemy_panel_holder = enemy_info.instantiate()
 		add_child(enemy_panel_holder)
 		enemy_panel_holder.get_child(0).get_child(1).get_child(0).get_child(2).text = pyro_enemy.title
-		enemy_panel_holder.get_child(0).get_child(1).get_child(1).get_node("Damage").text = str(pyro_enemy.damage)
+		enemy_panel_holder.get_child(0).get_child(1).get_child(1).get_node("Damage").text = str(pyro_enemy.damage) + "/" + str(pyro_enemy.damage_to_tower)
 		enemy_panel_holder.get_child(0).get_child(1).get_child(1).get_node("Health").text = str(pyro_enemy.health)
 		enemy_panel_holder.get_child(0).get_child(1).get_child(3).get_node("Speed").text = str(pyro_enemy.speed) + " blocks/s"
 		enemy_panel_holder.get_child(0).get_child(1).get_node("Label").text = pyro_enemy.description
 		enemy_panel_holder.get_child(0).get_child(1).get_child(0).get_child(0).texture = pyro_enemy_png
 		enemy_panel_holder.get_child(0).get_child(1).get_child(0).get_child(4).texture = pyro_enemy_png
 
-=======
->>>>>>> 186588cdfbc1492db872e20523215b9cc60090cf
 func _close_enemy_info_panels() -> void:
 	if enemy_panel_holder != null:
 		enemy_panel_holder.queue_free()

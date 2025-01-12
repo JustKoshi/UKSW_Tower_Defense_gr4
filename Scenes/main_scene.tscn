@@ -1,4 +1,4 @@
-[gd_scene load_steps=100 format=3 uid="uid://chdc08c7ct8xv"]
+[gd_scene load_steps=101 format=3 uid="uid://chdc08c7ct8xv"]
 
 [ext_resource type="Script" path="res://Scripts/game_script.gd" id="1_wclms"]
 [ext_resource type="MeshLibrary" uid="uid://746jf5hii373" path="res://mesh_lib.tres" id="2_5f8px"]
@@ -62,11 +62,8 @@
 [ext_resource type="Texture2D" uid="uid://c8ryt5rt6tn52" path="res://Resources/UI/Buttons and keys/back przycisk_hover.png" id="35_7qcub"]
 [ext_resource type="Texture2D" uid="uid://bjilt7slgvpqs" path="res://Resources/UI/Buttons and keys/back przycisk_pressed.png" id="36_ctwot"]
 [ext_resource type="Texture2D" uid="uid://cqyqb0x3fl6qe" path="res://Resources/UI/Buttons and keys/back przycisk.png" id="37_h1ab3"]
-<<<<<<< HEAD
 [ext_resource type="Texture2D" uid="uid://cmtelb3ayg6in" path="res://Resources/Icons/Pyro head.png" id="43_qh4xf"]
-=======
 [ext_resource type="PackedScene" uid="uid://dbhys37c51ulo" path="res://Scenes/ship.tscn" id="63_w0lb2"]
->>>>>>> 186588cdfbc1492db872e20523215b9cc60090cf
 
 [sub_resource type="Gradient" id="Gradient_lq3fq"]
 offsets = PackedFloat32Array(0.438819, 0.810127)
@@ -1464,10 +1461,7 @@ text = "Game is paused..."
 [connection signal="mouse_exited" from="CanvasLayer/UI/EnemyPanelContainer/MarginContainer/GridContainer/Basic enemy" to="CanvasLayer/UI" method="_close_enemy_info_panels"]
 [connection signal="mouse_entered" from="CanvasLayer/UI/EnemyPanelContainer/MarginContainer/GridContainer/Fast enemy" to="CanvasLayer/UI" method="_open_fast_enemy_info_panel"]
 [connection signal="mouse_exited" from="CanvasLayer/UI/EnemyPanelContainer/MarginContainer/GridContainer/Fast enemy" to="CanvasLayer/UI" method="_close_enemy_info_panels"]
-<<<<<<< HEAD
 [connection signal="mouse_entered" from="CanvasLayer/UI/EnemyPanelContainer/MarginContainer/GridContainer/Pyro" to="CanvasLayer/UI" method="_on_pyro_enemy_info_panel"]
-=======
->>>>>>> 186588cdfbc1492db872e20523215b9cc60090cf
 [connection signal="mouse_entered" from="CanvasLayer/UI/EnemyPanelContainer/MarginContainer/GridContainer/Boss" to="CanvasLayer/UI" method="_on_boss_enemy_info_panel"]
 [connection signal="mouse_exited" from="CanvasLayer/UI/EnemyPanelContainer/MarginContainer/GridContainer/Boss" to="CanvasLayer/UI" method="_close_enemy_info_panels"]
 [connection signal="pressed" from="CanvasLayer/UI/Workers_buy/VBoxContainer/HBoxContainer/Yes" to="." method="buy_workers"]

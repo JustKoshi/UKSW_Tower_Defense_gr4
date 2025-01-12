@@ -2,12 +2,13 @@ extends CharacterBody3D
 
 var health=300
 var damage = 1
+var damage_to_tower = 3
 var finished_walk = false
 var can_attack = true
 var freezing = false
 var targeting_tower = false
 var title = "Pyro"
-var speed = 4.0/2
+var speed = 1.0/2
 var description = "Enemy targeting\ntowers and resource\nbuildings"
 @onready var animation_player = $AnimationPlayer
 
@@ -61,7 +62,7 @@ func _on_attack_cd_timeout() -> void:
 		take_damage(300)
 		
 	else:
-		target.get_parent_node_3d().take_damage(damage)
+		target.get_parent_node_3d().take_damage(damage_to_tower)
 		take_damage(150)
 	can_attack=true
 

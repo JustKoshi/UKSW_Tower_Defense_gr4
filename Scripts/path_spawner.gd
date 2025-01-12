@@ -183,7 +183,9 @@ func update_wave_enemy_count():
 	if boss_enemies_per_wave < 0:
 		boss_enemies_per_wave = 0
 	print("Boss przeciwnicy: " + str(boss_enemies_per_wave))
-	pyro_enemies_per_wave = int(current_wave/2)
+	pyro_enemies_per_wave = (int(current_wave/3)-1)
+	if current_wave < 5:
+		pyro_enemies_per_wave = 0
 	print("Pyro przeciwnicy: " + str(pyro_enemies_per_wave))
 	
 func randomize_fast_enemy_cd():
@@ -194,5 +196,3 @@ func randomize_basic_enemy_cd():
 		basic_enemy_spawn_cd  = randf_range(1.5,2.25)
 	else:
 		basic_enemy_spawn_cd = randf_range(0.75, 1.5)
-
-
