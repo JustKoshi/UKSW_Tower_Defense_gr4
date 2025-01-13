@@ -73,6 +73,25 @@ var short_path = [] #array that holds shortest path converted to local
 var tower_hover_holder:MeshInstance3D = null#Object that holds tower instance that is now currently selected and might be placed
 var resource_hover_holder:MeshInstance3D = null
 
+#setting up the database and stats:
+var database: SQLite
+var stats = {
+	"placed_towers" : 0,
+	"generated_wood" : 0,
+	"generated_stone" : 0,
+	"generated_wheat" : 0,
+	"generated_beer" : 0,
+	"killed_normal_enemies" : 0,
+	"killed_fast_enemies" : 0,
+	"killed_pyro_enemies" : 0,
+	"killed_boss_enemies" : 0,
+	"used_powerups" : 0,
+	"defeated_waves" : 0,
+	"times_played" : 0,
+	"time_in_game" : 0
+}
+var start_time
+var end_time
 
 #resource counter:
 var game_resources = {
@@ -102,10 +121,33 @@ var normal_mat_range = StandardMaterial3D.new()
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	start_time = Time.get_unix_time_from_system()
 	#starting resources
 	game_resources.wood = 10
 	game_resources.stone = 10
-
+	
+	#opening database
+	database = SQLite.new()
+	database.path = "res://data.db"
+	database.open_db()
+	var main_table = {
+		"id" : {"data_type" : "int", "primary_key" : true, "not_null" : true, "auto_increment" : true},
+		"placed_towers" : {"data_type" : "int"},
+		"generated_wood" : {"data_type" : "int"},
+		"generated_stone" : {"data_type" : "int"},
+		"generated_wheat" : {"data_type" : "int"},
+		"generated_beer" : {"data_type" : "int"},
+		"killed_normal_enemies" : {"data_type" : "int"},
+		"killed_fast_enemies" : {"data_type" : "int"},
+		"killed_pyro_enemies" : {"data_type" : "int"},
+		"killed_boss_enemies" : {"data_type" : "int"},
+		"used_powerups" : {"data_type" : "int"},
+		"defeated_waves" : {"data_type" : "int"},
+		"times_played" : {"data_type" : "int"},
+		"time_in_game" : {"data_type" : "int"}
+	}
+	database.create_table("Stats",main_table)
+	
 	current_health = max_health
 	game = false
 	GameOver.visible = false
@@ -172,6 +214,7 @@ func _process(delta: float) -> void:
 		get_tree().paused = true
 		UI.visible = false
 		pause_menu.visible = true
+		load_data_to_database()
 		
 	
 	if walls_build:
@@ -335,6 +378,7 @@ func place_tower_on_click(tower_type:int):
 		game_resources.wheat -= needed_wheat
 		tower_hover_holder = null
 		hovering_tower = 0
+		stats.placed_towers += 1
 	else:
 		tower.queue_free()
 
@@ -502,6 +546,7 @@ func update_resource_timers():
 	for i in range(get_node("Resource Holder").get_child_count()):
 		var child = get_node("Resource Holder").get_child(i)
 		if child.generator_on == true:
+			update_resource_stats(child)
 			child.get_node("Timer").start()
 			child.generator_on = false
 			if child.generation_depleted:
@@ -749,8 +794,6 @@ func reset_build_timer():
 func _on_enemy_spawner_wave_ended() -> void:
 	#print("Przekazano sygnal")
 	if enemy_spawner.current_wave == 5:
-		#odblokuj farme
-		#print("Farm unlocked")
 		$"CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Wheat building".disabled = false
 		$"CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Workers".disabled = false
 		for button in UI.locked_buttons:
@@ -764,8 +807,6 @@ func _on_enemy_spawner_wave_ended() -> void:
 					child.position = target_position
 		game_resources.workers += 1
 	elif enemy_spawner.current_wave == 10:
-		#odblokuj piwo i skille
-		#print("Beer unlocked")
 		$"CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Beer building".disabled = false
 		for child in $"CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Beer building".get_children():
 			if child is TextureRect:
@@ -778,7 +819,7 @@ func _on_enemy_spawner_wave_ended() -> void:
 	enemy_spawner.update_wave_enemy_count()
 	UI.update_enemy_count_labels(enemy_spawner.basic_enemies_per_wave, enemy_spawner.fast_enemies_per_wave, enemy_spawner.boss_enemies_per_wave, enemy_spawner.pyro_enemies_per_wave)
 	UI.enemies_scaling()
-
+	stats.defeated_waves += 1
 	if game:
 		reset_build_timer()
 		UI.switch_skip_button_visiblity()
@@ -806,6 +847,8 @@ func take_damage(dmg) -> void:
 			var building = get_node("Resource Holder").get_child(i)
 			building.get_node("Timer").stop()
 			building.generator_on = false
+		stats.times_played += 1
+		load_data_to_database()
 			
 func _on_skip_button_pressed() -> void:
 	var remaining_time = build_timer.time_left
@@ -813,6 +856,7 @@ func _on_skip_button_pressed() -> void:
 	var adding_beer = int(remaining_time/5)
 	for i in range(get_node("Resource Holder").get_child_count()):
 		var child = get_node("Resource Holder").get_child(i)
+		update_resource_stats(child)
 		if not child.resource_type == "beer":
 			if child.generation_depleted:
 				game_resources[child.resource_type] += 1*adding_resources#polowa wartosci
@@ -839,7 +883,6 @@ func _on_play_pressed() -> void:
 	start_game()
 	if how_to_play.visible:
 		how_to_play.visible = false
-		
 		value = 1.0
 		time_passed = 0.0
 
@@ -866,3 +909,51 @@ func destoy_resource_building():
 		resource_holder.get_child(rand_builiding_to_destroy()).queue_free()
 		game_resources.used_workers-=1
 		game_resources.workers-=1
+
+func update_enemy_killed_stats(enemy_type:String) ->void:
+	match enemy_type:
+		"Basic Enemy":
+			stats.killed_normal_enemies += 1
+		"Fast Enemy":
+			stats.killed_fast_enemies += 1
+		"Pyro":
+			stats.killed_pyro_enemies += 1
+		"Boss Enemy":
+			stats.killed_boss_enemies += 1
+
+func update_resource_stats(resource) ->void:
+	if resource.generation_depleted:
+		game_resources[resource.resource_type] += 1#polowa wartosci
+		match resource.resource_type:
+			"wood":
+				stats.generated_wood += 1
+			"stone":
+				stats.generated_stone += 1
+			"wheat":
+				stats.generated_wheat += 1
+			"beer":
+				stats.generated_beer += 1
+	else:
+		game_resources[resource.resource_type] += 2
+		match resource.resource_type:
+			"wood":
+				stats.generated_wood += 2
+			"stone":
+				stats.generated_stone += 2
+			"wheat":
+				stats.generated_wheat += 2
+			"beer":
+				stats.generated_beer += 2
+	
+func load_data_to_database() -> void:
+	end_time = Time.get_unix_time_from_system()
+	stats.time_in_game = (end_time-start_time)/60
+	start_time = Time.get_unix_time_from_system()
+	var stat
+	stat = database.select_rows("Stats","id=1",["*"])
+	for i in stats:
+		stat[0][i] += stats[i]
+		stats[i] = 0
+	#print(stat[0])
+	database.update_rows("Stats","id=1",stat[0])
+	
