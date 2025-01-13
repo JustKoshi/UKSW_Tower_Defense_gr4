@@ -147,6 +147,9 @@ func _ready() -> void:
 		"time_in_game" : {"data_type" : "int"}
 	}
 	database.create_table("Stats",main_table)
+	var row = database.select_rows("Stats","id=1",["*"])
+	if row.is_empty():
+		database.insert_row("Stats",stats)
 	
 	current_health = max_health
 	game = false
