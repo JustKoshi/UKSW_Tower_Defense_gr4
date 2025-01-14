@@ -589,10 +589,12 @@ func place_resource_on_click(resource_type:int):
 			get_node("Resource Holder").add_child(building)
 			color_transparent_mesh_instance(building,3)
 			check_resource_generation_req()
+			
 			#print("Added lumbermill in position: ",grid_pos)
 			game_resources.used_workers += 1
 			resource_hover_holder=null
 			hovering_resource = 0
+			building.connect("resource_info", UI._on_resource_info)
 
 func check_resource_generation_req():
 	var shifts = [Vector3(-4,0,0),Vector3(4,0,0),Vector3(0,0,-4),Vector3(0,0,4)]

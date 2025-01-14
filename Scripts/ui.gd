@@ -52,6 +52,15 @@ var panel_info_holder
 var ui_tower_panel
 var enemy_panel_holder
 
+var resource_info = preload("res://Scenes/resource_panel.tscn")
+var ui_resource_holder
+var wood_icon = load("res://Resources/UI/Resource panels/wood.png")
+var stone_icon = load("res://Resources/UI/Resource panels/stone.png")
+var wheat_icon = load("res://Resources/UI/Resource panels/wheat.png")
+var beer_icon = load("res://Resources/UI/Resource panels/beer.png")
+var cancel_icon = load("res://Resources/UI/Resource panels/cancel.png")
+var check_icon = load("res://Resources/UI/Resource panels/checked.png")
+
 const basic_enemies = preload("res://Scripts/enemy_basic.gd")
 const fast_enemies = preload("res://Scripts/fast_enemy.gd")
 const boss_enemies = preload("res://Scripts/skeleton_boss.gd")
@@ -86,6 +95,7 @@ func _ready() -> void:
 	
 	panel_info_holder = null
 	ui_tower_panel = null
+	ui_resource_holder = null
 	worker_bonus_panel.position.x += 235
 	worker_bonus_panel.position.y -= 179
 			
@@ -279,8 +289,36 @@ func update_hearts() -> void:
 			heart.texture = full_heart
 		else:
 			heart.texture = empty_heart
+
+func _on_resource_info(obj)->void:
+	if not game_script.normal_tower_build and not game_script.freeze_tower_build and not game_script.aoe_tower_build and not game_script.wood_build and not game_script.stone_build and not game_script.wheat_build and not game_script.beer_build and game_script.is_build_phase:
+		if ui_resource_holder == null:
+			ui_resource_holder = resource_info.instantiate()
+			add_child(ui_resource_holder)
+			var help_panel
 			
-			
+			help_panel = ui_resource_holder.get_child(0)
+			help_panel.object = obj
+			help_panel.visible = true
+			help_panel.connect("X_button_pressed_r",self._on_X_button_r)
+			help_panel.connect("destroy_pressed_r",self._on_destroy_resource)
+			help_panel.get_child(1).get_child(0).get_child(0).text = str(obj.title)
+			match obj.title:
+				"Lumbermill":
+					help_panel.get_child(1).get_child(2).get_child(1).texture = wood_icon
+				"Mine":
+					help_panel.get_child(1).get_child(2).get_child(1).texture = stone_icon
+				"Windmill":
+					help_panel.get_child(1).get_child(2).get_child(1).texture = wheat_icon
+				"Tavern":
+					help_panel.get_child(1).get_child(2).get_child(1).texture = beer_icon
+			if obj.generation_depleted:
+				help_panel.get_child(1).get_child(2).get_node("Reduction").texture = check_icon
+			else:
+				help_panel.get_child(1).get_child(2).get_node("Reduction").texture = cancel_icon
+
+
+
 #when clicked on tower signal is recieved and pops up the ui for stats/upgrade/destroy
 func _on_normal_tower_lvl_1_tower_info(obj) -> void:
 	#print("Signal recieved from: ",obj.name)
@@ -354,6 +392,24 @@ func _on_normal_tower_lvl_1_tower_info(obj) -> void:
 		else:
 			print("One panel already opened")
 
+func _on_X_button_r()->void:
+	if ui_resource_holder!=null:
+		ui_resource_holder.queue_free()
+		ui_resource_holder = null
+
+func _on_destroy_resource(resource)->void:
+	game_script.game_resources.used_workers-=1
+	#resource.queue_free()
+	var col_point = resource.position
+	print(col_point)
+	var grid_pos = game_script.grid_map.local_to_map(col_point)
+	
+	var tile_pos = Vector3(grid_pos.x+10, grid_pos.y, grid_pos.z+5)
+	for i in resource.shape:
+		game_script.grid_map.castle_state[tile_pos.z-i.z][tile_pos.x-i.x] = 0
+	resource.free()
+	game_script.check_resource_generation_req()
+	_on_X_button_r()
 
 #Signal recived when X_button on tower_panel is clicked
 func _on_X_button() ->void:
