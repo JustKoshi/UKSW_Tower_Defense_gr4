@@ -36,6 +36,7 @@ var defence_group = ButtonGroup.new()
 @onready var menu_buttons: PanelContainer = $"../Menu/Menu Buttons"
 @onready var how_to_play: Control = $"../Menu/How to Play"
 @onready var options: Control = $"../Menu/Options"
+@onready var leaderboard: Control = $"../Menu/Leaderboard"
 @onready var title: Label = $"../Menu/Title"
 @onready var h_slider: HSlider = $"../Menu/Options/HTP/VBoxContainer/MarginContainer/PanelContainer/VBoxContainer/HSlider"
 
@@ -44,6 +45,7 @@ var full_heart = load("res://Resources/Icons/Heart.png")
 var empty_heart = load("res://Resources/Icons/black_heart.png")
 var slow_png = load("res://Resources/Icons/snowflake.png")
 var aoe_png = load("res://Resources/Icons/catapult.png")
+var unlocked_achievement = load("res://Resources/Icons/unlocked.png")
 
 var info_panels = preload("res://Scenes/buttons_info_panels.tscn")
 var tower_info = preload("res://Scenes/towers_info_panels.tscn")
@@ -444,26 +446,174 @@ func _on_no_pressed() -> void:
 
 
 func _on_about_pressed() -> void:
-	if !how_to_play.visible and !options.visible:
+	if !how_to_play.visible and !options.visible and !leaderboard.visible:
 		title.global_position.x -= 500
 		menu_buttons.global_position.x -= 500
-	elif !how_to_play.visible and options.visible:
+	elif !how_to_play.visible and (leaderboard.visible or options.visible):
 		options.visible = false
-		
+		leaderboard.visible = false
 	how_to_play.visible = true	
 	
 func _on_options_pressed() -> void:
-	if !how_to_play.visible and !options.visible:
+	if !how_to_play.visible and !options.visible and !leaderboard.visible:
 		title.global_position.x -= 500
 		menu_buttons.global_position.x -= 500
-	elif how_to_play.visible and !options.visible:
+	elif !options.visible and (leaderboard.visible or how_to_play.visible):
 		how_to_play.visible = false
-		
+		leaderboard.visible = false
 	options.visible = true	
+	
+func _on_leaderboard_pressed() -> void:
+	if !how_to_play.visible and !options.visible and !leaderboard.visible:
+		title.global_position.x -= 500
+		menu_buttons.global_position.x -= 500
+	elif !leaderboard.visible and (how_to_play.visible or options.visible):
+		options.visible = false
+		how_to_play.visible = false
+	leaderboard.visible = true
+	var stat = game_script.database.select_rows("Stats","id=1",["*"])
+	var string_of_names :String = ""
+	var string_of_stats :String = ""
+	var minutes
+	var hours
+	var waves
+	var bosses
+	var tetris
+	var minigames
+	var lost_health
+	var has_res = false
+	var map_cov = false
+	var easter_egg = false
+	var done_achivements = 0
+	var all_towers = 0.0
+	var all_enemies = 0.0
+	var all_resources = 0.0
+	for key in stat[0]:
+		if key != "id" and key != "has_1000_res" and key != "map_covered" and key !="easter_egg":
+			var value = stat[0][key]
+			if key == "time_in_game":
+				minutes = value
+				hours = value/60
+				value = round_to_decimals(value,2)
+				key = "time_in_game [in minutes]"
+			elif key == "placed_towers":
+				all_towers = value
+			elif key == "killed_normal_enemies" or key == "killed_fast_enemies" or key == "killed_pyro_enemies":
+				all_enemies += value
+			elif key == "killed_boss_enemies":
+				all_enemies +=value
+				bosses = value
+			elif key == "generated_wood" or key == "generated_stone" or key == "generated_wheat" or key == "generated_beer":
+				all_resources += value
+			elif key == "defeated_waves":
+				waves = value
+			elif key == "placed_tetris_blocks":
+				tetris = value
+			elif key == "lost_health":
+				lost_health = value
+			elif key =="minigames_won":
+				minigames = value
+			string_of_names += str(key) + ":\n"
+			string_of_stats += str(value) + "\n"
+		elif key == "has_1000_res":
+			if stat[0][key] == 1:
+				has_res = true
+		elif key == "map_covered":
+			if stat[0][key] == 1:
+				map_cov = true
+		elif key == "easter_egg":
+			if stat[0][key] == 1:
+				easter_egg = true
+	string_of_names += "Collected resources per minute:\nAverage slained enemies per tower:\nEnemies killed per hour:"
+	string_of_stats += str(round_to_decimals(all_resources/minutes,2)) + "\n" + str(round_to_decimals(all_enemies/all_towers,2)) + "\n" + str(round_to_decimals(all_enemies/hours,2))
+	$"../Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/Statistics/Names".text = string_of_names
+	$"../Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/Statistics/Stats".text = string_of_stats
+	var achievements = $"../Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer"
+	for i in range(achievements.get_child_count()+1):
+		var row = achievements.get_child(i)
+		match i:
+			1:
+				if waves >= 100:
+					row.get_child(4).text = "DONE!"
+					done_achivements += 1
+					row.get_child(0).texture = unlocked_achievement
+				else:
+					row.get_child(4).text = str(waves)+"/100"
+			2:
+				if all_towers >= 75:
+					row.get_child(4).text = "DONE!"
+					done_achivements += 1
+					row.get_child(0).texture = unlocked_achievement
+				else:
+					row.get_child(4).text = str(all_towers)+"/75"
+			3:
+				if bosses >=30:
+					row.get_child(4).text = "DONE!"
+					done_achivements += 1
+					row.get_child(0).texture = unlocked_achievement
+				else:
+					row.get_child(4).text = str(bosses)+"/30"
+			4:
+				if has_res:
+					row.get_child(4).text = "DONE!"
+					done_achivements += 1
+					row.get_child(0).texture = unlocked_achievement
+				else:
+					row.get_child(4).text = "0/1"
+			5:
+				if tetris >= 150:
+					row.get_child(4).text = "DONE!"
+					done_achivements += 1
+					row.get_child(0).texture = unlocked_achievement
+				else:
+					row.get_child(4).text = str(tetris)+"/150"
+			6:
+				if map_cov:
+					row.get_child(4).text = "DONE!"
+					done_achivements += 1
+					row.get_child(0).texture = unlocked_achievement
+				else:
+					row.get_child(4).text = "0/1"
+					
+			7:
+				if minutes >= 100:
+					row.get_child(4).text = "DONE!"
+					done_achivements += 1
+					row.get_child(0).texture = unlocked_achievement
+				else:
+					row.get_child(4).text = str(round_to_decimals(minutes,1))+"/100"
+			8:
+				if minigames >= 40:
+					row.get_child(4).text = "DONE!"
+					done_achivements += 1
+					row.get_child(0).texture = unlocked_achievement
+				else:
+					row.get_child(4).text = str(minigames)+"/40"
+			9:
+				if lost_health >= 50:
+					row.get_child(4).text = "DONE!"
+					done_achivements += 1
+					row.get_child(0).texture = unlocked_achievement
+				else:
+					row.get_child(4).text = str(lost_health)+"/50"
+			10:
+				if easter_egg:
+					row.get_child(4).text = "DONE!"
+					done_achivements += 1
+					row.get_child(0).texture = unlocked_achievement
+				else:
+					row.get_child(4).text = "0/1"
+	var row = achievements.get_child(0)
+	if done_achivements == 10:
+		row.get_child(4).text = "DONE!"
+		row.get_child(0).texture = unlocked_achievement
+	else:
+		row.get_child(4).text = str(done_achivements)+"/10"
 
 func _on_close_pressed() -> void:
 	how_to_play.visible = false
 	options.visible = false
+	leaderboard.visible = false
 	title.global_position.x += 500
 	menu_buttons.global_position.x += 500
 
@@ -563,3 +713,7 @@ func repair_tower(tower) ->void:
 func _on_h_slider_value_changed(value: float) -> void:
 	var db_value = (MIN_DB + (MAX_DB - MIN_DB) * pow(h_slider.value, 2))
 	AudioServer.set_bus_volume_db(bus_index, db_value)
+	
+func round_to_decimals(value: float, decimals: int) -> float:
+	var factor = pow(10, decimals)
+	return round(value * factor) / factor

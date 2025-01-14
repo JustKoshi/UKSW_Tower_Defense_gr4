@@ -77,6 +77,7 @@ var resource_hover_holder:MeshInstance3D = null
 var database: SQLite
 var stats = {
 	"placed_towers" : 0,
+	"placed_tetris_blocks" : 0,
 	"generated_wood" : 0,
 	"generated_stone" : 0,
 	"generated_wheat" : 0,
@@ -88,10 +89,20 @@ var stats = {
 	"used_powerups" : 0,
 	"defeated_waves" : 0,
 	"times_played" : 0,
-	"time_in_game" : 0
+	"time_in_game" : 0,
+	"has_1000_res" : 0,
+	"map_covered" : 0,
+	"lost_health" : 0,
+	"minigames_won" : 0,
+	"easter_egg" : 0
 }
 var start_time
 var end_time
+
+#achievement related variables
+var has_1000_res = 0
+var map_covered = 0
+var easter_egg = 0
 
 #resource counter:
 var game_resources = {
@@ -133,6 +144,7 @@ func _ready() -> void:
 	var main_table = {
 		"id" : {"data_type" : "int", "primary_key" : true, "not_null" : true, "auto_increment" : true},
 		"placed_towers" : {"data_type" : "int"},
+		"placed_tetris_blocks" : {"data_type" : "int"},
 		"generated_wood" : {"data_type" : "int"},
 		"generated_stone" : {"data_type" : "int"},
 		"generated_wheat" : {"data_type" : "int"},
@@ -144,7 +156,12 @@ func _ready() -> void:
 		"used_powerups" : {"data_type" : "int"},
 		"defeated_waves" : {"data_type" : "int"},
 		"times_played" : {"data_type" : "int"},
-		"time_in_game" : {"data_type" : "int"}
+		"time_in_game" : {"data_type" : "int"},
+		"has_1000_res" : {"data_type" : "int"},
+		"map_covered" : {"data_type" : "int"},
+		"lost_health" : {"data_type" : "int"},
+		"minigames_won" : {"data_type" : "int"},
+		"easter_egg" : {"data_type" : "int"}
 	}
 	database.create_table("Stats",main_table)
 	var row = database.select_rows("Stats","id=1",["*"])
@@ -181,7 +198,7 @@ func _ready() -> void:
 	UI.update_enemy_count_labels(enemy_spawner.basic_enemies_per_wave, enemy_spawner.fast_enemies_per_wave, enemy_spawner.boss_enemies_per_wave, enemy_spawner.pyro_enemies_per_wave)
 	
 	#testing chagnes: 
-	#enemy_spawner.current_wave = 5
+	enemy_spawner.current_wave = 5
 	game_resources.wood = 999
 	game_resources.stone = 999
 	game_resources.wheat = 999
@@ -259,7 +276,10 @@ func _process(delta: float) -> void:
 		resource_to_hover = 0
 	if is_build_phase:
 		update_label_build_time()
-		
+	if game_resources.wood >=1000 or game_resources.stone >=1000 or game_resources.wheat >=1000 or game_resources.beer >=1000:
+		has_1000_res = 1
+	if number_of_tetris_placed >=15:
+		map_covered = 1
 	if game and is_build_phase:
 		ship_sailin(delta)
 	elif game:
@@ -332,6 +352,7 @@ func place_block_on_click():
 		var grid_pos = grid_map.local_to_map(collision_point)
 		if grid_map.can_place_tetris_block(grid_pos,grid_map.current_shape):
 			number_of_tetris_placed += 1
+			stats.placed_tetris_blocks += 4
 			game_resources.wood -= needed_res
 			game_resources.stone -= needed_res
 		grid_map.place_tetris_block(grid_pos, grid_map.current_shape)
@@ -834,6 +855,8 @@ func _on_switch_label_timer_timeout() -> void:
 #Function that happens when enemies deal damage to our gate and checks for game_over possibility
 func take_damage(dmg) -> void:
 	current_health = current_health-dmg
+	if game:
+		stats.lost_health += dmg
 	#print("Current health z maina:",current_health)
 	UI.update_hearts()
 	if current_health <= 0 and game:
@@ -955,8 +978,18 @@ func load_data_to_database() -> void:
 	var stat
 	stat = database.select_rows("Stats","id=1",["*"])
 	for i in stats:
-		stat[0][i] += stats[i]
-		stats[i] = 0
-	#print(stat[0])
+		if i == "has_1000_res":
+			if stat[0][i] == 0:
+				stat[0][i] = has_1000_res
+		if i == "map_covered":
+			if stat[0][i] == 0:
+				stat[0][i] = map_covered
+		if i == "easter_egg":
+			if stat[0][i] == 0:
+				stat[0][i] = easter_egg
+		else:
+			stat[0][i] += stats[i]
+			stats[i] = 0
+	print(stat[0])
 	database.update_rows("Stats","id=1",stat[0])
 	
