@@ -529,7 +529,7 @@ func _on_leaderboard_pressed() -> void:
 	$"../Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/Statistics/Names".text = string_of_names
 	$"../Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/Statistics/Stats".text = string_of_stats
 	var achievements = $"../Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer"
-	for i in range(achievements.get_child_count()+1):
+	for i in range(achievements.get_child_count()):
 		var row = achievements.get_child(i)
 		match i:
 			1:

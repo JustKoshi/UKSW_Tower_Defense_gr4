@@ -198,7 +198,7 @@ func _ready() -> void:
 	UI.update_enemy_count_labels(enemy_spawner.basic_enemies_per_wave, enemy_spawner.fast_enemies_per_wave, enemy_spawner.boss_enemies_per_wave, enemy_spawner.pyro_enemies_per_wave)
 	
 	#testing chagnes: 
-	enemy_spawner.current_wave = 5
+	#enemy_spawner.current_wave = 5
 	game_resources.wood = 999
 	game_resources.stone = 999
 	game_resources.wheat = 999
