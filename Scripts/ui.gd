@@ -575,7 +575,7 @@ func _on_pyro_enemy_info_panel() -> void:
 		enemy_panel_holder = enemy_info.instantiate()
 		add_child(enemy_panel_holder)
 		enemy_panel_holder.get_child(0).get_child(1).get_child(0).get_child(2).text = pyro_enemy.title
-		enemy_panel_holder.get_child(0).get_child(1).get_child(1).get_node("Damage").text = str(pyro_enemy.damage) + "/" + str(pyro_enemy.damage_to_tower)
+		enemy_panel_holder.get_child(0).get_child(1).get_child(1).get_node("Damage").text = str(pyro_enemy.damage) + " or " + str(pyro_enemy.damage_to_tower)
 		enemy_panel_holder.get_child(0).get_child(1).get_child(1).get_node("Health").text = str(pyro_enemy.health)
 		enemy_panel_holder.get_child(0).get_child(1).get_child(3).get_node("Speed").text = str(pyro_enemy.speed) + " blocks/s"
 		enemy_panel_holder.get_child(0).get_child(1).get_node("Label").text = pyro_enemy.description

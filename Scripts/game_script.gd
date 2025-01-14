@@ -623,7 +623,6 @@ func check_resource_generation_req():
 				if resource is Tavern:
 					if resource2 is Windmill and resource2.transform.origin == resource.transform.origin+tavern_shift:
 						resource.generation_depleted = false
-
 				if resource is Windmill:
 					if resource2 is Mine or resource2 is Lumbermill:
 						print("farma:", resource.transform.origin, " drugie: ", resource2.transform.origin )
@@ -631,6 +630,9 @@ func check_resource_generation_req():
 							resource.generation_depleted = false
 					elif resource2 is Windmill:
 						if resource2.transform.origin+tavern_shift == resource.transform.origin:
+							resource.generation_depleted = false
+					elif resource2 is Tavern:
+						if resource.transform.origin == resource2.transform.origin+tavern_shift:
 							resource.generation_depleted = false
 		if resource.generation_depleted:
 			resource.get_node("exclamation_mark").visible = true

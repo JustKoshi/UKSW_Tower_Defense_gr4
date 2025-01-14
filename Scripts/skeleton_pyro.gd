@@ -80,7 +80,6 @@ func _on_area_3d_body_entered(body: Node3D) -> void:
 func calculate_distance(vec1: Vector3, vec2: Vector3)->float:
 	return vec1.distance_to(vec2)
 
-	
 
 
 func _on_area_3d_body_exited(body: Node3D) -> void:

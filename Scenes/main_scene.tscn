@@ -1,4 +1,4 @@
-[gd_scene load_steps=116 format=3 uid="uid://chdc08c7ct8xv"]
+[gd_scene load_steps=115 format=3 uid="uid://chdc08c7ct8xv"]
 
 [ext_resource type="Script" path="res://Scripts/game_script.gd" id="1_wclms"]
 [ext_resource type="MeshLibrary" uid="uid://746jf5hii373" path="res://mesh_lib.tres" id="2_5f8px"]
@@ -70,7 +70,6 @@
 [ext_resource type="Texture2D" uid="uid://rcpriyo5al5g" path="res://Resources/UI/Slider/slider.png" id="37_p4sdc"]
 [ext_resource type="Texture2D" uid="uid://qwpbol5h81d2" path="res://Resources/UI/Slider/tick.png" id="38_qqkip"]
 [ext_resource type="Texture2D" uid="uid://cmtelb3ayg6in" path="res://Resources/Icons/Pyro head.png" id="43_qh4xf"]
-[ext_resource type="PackedScene" uid="uid://dns1b5t1d7dab" path="res://Scenes/resource_panel.tscn" id="53_nos3f"]
 [ext_resource type="PackedScene" uid="uid://dbhys37c51ulo" path="res://Scenes/ship.tscn" id="63_w0lb2"]
 [ext_resource type="AudioStream" uid="uid://hwogrt6w0sn7" path="res://Resources/Music/15619784_battle-loop-7_by_gameaudiosource_preview (2).mp3" id="65_axqnv"]
 
@@ -1010,7 +1009,7 @@ theme_override_styles/normal = SubResource("StyleBoxEmpty_1a7p5")
 text = "0"
 vertical_alignment = 2
 
-[node name="Workers_buy" parent="CanvasLayer/UI" instance=ExtResource("53_nos3f")]
+[node name="Workers_buy" type="PanelContainer" parent="CanvasLayer/UI"]
 visible = false
 layout_mode = 1
 anchors_preset = 7
