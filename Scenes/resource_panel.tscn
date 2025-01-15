@@ -132,6 +132,15 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
+[node name="Disabled_is" type="Label" parent="Resource Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+text = "Is disabled:"
+
+[node name="Disabled_text" type="TextureRect" parent="Resource Panel/VBoxContainer/GridContainer"]
+layout_mode = 2
+expand_mode = 2
+
 [node name="Spring2" type="Control" parent="Resource Panel/VBoxContainer"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2

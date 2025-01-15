@@ -10,7 +10,7 @@ extends Node3D
 @onready var build_timer = $"Build Timer"
 @onready var build_time_label = $"CanvasLayer/UI/Build time Label"
 @onready var switch_label_timer = $"Switch Label Timer"
-
+@onready var sprite_timer = $"Sprite Timer"
 #variable to contain raycast to detect clicks in build mode
 @onready var raycast = $"Top Camera/RayCast3D"
 
@@ -63,6 +63,11 @@ var resource_shape
 var value = 1.0  # Startowa wartość
 var duration = 2.0  # Czas w sekundach
 var time_passed = 0.0  # Licznik czasu
+
+
+#sprite timer variables
+const MIN_TIME = 5
+const MAX_TIME = 25
 
 
 var current_cam_index = 0
@@ -185,6 +190,8 @@ func _ready() -> void:
 	game_resources.wood = 999
 	game_resources.stone = 999
 	game_resources.wheat = 999
+	
+	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -549,7 +556,7 @@ func color_transparent_mesh_instance(object, color):#1 - transparent, 2 - red/tr
 func update_resource_timers():
 	for i in range(get_node("Resource Holder").get_child_count()):
 		var child = get_node("Resource Holder").get_child(i)
-		if child.generator_on == true:
+		if child.generator_on and !child.disabled:
 			update_resource_stats(child)
 			child.get_node("Timer").start()
 			child.generator_on = false
@@ -640,6 +647,13 @@ func check_resource_generation_req():
 		else:
 			resource.get_node("exclamation_mark").visible = false
 
+func resource_sprite_popup()->void:
+	var child_count = get_node("Resource Holder").get_child_count()
+	var res = get_node("Resource Holder").get_child(randi()%child_count)
+	if res.disabled:#If the random chosenn building is alreaddy disabled then the minigame wont triggger that round
+		return
+	res.sprite_phase = true
+	res.get_node("Sprite3D").get_node("sprite_countdown").start()
 
 func hover_resource(resource_type:int):
 	var collision_point = get_collision_point()
@@ -798,6 +812,7 @@ func reset_build_timer():
 	UI.show_first_panel()
 	UI.bottom_panel.visible = true
 	build_timer.start()
+	sprite_timer.start()
 
 #when end wave signal is recived resets build timer
 func _on_enemy_spawner_wave_ended() -> void:
@@ -865,18 +880,24 @@ func _on_skip_button_pressed() -> void:
 	var adding_beer = int(remaining_time/5)
 	for i in range(get_node("Resource Holder").get_child_count()):
 		var child = get_node("Resource Holder").get_child(i)
-		update_resource_stats(child)
-		if not child.resource_type == "beer":
-			if child.generation_depleted:
-				game_resources[child.resource_type] += 1*adding_resources#polowa wartosci
+		if !child.disabled:
+			update_resource_stats(child)
+			if not child.resource_type == "beer":
+				if child.generation_depleted:
+					game_resources[child.resource_type] += 1*adding_resources#polowa wartosci
+				else:
+					game_resources[child.resource_type] += 2*adding_resources
 			else:
-				game_resources[child.resource_type] += 2*adding_resources
-		else:
-			if child.generation_depleted:
-				game_resources[child.resource_type] += 1*adding_beer#polowa wartosci
-			else:
-				game_resources[child.resource_type] += 2*adding_beer
+				if child.generation_depleted:
+					game_resources[child.resource_type] += 1*adding_beer#polowa wartosci
+				else:
+					game_resources[child.resource_type] += 2*adding_beer
 	build_timer.stop()
+	
+	#after skip the sprite minigame triggers automatically
+	sprite_timer.stop()
+	resource_sprite_popup()
+	
 	prepare_wave()
 	
 	get_node("Ship/Path3D2/PathFollow3D").progress = 565.87
@@ -964,3 +985,9 @@ func load_data_to_database() -> void:
 	#print(stat[0])
 	database.update_rows("Stats","id=1",stat[0])
 	
+
+
+func _on_sprite_timer_timeout()->void:
+	resource_sprite_popup()
+	var random_interval = randf_range(MIN_TIME, MAX_TIME)
+	sprite_timer.wait_time = random_interval

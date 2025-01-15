@@ -303,6 +303,9 @@ func _on_resource_info(obj)->void:
 			help_panel.connect("X_button_pressed_r",self._on_X_button_r)
 			help_panel.connect("destroy_pressed_r",self._on_destroy_resource)
 			help_panel.get_child(1).get_child(0).get_child(0).text = str(obj.title)
+			
+			if obj.disabled:
+				help_panel.get_child(1).get_node("Last_button").get_child(0).disabled = true
 			match obj.title:
 				"Lumbermill":
 					help_panel.get_child(1).get_child(2).get_child(1).texture = wood_icon
@@ -316,6 +319,10 @@ func _on_resource_info(obj)->void:
 				help_panel.get_child(1).get_child(2).get_node("Reduction").texture = check_icon
 			else:
 				help_panel.get_child(1).get_child(2).get_node("Reduction").texture = cancel_icon
+			if obj.disabled:
+				help_panel.get_child(1).get_child(2).get_node("Disabled_text").texture = check_icon
+			else:
+				help_panel.get_child(1).get_child(2).get_node("Disabled_text").texture = cancel_icon
 
 
 
