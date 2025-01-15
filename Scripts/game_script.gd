@@ -25,6 +25,12 @@ extends Node3D
 
 @onready var resource_holder: Node = $"Resource Holder"
 
+@onready var wave_start_sound: AudioStreamPlayer = $"SFX and music/Wave start"
+@onready var hit: AudioStreamPlayer = $"SFX and music/Hit"
+@onready var fanfare: AudioStreamPlayer = $"SFX and music/Fanfare"
+@onready var music: AudioStreamPlayer = $"SFX and music/Music"
+@onready var sad_trombone: AudioStreamPlayer = $"SFX and music/Sad trombone"
+
 
 var NormalTowerScene = preload("res://Scenes/normal_tower_lvl_1.tscn")
 var FreezeTowerScene = preload("res://Scenes/Freeze_tower_lvl_1.tscn")
@@ -723,6 +729,7 @@ func prepare_wave() -> void:
 		resource_hover_holder.free()
 	if !enemy_spawner.wave_in_progress:
 		enemy_spawner.start_wave()
+		wave_start_sound.play()
 		UI.bottom_panel.visible = false
 		UI.unpress_all_buttons()
 		UI._on_X_button()
@@ -748,6 +755,8 @@ func reset_build_timer():
 #when end wave signal is recived resets build timer
 func _on_enemy_spawner_wave_ended() -> void:
 	#print("Przekazano sygnal")
+	if game:
+		fanfare.play()
 	if enemy_spawner.current_wave == 5:
 		#odblokuj farme
 		#print("Farm unlocked")
@@ -789,12 +798,15 @@ func _on_switch_label_timer_timeout() -> void:
 	
 #Function that happens when enemies deal damage to our gate and checks for game_over possibility
 func take_damage(dmg) -> void:
+	hit.play()
 	current_health = current_health-dmg
 	#print("Current health z maina:",current_health)
 	UI.update_hearts()
 	if current_health <= 0 and game:
 		print("GAMEOVER GG")
 		game = false
+		music.stop()
+		sad_trombone.play()
 		GameOver.visible = true
 		$CanvasLayer/UI/GameOverScreen/VBoxContainer/GameOverText.text = "Game Over!\nYou failed at\n wave number\n %d." % enemy_spawner.current_wave
 		$CanvasLayer/UI/GameOverScreen/VBoxContainer/MainMenu_button.disabled = false

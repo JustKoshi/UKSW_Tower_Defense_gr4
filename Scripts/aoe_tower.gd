@@ -12,6 +12,7 @@ var current_health
 var enemies = []
 var current_enemy
 var can_shoot = true
+var is_targeted = false
 
 var return_wood
 var return_stone
@@ -29,6 +30,8 @@ var stone_lvl2 = StandardMaterial3D.new()
 var stone_lvl3 = StandardMaterial3D.new()
 
 signal tower_info(object)
+
+@onready var grid_map = self.get_parent().get_parent().grid_map
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -147,4 +150,8 @@ func _on_animation_time_timeout() -> void:
 func take_damage(dmg: int) -> void:
 	current_health-=dmg
 	if current_health<=0 and (current_health+dmg) > 0:
+		var col_point = self.position
+		var grid_pos = grid_map.local_to_map(col_point)
+		var tile_pos = Vector3(grid_pos.x+grid_map.map_size, grid_pos.y, grid_pos.z+grid_map.map_size)
+		grid_map.tile_state[tile_pos.z][tile_pos.x] = 2
 		queue_free()

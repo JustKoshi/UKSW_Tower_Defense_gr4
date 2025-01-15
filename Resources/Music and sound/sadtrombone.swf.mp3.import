@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://js3wg2npo7je"
+path="res://.godot/imported/sadtrombone.swf.mp3-f0eef27d2c03fd0a0c3f586391dc0a8f.mp3str"
+
+[deps]
+
+source_file="res://Resources/Music and sound/sadtrombone.swf.mp3"
+dest_files=["res://.godot/imported/sadtrombone.swf.mp3-f0eef27d2c03fd0a0c3f586391dc0a8f.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

@@ -1,13 +1,9 @@
 extends Control
 
-const MIN_DB := -50.0  
-const MAX_DB := 15
-
 @onready var basic_enemy_count = $"EnemyPanelContainer/MarginContainer/GridContainer/BE count Label"
 @onready var fast_enemy_count = $"EnemyPanelContainer/MarginContainer/GridContainer/FE count Label"
 @onready var boss_enemy_count = $"EnemyPanelContainer/MarginContainer/GridContainer/Boss count Label"
 @onready var pyro_count: Label = $"EnemyPanelContainer/MarginContainer/GridContainer/Pyro count Label"
-
 
 @onready var bottom_panel: PanelContainer = $Bottom_panel
 
@@ -38,6 +34,8 @@ var defence_group = ButtonGroup.new()
 @onready var options: Control = $"../Menu/Options"
 @onready var title: Label = $"../Menu/Title"
 @onready var h_slider: HSlider = $"../Menu/Options/HTP/VBoxContainer/MarginContainer/PanelContainer/VBoxContainer/HSlider"
+@onready var sfx_slider: HSlider = $"../Menu/Options/HTP/VBoxContainer/MarginContainer/PanelContainer/VBoxContainer/SFX_slider"
+
 
 
 var full_heart = load("res://Resources/Icons/Heart.png")
@@ -70,14 +68,13 @@ var panel_number
 @onready var locked_buttons = [$"Bottom_panel/Resource buildings/HBoxContainer/Workers", $"Bottom_panel/Resource buildings/HBoxContainer/Wheat building", $"Bottom_panel/Resource buildings/HBoxContainer/Beer building"]
 var resolution
 
-@export
-var bus_name: String
-var bus_index: int
+var bus_index = AudioServer.get_bus_index("Music")
+var sfx_bus_index = AudioServer.get_bus_index("SFX")
 
 func _ready() -> void:
-	AudioServer.set_bus_volume_db(bus_index, (MIN_DB + (MAX_DB - MIN_DB) * pow(h_slider.value, 2)))
+	AudioServer.set_bus_volume_db(bus_index, h_slider.value)
+	AudioServer.set_bus_volume_db(sfx_bus_index, sfx_slider.value)
 	
-	bus_index = AudioServer.get_bus_index("Master")
 	
 	basic_enemy = basic_enemies.new()
 	fast_enemy = fast_enemies.new()
@@ -561,5 +558,16 @@ func repair_tower(tower) ->void:
 
 
 func _on_h_slider_value_changed(value: float) -> void:
-	var db_value = (MIN_DB + (MAX_DB - MIN_DB) * pow(h_slider.value, 2))
-	AudioServer.set_bus_volume_db(bus_index, db_value)
+	AudioServer.set_bus_volume_db(bus_index, h_slider.value)
+	if h_slider.value == -30:
+		AudioServer.set_bus_mute(bus_index, true)
+	else:
+		AudioServer.set_bus_mute(bus_index, false)
+
+
+func _on_sfx_slider_value_changed(value: float) -> void:
+	AudioServer.set_bus_volume_db(sfx_bus_index, sfx_slider.value)
+	if sfx_slider.value == -30:
+		AudioServer.set_bus_mute(sfx_bus_index, true)
+	else:
+		AudioServer.set_bus_mute(sfx_bus_index, false)

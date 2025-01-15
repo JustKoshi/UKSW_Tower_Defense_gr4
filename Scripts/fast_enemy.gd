@@ -10,6 +10,7 @@ var can_attack = true
 var freezing = false
 @onready var animation_player = $AnimationPlayer
 
+
 func _physics_process(_delta):
 	# Dodaj grawitacje do osi Y predkosci
 	if finished_walk:
@@ -47,6 +48,6 @@ func take_damage(dmg: int) -> void:
 
 #Resetting attacking 
 func _on_attack_cd_timeout() -> void:
-	take_damage(50)
 	get_parent_node_3d().get_parent_node_3d().get_parent_node_3d().take_damage(damage)
+	take_damage(50)
 	can_attack=true
