@@ -401,7 +401,7 @@ func _on_destroy_resource(resource)->void:
 	game_script.game_resources.used_workers-=1
 	#resource.queue_free()
 	var col_point = resource.position
-	print(col_point)
+	#print(col_point)
 	var grid_pos = game_script.grid_map.local_to_map(col_point)
 	
 	var tile_pos = Vector3(grid_pos.x+10, grid_pos.y, grid_pos.z+5)

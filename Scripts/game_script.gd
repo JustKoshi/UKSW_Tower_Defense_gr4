@@ -61,7 +61,7 @@ var resource_shape
 
 #Vars for ship fadeout func
 var value = 1.0  # Startowa wartość
-var duration = 4.0  # Czas w sekundach
+var duration = 2.0  # Czas w sekundach
 var time_passed = 0.0  # Licznik czasu
 
 
@@ -266,7 +266,8 @@ func _process(delta: float) -> void:
 		if value > 0:
 			time_passed += delta
 			value = clamp(1.0 - time_passed / duration, 0.0, 1.0)
-		ship_fadeout()
+			ship_fadeout()
+	
 	
 	if not game:
 		get_node("Main Camera").angle += 0.1 * delta
@@ -625,7 +626,7 @@ func check_resource_generation_req():
 						resource.generation_depleted = false
 				if resource is Windmill:
 					if resource2 is Mine or resource2 is Lumbermill:
-						print("farma:", resource.transform.origin, " drugie: ", resource2.transform.origin )
+						#print("farma:", resource.transform.origin, " drugie: ", resource2.transform.origin )
 						if resource2.transform.origin+windmill_shift == resource.transform.origin:
 							resource.generation_depleted = false
 					elif resource2 is Windmill:
@@ -778,6 +779,7 @@ func prepare_wave() -> void:
 		UI.bottom_panel.visible = false
 		UI.unpress_all_buttons()
 		UI._on_X_button()
+		UI._on_X_button_r()
 		for h in hover:
 			h.visible = false
 	UI.switch_skip_button_visiblity()
@@ -930,7 +932,6 @@ func update_enemy_killed_stats(enemy_type:String) ->void:
 
 func update_resource_stats(resource) ->void:
 	if resource.generation_depleted:
-		game_resources[resource.resource_type] += 1#polowa wartosci
 		match resource.resource_type:
 			"wood":
 				stats.generated_wood += 1
@@ -941,7 +942,6 @@ func update_resource_stats(resource) ->void:
 			"beer":
 				stats.generated_beer += 1
 	else:
-		game_resources[resource.resource_type] += 2
 		match resource.resource_type:
 			"wood":
 				stats.generated_wood += 2
