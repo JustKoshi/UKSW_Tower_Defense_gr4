@@ -54,6 +54,7 @@ func take_damage(dmg: int) -> void:
 		if target != null and target.get_parent_node_3d().is_targeted:
 			target.get_parent_node_3d().is_targeted = false
 		get_parent_node_3d().delete_object()
+		get_parent_node_3d().get_parent_node_3d().get_parent_node_3d().update_enemy_killed_stats(title)
 
 #Resetting attacking 
 func _on_attack_cd_timeout() -> void:

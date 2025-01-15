@@ -69,6 +69,7 @@
 [ext_resource type="Texture2D" uid="uid://cqyqb0x3fl6qe" path="res://Resources/UI/Buttons and keys/back przycisk.png" id="37_h1ab3"]
 [ext_resource type="Texture2D" uid="uid://rcpriyo5al5g" path="res://Resources/UI/Slider/slider.png" id="37_p4sdc"]
 [ext_resource type="Texture2D" uid="uid://qwpbol5h81d2" path="res://Resources/UI/Slider/tick.png" id="38_qqkip"]
+[ext_resource type="Texture2D" uid="uid://dkenx4a0rwxa1" path="res://Resources/Icons/not_unlocked.png" id="41_vgf4a"]
 [ext_resource type="Texture2D" uid="uid://cmtelb3ayg6in" path="res://Resources/Icons/Pyro head.png" id="43_qh4xf"]
 [ext_resource type="PackedScene" uid="uid://dbhys37c51ulo" path="res://Scenes/ship.tscn" id="63_w0lb2"]
 [ext_resource type="AudioStream" uid="uid://hwogrt6w0sn7" path="res://Resources/Music and sound/15619784_battle-loop-7_by_gameaudiosource_preview (2).mp3" id="65_axqnv"]
@@ -842,21 +843,360 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="Title" type="Label" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("20_xetcj")
+theme_override_font_sizes/font_size = 64
+text = "Statistics and Achievements"
+horizontal_alignment = 1
+
 [node name="Spring" type="Control" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/margin_right = 5
 
-[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/MarginContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxTexture_13q4d")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 50
+text = "STATISTICS"
+horizontal_alignment = 1
+
+[node name="Statistics" type="HBoxContainer" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Names" type="Label" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/Statistics"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+
+[node name="Control" type="Control" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/Statistics"]
+layout_mode = 2
+
+[node name="Stats" type="Label" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/Statistics"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+
+[node name="Title2" type="Label" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 50
+text = "ACHIEVEMENTS"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="GridContainer" type="VBoxContainer" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+
+[node name="png" type="TextureRect" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("41_vgf4a")
+expand_mode = 2
+
+[node name="Spring1" type="Control" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Name" type="Label" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Unlock all achievements: "
+
+[node name="Spring2" type="Control" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Progress" type="Label" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "0/10"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+
+[node name="png" type="TextureRect" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer2"]
+layout_mode = 2
+texture = ExtResource("41_vgf4a")
+expand_mode = 2
+
+[node name="Spring1" type="Control" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Name" type="Label" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer2"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Defeat 100 waves:"
+
+[node name="Spring2" type="Control" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Progress" type="Label" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer2"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "0/100"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+
+[node name="png" type="TextureRect" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer3"]
+layout_mode = 2
+texture = ExtResource("41_vgf4a")
+expand_mode = 2
+
+[node name="Spring1" type="Control" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Name" type="Label" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer3"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Place 75 towers:"
+
+[node name="Spring2" type="Control" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Progress" type="Label" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer3"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "0/75"
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+
+[node name="png" type="TextureRect" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer4"]
+layout_mode = 2
+texture = ExtResource("41_vgf4a")
+expand_mode = 2
+
+[node name="Spring1" type="Control" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer4"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Name" type="Label" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer4"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Kill 30 bosses:"
+
+[node name="Spring2" type="Control" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer4"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Progress" type="Label" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer4"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "0/30"
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+
+[node name="png" type="TextureRect" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer5"]
+layout_mode = 2
+texture = ExtResource("41_vgf4a")
+expand_mode = 2
+
+[node name="Spring1" type="Control" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer5"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Name" type="Label" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer5"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Have 1000 of any resource at some point:"
+
+[node name="Spring2" type="Control" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer5"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Progress" type="Label" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer5"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "0/1"
+
+[node name="HBoxContainer6" type="HBoxContainer" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+
+[node name="png" type="TextureRect" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer6"]
+layout_mode = 2
+texture = ExtResource("41_vgf4a")
+expand_mode = 2
+
+[node name="Spring1" type="Control" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer6"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Name" type="Label" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer6"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Place 150 tetris blocks:"
+
+[node name="Spring2" type="Control" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer6"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Progress" type="Label" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer6"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "0/150"
+
+[node name="HBoxContainer7" type="HBoxContainer" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+
+[node name="png" type="TextureRect" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer7"]
+layout_mode = 2
+texture = ExtResource("41_vgf4a")
+expand_mode = 2
+
+[node name="Spring1" type="Control" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer7"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Name" type="Label" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer7"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Have +60% of the map covered with tetris walls:"
+
+[node name="Spring2" type="Control" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer7"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Progress" type="Label" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer7"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "0/1"
+
+[node name="HBoxContainer8" type="HBoxContainer" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+
+[node name="png" type="TextureRect" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer8"]
+layout_mode = 2
+texture = ExtResource("41_vgf4a")
+expand_mode = 2
+
+[node name="Spring1" type="Control" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer8"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Name" type="Label" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer8"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Spend 100 minutes in game:"
+
+[node name="Spring2" type="Control" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer8"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Progress" type="Label" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer8"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "0/100"
+
+[node name="HBoxContainer9" type="HBoxContainer" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+
+[node name="png" type="TextureRect" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer9"]
+layout_mode = 2
+texture = ExtResource("41_vgf4a")
+expand_mode = 2
+
+[node name="Spring1" type="Control" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer9"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Name" type="Label" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer9"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Win the minigame 40 times:"
+
+[node name="Spring2" type="Control" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer9"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Progress" type="Label" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer9"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "0/40"
+
+[node name="HBoxContainer10" type="HBoxContainer" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+
+[node name="png" type="TextureRect" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer10"]
+layout_mode = 2
+texture = ExtResource("41_vgf4a")
+expand_mode = 2
+
+[node name="Spring1" type="Control" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer10"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Name" type="Label" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer10"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Lose 50 health:"
+
+[node name="Spring2" type="Control" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer10"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Progress" type="Label" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer10"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "0/50"
+
+[node name="HBoxContainer11" type="HBoxContainer" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+
+[node name="png" type="TextureRect" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer11"]
+layout_mode = 2
+texture = ExtResource("41_vgf4a")
+expand_mode = 2
+
+[node name="Spring1" type="Control" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer11"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Name" type="Label" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer11"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "????????????????????????????:"
+
+[node name="Spring2" type="Control" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer11"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Progress" type="Label" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer/GridContainer/HBoxContainer11"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "0/1"
+
+[node name="Nothing" type="Label" parent="CanvasLayer/Menu/Leaderboard/HTP/VBoxContainer/ScrollContainer/MarginContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "
+
+
+
+"
 
 [node name="Close" type="Button" parent="CanvasLayer/Menu/Leaderboard"]
 custom_minimum_size = Vector2(30, 30)
@@ -1739,6 +2079,7 @@ bus = &"SFX"
 [connection signal="pressed" from="CanvasLayer/Menu/Menu Buttons/MarginContainer/VBoxContainer/Play" to="." method="_on_play_pressed"]
 [connection signal="pressed" from="CanvasLayer/Menu/Menu Buttons/MarginContainer/VBoxContainer/Options" to="CanvasLayer/UI" method="_on_options_pressed"]
 [connection signal="pressed" from="CanvasLayer/Menu/Menu Buttons/MarginContainer/VBoxContainer/About" to="CanvasLayer/UI" method="_on_about_pressed"]
+[connection signal="pressed" from="CanvasLayer/Menu/Menu Buttons/MarginContainer/VBoxContainer/Leaderboard" to="CanvasLayer/UI" method="_on_leaderboard_pressed"]
 [connection signal="pressed" from="CanvasLayer/Menu/Menu Buttons/MarginContainer/VBoxContainer/Quit" to="." method="_on_quit_pressed"]
 [connection signal="pressed" from="CanvasLayer/Menu/How to Play/Close" to="CanvasLayer/UI" method="_on_close_pressed"]
 [connection signal="value_changed" from="CanvasLayer/Menu/Options/HTP/VBoxContainer/MarginContainer/PanelContainer/VBoxContainer/HSlider" to="CanvasLayer/UI" method="_on_h_slider_value_changed"]

@@ -45,6 +45,7 @@ func take_damage(dmg: int) -> void:
 	#print("Current health: ",health)
 	if health<=0 and (health+dmg) > 0:
 		get_parent_node_3d().delete_object()
+		get_parent_node_3d().get_parent_node_3d().get_parent_node_3d().update_enemy_killed_stats(title)
 
 #Resetting attacking 
 func _on_attack_cd_timeout() -> void:

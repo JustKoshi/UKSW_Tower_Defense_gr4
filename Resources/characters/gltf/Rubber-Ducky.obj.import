@@ -1,0 +1,22 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://dv1kxmf4t05l0"
+path="res://.godot/imported/Rubber-Ducky.obj-8d45049410822bd1e72c7a3f176945fc.mesh"
+
+[deps]
+
+files=["res://.godot/imported/Rubber-Ducky.obj-8d45049410822bd1e72c7a3f176945fc.mesh"]
+
+source_file="res://Resources/characters/gltf/Rubber-Ducky.obj"
+dest_files=["res://.godot/imported/Rubber-Ducky.obj-8d45049410822bd1e72c7a3f176945fc.mesh", "res://.godot/imported/Rubber-Ducky.obj-8d45049410822bd1e72c7a3f176945fc.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true
+force_disable_mesh_compression=false
