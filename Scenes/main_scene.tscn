@@ -1,4 +1,4 @@
-[gd_scene load_steps=115 format=3 uid="uid://chdc08c7ct8xv"]
+[gd_scene load_steps=119 format=3 uid="uid://chdc08c7ct8xv"]
 
 [ext_resource type="Script" path="res://Scripts/game_script.gd" id="1_wclms"]
 [ext_resource type="MeshLibrary" uid="uid://746jf5hii373" path="res://mesh_lib.tres" id="2_5f8px"]
@@ -71,7 +71,11 @@
 [ext_resource type="Texture2D" uid="uid://qwpbol5h81d2" path="res://Resources/UI/Slider/tick.png" id="38_qqkip"]
 [ext_resource type="Texture2D" uid="uid://cmtelb3ayg6in" path="res://Resources/Icons/Pyro head.png" id="43_qh4xf"]
 [ext_resource type="PackedScene" uid="uid://dbhys37c51ulo" path="res://Scenes/ship.tscn" id="63_w0lb2"]
-[ext_resource type="AudioStream" uid="uid://hwogrt6w0sn7" path="res://Resources/Music/15619784_battle-loop-7_by_gameaudiosource_preview (2).mp3" id="65_axqnv"]
+[ext_resource type="AudioStream" uid="uid://hwogrt6w0sn7" path="res://Resources/Music and sound/15619784_battle-loop-7_by_gameaudiosource_preview (2).mp3" id="65_axqnv"]
+[ext_resource type="AudioStream" uid="uid://barv1fcw2wiqb" path="res://Resources/Music and sound/ornn-ult-made-with-Voicemod.mp3" id="73_2twgf"]
+[ext_resource type="AudioStream" uid="uid://kv4c7v2av5a3" path="res://Resources/Music and sound/mixkit-impact-of-a-blow-2150.mp3" id="74_lgq2q"]
+[ext_resource type="AudioStream" uid="uid://bavpef4x6a5yv" path="res://Resources/Music and sound/tada-fanfare-a-6313.mp3" id="75_u4e7l"]
+[ext_resource type="AudioStream" uid="uid://js3wg2npo7je" path="res://Resources/Music and sound/sadtrombone.swf.mp3" id="76_ikto0"]
 
 [sub_resource type="Gradient" id="Gradient_lq3fq"]
 offsets = PackedFloat32Array(0.438819, 0.810127)
@@ -752,9 +756,33 @@ theme_override_icons/tick = ExtResource("38_qqkip")
 theme_override_styles/slider = SubResource("StyleBoxTexture_6oejd")
 theme_override_styles/grabber_area = SubResource("StyleBoxEmpty_lah0a")
 theme_override_styles/grabber_area_highlight = SubResource("StyleBoxEmpty_tltkk")
-max_value = 1.0
+min_value = -30.0
+max_value = 0.0
 step = 0.01
-value = 0.8
+value = -15.0
+tick_count = 11
+ticks_on_borders = true
+
+[node name="Title4" type="Label" parent="CanvasLayer/Menu/Options/HTP/VBoxContainer/MarginContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("20_xetcj")
+theme_override_font_sizes/font_size = 72
+text = "SFX"
+horizontal_alignment = 1
+
+[node name="SFX_slider" type="HSlider" parent="CanvasLayer/Menu/Options/HTP/VBoxContainer/MarginContainer/PanelContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+theme_override_icons/grabber = ExtResource("37_e1h0a")
+theme_override_icons/grabber_highlight = ExtResource("37_e1h0a")
+theme_override_icons/tick = ExtResource("38_qqkip")
+theme_override_styles/slider = SubResource("StyleBoxTexture_6oejd")
+theme_override_styles/grabber_area = SubResource("StyleBoxEmpty_lah0a")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxEmpty_tltkk")
+min_value = -30.0
+max_value = 0.0
+step = 0.01
+value = -15.0
 tick_count = 11
 ticks_on_borders = true
 
@@ -1676,10 +1704,33 @@ theme_override_font_sizes/font_size = 164
 theme_override_styles/normal = SubResource("StyleBoxFlat_eu65f")
 text = "Game is paused..."
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+[node name="SFX and music" type="Node" parent="."]
+
+[node name="Music" type="AudioStreamPlayer" parent="SFX and music"]
 stream = ExtResource("65_axqnv")
 volume_db = -30.0
 autoplay = true
+bus = &"Music"
+
+[node name="Wave start" type="AudioStreamPlayer" parent="SFX and music"]
+stream = ExtResource("73_2twgf")
+volume_db = -30.0
+bus = &"SFX"
+
+[node name="Hit" type="AudioStreamPlayer" parent="SFX and music"]
+stream = ExtResource("74_lgq2q")
+volume_db = -10.0
+bus = &"SFX"
+
+[node name="Fanfare" type="AudioStreamPlayer" parent="SFX and music"]
+stream = ExtResource("75_u4e7l")
+volume_db = -20.0
+bus = &"SFX"
+
+[node name="Sad trombone" type="AudioStreamPlayer" parent="SFX and music"]
+stream = ExtResource("76_ikto0")
+volume_db = -10.0
+bus = &"SFX"
 
 [connection signal="wave_ended" from="Enemy Spawner" to="." method="_on_enemy_spawner_wave_ended"]
 [connection signal="timeout" from="Enemy Spawner/Timer" to="Enemy Spawner" method="_on_timer_timeout"]
@@ -1691,6 +1742,7 @@ autoplay = true
 [connection signal="pressed" from="CanvasLayer/Menu/Menu Buttons/MarginContainer/VBoxContainer/Quit" to="." method="_on_quit_pressed"]
 [connection signal="pressed" from="CanvasLayer/Menu/How to Play/Close" to="CanvasLayer/UI" method="_on_close_pressed"]
 [connection signal="value_changed" from="CanvasLayer/Menu/Options/HTP/VBoxContainer/MarginContainer/PanelContainer/VBoxContainer/HSlider" to="CanvasLayer/UI" method="_on_h_slider_value_changed"]
+[connection signal="value_changed" from="CanvasLayer/Menu/Options/HTP/VBoxContainer/MarginContainer/PanelContainer/VBoxContainer/SFX_slider" to="CanvasLayer/UI" method="_on_sfx_slider_value_changed"]
 [connection signal="pressed" from="CanvasLayer/Menu/Options/Close" to="CanvasLayer/UI" method="_on_close_pressed"]
 [connection signal="pressed" from="CanvasLayer/Menu/Leaderboard/Close" to="CanvasLayer/UI" method="_on_close_pressed"]
 [connection signal="mouse_entered" from="CanvasLayer/UI/EnemyPanelContainer/MarginContainer/GridContainer/Basic enemy" to="CanvasLayer/UI" method="_open_normal_enemy_info_panels"]

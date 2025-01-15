@@ -22,8 +22,11 @@ var wheat_to_upgrade = [0,25,75,0]
 
 var mesh_lvl2 = load("res://Resources/Towers/normalTower/normal_tower_lvl2.obj")
 var mesh_lvl3 = load("res://Resources/Towers/normalTower/normal_tower_lvl3.obj")
+var is_targeted = false
 
 signal tower_info(object)
+
+@onready var grid_map = self.get_parent().get_parent().grid_map
 
 func _ready() -> void:
 	current_health = health[level-1]
@@ -120,4 +123,8 @@ func upgrade() ->void:
 func take_damage(dmg: int) -> void:
 	current_health-=dmg
 	if current_health<=0 and (current_health+dmg) > 0:
+		var col_point = self.position
+		var grid_pos = grid_map.local_to_map(col_point)
+		var tile_pos = Vector3(grid_pos.x+grid_map.map_size, grid_pos.y, grid_pos.z+grid_map.map_size)
+		grid_map.tile_state[tile_pos.z][tile_pos.x] = 2
 		queue_free()

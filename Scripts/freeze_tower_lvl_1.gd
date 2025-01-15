@@ -10,6 +10,7 @@ var current_health
 var title = "Freeze Tower"
 var enemies = []
 var can_shoot = true
+var is_targeted = false
 
 var return_wood
 var return_stone
@@ -25,6 +26,8 @@ var mage_lvl2 = load("res://Resources/Icons/green_heart.png")
 var mage_lvl3 = load("res://Resources/Icons/Heart.png")
 
 signal tower_info(object)
+
+@onready var grid_map = self.get_parent().get_parent().grid_map
 
 func _ready() -> void:
 	current_health = health[level-1]
@@ -117,6 +120,11 @@ func upgrade() ->void:
 	current_health = health[level-1]
 	
 func take_damage(dmg: int) -> void:
+	print("im here")
 	current_health-=dmg
 	if current_health<=0 and (current_health+dmg) > 0:
+		var col_point = self.position
+		var grid_pos = grid_map.local_to_map(col_point)
+		var tile_pos = Vector3(grid_pos.x+grid_map.map_size, grid_pos.y, grid_pos.z+grid_map.map_size)
+		grid_map.tile_state[tile_pos.z][tile_pos.x] = 2
 		queue_free()
