@@ -30,6 +30,7 @@ extends Node3D
 @onready var fanfare: AudioStreamPlayer = $"SFX and music/Fanfare"
 @onready var music: AudioStreamPlayer = $"SFX and music/Music"
 @onready var sad_trombone: AudioStreamPlayer = $"SFX and music/Sad trombone"
+@onready var quack_sound: AudioStreamPlayer = $"SFX and music/Quack_sound"
 
 
 var NormalTowerScene = preload("res://Scenes/normal_tower_lvl_1.tscn")
@@ -868,7 +869,8 @@ func _on_switch_label_timer_timeout() -> void:
 	
 #Function that happens when enemies deal damage to our gate and checks for game_over possibility
 func take_damage(dmg) -> void:
-	hit.play()
+	if game:
+		hit.play()
 	current_health = current_health-dmg
 	if game:
 		stats.lost_health += dmg
@@ -1010,3 +1012,5 @@ func load_data_to_database() -> void:
 	print(stat[0])
 	database.update_rows("Stats","id=1",stat[0])
 	
+func quack():
+	quack_sound.play()

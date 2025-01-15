@@ -1,4 +1,4 @@
-[gd_scene load_steps=119 format=3 uid="uid://chdc08c7ct8xv"]
+[gd_scene load_steps=121 format=3 uid="uid://chdc08c7ct8xv"]
 
 [ext_resource type="Script" path="res://Scripts/game_script.gd" id="1_wclms"]
 [ext_resource type="MeshLibrary" uid="uid://746jf5hii373" path="res://mesh_lib.tres" id="2_5f8px"]
@@ -77,6 +77,7 @@
 [ext_resource type="AudioStream" uid="uid://kv4c7v2av5a3" path="res://Resources/Music and sound/mixkit-impact-of-a-blow-2150.mp3" id="74_lgq2q"]
 [ext_resource type="AudioStream" uid="uid://bavpef4x6a5yv" path="res://Resources/Music and sound/tada-fanfare-a-6313.mp3" id="75_u4e7l"]
 [ext_resource type="AudioStream" uid="uid://js3wg2npo7je" path="res://Resources/Music and sound/sadtrombone.swf.mp3" id="76_ikto0"]
+[ext_resource type="AudioStream" uid="uid://jxxdmqjlrdmi" path="res://Resources/Music and sound/quack_5.mp3" id="78_mds3g"]
 
 [sub_resource type="Gradient" id="Gradient_lq3fq"]
 offsets = PackedFloat32Array(0.438819, 0.810127)
@@ -2069,6 +2070,11 @@ bus = &"SFX"
 
 [node name="Sad trombone" type="AudioStreamPlayer" parent="SFX and music"]
 stream = ExtResource("76_ikto0")
+volume_db = -10.0
+bus = &"SFX"
+
+[node name="Quack_sound" type="AudioStreamPlayer" parent="SFX and music"]
+stream = ExtResource("78_mds3g")
 volume_db = -10.0
 bus = &"SFX"
 
