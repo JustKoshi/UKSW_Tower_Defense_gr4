@@ -34,6 +34,7 @@ var Mine = preload("res://Scenes/mine.tscn")
 var Windmill = preload("res://Scenes/windmill.tscn")
 var Tavern = preload("res://Scenes/tavern.tscn")
 var Ship = preload("res://Scenes/ship.tscn")
+var duck = preload("res://Scenes/duck.tscn")
 
 var tower_build = false
 var tetris_build_mode = false
@@ -72,6 +73,7 @@ var short_path = [] #array that holds shortest path converted to local
 
 var tower_hover_holder:MeshInstance3D = null#Object that holds tower instance that is now currently selected and might be placed
 var resource_hover_holder:MeshInstance3D = null
+var duck_holder = null
 
 #setting up the database and stats:
 var database: SQLite
@@ -196,6 +198,9 @@ func _ready() -> void:
 	convert_path_to_local()
 	enemy_spawner.set_path(short_path)
 	UI.update_enemy_count_labels(enemy_spawner.basic_enemies_per_wave, enemy_spawner.fast_enemies_per_wave, enemy_spawner.boss_enemies_per_wave, enemy_spawner.pyro_enemies_per_wave)
+	duck_holder = duck.instantiate()
+	add_child(duck_holder)
+	duck_holder.position = Vector3(0,0,30)
 	
 	#testing chagnes: 
 	#enemy_spawner.current_wave = 5

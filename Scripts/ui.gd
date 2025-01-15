@@ -599,6 +599,7 @@ func _on_leaderboard_pressed() -> void:
 			10:
 				if easter_egg:
 					row.get_child(4).text = "DONE!"
+					row.get_child(2).text = "Kill the duck :("
 					done_achivements += 1
 					row.get_child(0).texture = unlocked_achievement
 				else:
