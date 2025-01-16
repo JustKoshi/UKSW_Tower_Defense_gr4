@@ -1,9 +1,10 @@
-[gd_scene load_steps=12 format=3 uid="uid://dwxruv2v5bxyy"]
+[gd_scene load_steps=14 format=3 uid="uid://dwxruv2v5bxyy"]
 
 [ext_resource type="ArrayMesh" uid="uid://dxek417vtuigu" path="res://Resources/Resource_buildings/uploads_files_2755137_FarmLowpoly.obj" id="1_yne08"]
 [ext_resource type="Texture2D" uid="uid://b1ms4h5mcmjd0" path="res://Resources/Towers/hexagons_medieval.png" id="2_n43q7"]
 [ext_resource type="Script" path="res://Scripts/windmill.gd" id="3_668tx"]
 [ext_resource type="ArrayMesh" uid="uid://qf8dpkg4ccjt" path="res://Resources/Resource_buildings/exclamation_mark.obj" id="4_4xj14"]
+[ext_resource type="Texture2D" uid="uid://c6r2iw5i1o3x2" path="res://Resources/UI/Resource panels/wheat.png" id="5_p75iv"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_q6ahe"]
 albedo_color = Color(0.898039, 0.905882, 0.380392, 1)
@@ -25,6 +26,9 @@ albedo_texture = ExtResource("2_n43q7")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_onp8n"]
 size = Vector3(1.99792, 2.37891, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_udxii"]
+size = Vector3(3.74036, 1, 0.608398)
 
 [node name="Windmill" type="MeshInstance3D"]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 0, 0, 0)
@@ -81,4 +85,22 @@ wait_time = 3.0
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 2.91175, 0)
 mesh = ExtResource("4_4xj14")
 
+[node name="Sprite3D" type="Sprite3D" parent="."]
+transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0, 3, 0)
+visible = false
+texture = ExtResource("5_p75iv")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Sprite3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Sprite3D/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.171326, 0, -0.0141602)
+shape = SubResource("BoxShape3D_udxii")
+
+[node name="sprite_countdown" type="Timer" parent="Sprite3D"]
+wait_time = 2.0
+one_shot = true
+
+[connection signal="input_event" from="StaticBody3D" to="." method="_on_static_body_3d_input_event"]
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="input_event" from="Sprite3D/StaticBody3D" to="." method="_input_event"]
+[connection signal="timeout" from="Sprite3D/sprite_countdown" to="." method="_on_sprite_countdown_timeout"]

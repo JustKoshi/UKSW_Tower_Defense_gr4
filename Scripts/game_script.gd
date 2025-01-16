@@ -10,7 +10,7 @@ extends Node3D
 @onready var build_timer = $"Build Timer"
 @onready var build_time_label = $"CanvasLayer/UI/Build time Label"
 @onready var switch_label_timer = $"Switch Label Timer"
-
+@onready var sprite_timer = $"Sprite Timer"
 #variable to contain raycast to detect clicks in build mode
 @onready var raycast = $"Top Camera/RayCast3D"
 
@@ -69,8 +69,13 @@ var resource_shape
 
 #Vars for ship fadeout func
 var value = 1.0  # Startowa wartość
-var duration = 4.0  # Czas w sekundach
+var duration = 2.0  # Czas w sekundach
 var time_passed = 0.0  # Licznik czasu
+
+
+#sprite timer variables
+const MIN_TIME = 5
+const MAX_TIME = 25
 
 
 var current_cam_index = 0
@@ -214,6 +219,8 @@ func _ready() -> void:
 	game_resources.wood = 999
 	game_resources.stone = 999
 	game_resources.wheat = 999
+	
+	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -298,7 +305,8 @@ func _process(delta: float) -> void:
 		if value > 0:
 			time_passed += delta
 			value = clamp(1.0 - time_passed / duration, 0.0, 1.0)
-		ship_fadeout()
+			ship_fadeout()
+	
 	
 	if not game:
 		get_node("Main Camera").angle += 0.1 * delta
@@ -581,7 +589,7 @@ func color_transparent_mesh_instance(object, color):#1 - transparent, 2 - red/tr
 func update_resource_timers():
 	for i in range(get_node("Resource Holder").get_child_count()):
 		var child = get_node("Resource Holder").get_child(i)
-		if child.generator_on == true:
+		if child.generator_on and !child.disabled:
 			update_resource_stats(child)
 			child.get_node("Timer").start()
 			child.generator_on = false
@@ -622,10 +630,12 @@ func place_resource_on_click(resource_type:int):
 			get_node("Resource Holder").add_child(building)
 			color_transparent_mesh_instance(building,3)
 			check_resource_generation_req()
+			
 			#print("Added lumbermill in position: ",grid_pos)
 			game_resources.used_workers += 1
 			resource_hover_holder=null
 			hovering_resource = 0
+			building.connect("resource_info", UI._on_resource_info)
 
 func check_resource_generation_req():
 	var shifts = [Vector3(-4,0,0),Vector3(4,0,0),Vector3(0,0,-4),Vector3(0,0,4)]
@@ -654,20 +664,30 @@ func check_resource_generation_req():
 				if resource is Tavern:
 					if resource2 is Windmill and resource2.transform.origin == resource.transform.origin+tavern_shift:
 						resource.generation_depleted = false
-
 				if resource is Windmill:
 					if resource2 is Mine or resource2 is Lumbermill:
-						print("farma:", resource.transform.origin, " drugie: ", resource2.transform.origin )
+						#print("farma:", resource.transform.origin, " drugie: ", resource2.transform.origin )
 						if resource2.transform.origin+windmill_shift == resource.transform.origin:
 							resource.generation_depleted = false
 					elif resource2 is Windmill:
 						if resource2.transform.origin+tavern_shift == resource.transform.origin:
+							resource.generation_depleted = false
+					elif resource2 is Tavern:
+						if resource.transform.origin == resource2.transform.origin+tavern_shift:
 							resource.generation_depleted = false
 		if resource.generation_depleted:
 			resource.get_node("exclamation_mark").visible = true
 		else:
 			resource.get_node("exclamation_mark").visible = false
 
+func resource_sprite_popup()->void:
+	var child_count = get_node("Resource Holder").get_child_count()
+	if child_count > 0:
+		var res = get_node("Resource Holder").get_child(randi()%child_count)
+		if res.disabled:#If the random chosenn building is alreaddy disabled then the minigame wont triggger that round
+			return
+		res.sprite_phase = true
+		res.get_node("Sprite3D").get_node("sprite_countdown").start()
 
 func hover_resource(resource_type:int):
 	var collision_point = get_collision_point()
@@ -808,6 +828,7 @@ func prepare_wave() -> void:
 		UI.bottom_panel.visible = false
 		UI.unpress_all_buttons()
 		UI._on_X_button()
+		UI._on_X_button_r()
 		for h in hover:
 			h.visible = false
 	UI.switch_skip_button_visiblity()
@@ -826,6 +847,7 @@ func reset_build_timer():
 	UI.show_first_panel()
 	UI.bottom_panel.visible = true
 	build_timer.start()
+	sprite_timer.start()
 
 #when end wave signal is recived resets build timer
 func _on_enemy_spawner_wave_ended() -> void:
@@ -901,18 +923,24 @@ func _on_skip_button_pressed() -> void:
 	var adding_beer = int(remaining_time/5)
 	for i in range(get_node("Resource Holder").get_child_count()):
 		var child = get_node("Resource Holder").get_child(i)
-		update_resource_stats(child)
-		if not child.resource_type == "beer":
-			if child.generation_depleted:
-				game_resources[child.resource_type] += 1*adding_resources#polowa wartosci
+		if !child.disabled:
+			update_resource_stats(child)
+			if not child.resource_type == "beer":
+				if child.generation_depleted:
+					game_resources[child.resource_type] += 1*adding_resources#polowa wartosci
+				else:
+					game_resources[child.resource_type] += 2*adding_resources
 			else:
-				game_resources[child.resource_type] += 2*adding_resources
-		else:
-			if child.generation_depleted:
-				game_resources[child.resource_type] += 1*adding_beer#polowa wartosci
-			else:
-				game_resources[child.resource_type] += 2*adding_beer
+				if child.generation_depleted:
+					game_resources[child.resource_type] += 1*adding_beer#polowa wartosci
+				else:
+					game_resources[child.resource_type] += 2*adding_beer
 	build_timer.stop()
+	
+	#after skip the sprite minigame triggers automatically
+	sprite_timer.stop()
+	resource_sprite_popup()
+	
 	prepare_wave()
 	
 	get_node("Ship/Path3D2/PathFollow3D").progress = 565.87
@@ -951,9 +979,17 @@ func rand_builiding_to_destroy():
 
 func destoy_resource_building():
 	if resource_holder.get_child_count()>0:
-		resource_holder.get_child(rand_builiding_to_destroy()).queue_free()
+		var resource = resource_holder.get_child(rand_builiding_to_destroy())
 		game_resources.used_workers-=1
 		game_resources.workers-=1
+		var col_point = resource.position
+		#print(col_point)
+		var grid_pos = grid_map.local_to_map(col_point)
+		var tile_pos = Vector3(grid_pos.x+10, grid_pos.y, grid_pos.z+5)
+		for i in resource.shape:
+			grid_map.castle_state[tile_pos.z-i.z][tile_pos.x-i.x] = 0
+		resource.free()
+		check_resource_generation_req()
 
 func update_enemy_killed_stats(enemy_type:String) ->void:
 	match enemy_type:
@@ -968,7 +1004,6 @@ func update_enemy_killed_stats(enemy_type:String) ->void:
 
 func update_resource_stats(resource) ->void:
 	if resource.generation_depleted:
-		game_resources[resource.resource_type] += 1#polowa wartosci
 		match resource.resource_type:
 			"wood":
 				stats.generated_wood += 1
@@ -979,7 +1014,6 @@ func update_resource_stats(resource) ->void:
 			"beer":
 				stats.generated_beer += 1
 	else:
-		game_resources[resource.resource_type] += 2
 		match resource.resource_type:
 			"wood":
 				stats.generated_wood += 2
@@ -1014,3 +1048,9 @@ func load_data_to_database() -> void:
 	
 func quack():
 	quack_sound.play()
+
+
+func _on_sprite_timer_timeout()->void:
+	resource_sprite_popup()
+	var random_interval = randf_range(MIN_TIME, MAX_TIME)
+	sprite_timer.wait_time = random_interval

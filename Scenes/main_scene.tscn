@@ -308,6 +308,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30.5644, -6.63058, -17.9975)
 wait_time = 30.0
 one_shot = true
 
+[node name="Sprite Timer" type="Timer" parent="."]
+wait_time = 5.0
+one_shot = true
+
 [node name="Switch Label Timer" type="Timer" parent="."]
 wait_time = 2.0
 one_shot = true
@@ -2081,6 +2085,7 @@ bus = &"SFX"
 [connection signal="wave_ended" from="Enemy Spawner" to="." method="_on_enemy_spawner_wave_ended"]
 [connection signal="timeout" from="Enemy Spawner/Timer" to="Enemy Spawner" method="_on_timer_timeout"]
 [connection signal="timeout" from="Build Timer" to="." method="prepare_wave"]
+[connection signal="timeout" from="Sprite Timer" to="." method="_on_sprite_timer_timeout"]
 [connection signal="timeout" from="Switch Label Timer" to="." method="_on_switch_label_timer_timeout"]
 [connection signal="pressed" from="CanvasLayer/Menu/Menu Buttons/MarginContainer/VBoxContainer/Play" to="." method="_on_play_pressed"]
 [connection signal="pressed" from="CanvasLayer/Menu/Menu Buttons/MarginContainer/VBoxContainer/Options" to="CanvasLayer/UI" method="_on_options_pressed"]

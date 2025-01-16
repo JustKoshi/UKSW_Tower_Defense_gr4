@@ -1,15 +1,19 @@
-[gd_scene load_steps=7 format=3 uid="uid://dcy4ms3a60lxw"]
+[gd_scene load_steps=9 format=3 uid="uid://dcy4ms3a60lxw"]
 
 [ext_resource type="ArrayMesh" uid="uid://yyxxxln1hx6l" path="res://Resources/Resource_buildings/building_mine_blue.obj" id="1_71aqv"]
 [ext_resource type="Texture2D" uid="uid://b1ms4h5mcmjd0" path="res://Resources/Towers/hexagons_medieval.png" id="2_2qvdo"]
 [ext_resource type="Script" path="res://Scripts/mine.gd" id="3_uqrls"]
 [ext_resource type="ArrayMesh" uid="uid://qf8dpkg4ccjt" path="res://Resources/Resource_buildings/exclamation_mark.obj" id="4_fmk7p"]
+[ext_resource type="Texture2D" uid="uid://b2qb3k1s80sgh" path="res://Resources/UI/Resource panels/stone.png" id="5_aubuv"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fru3p"]
 render_priority = 1
 albedo_texture = ExtResource("2_2qvdo")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_xm7q8"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_0wmdd"]
+size = Vector3(3.74036, 1, 0.608398)
 
 [node name="Mine" type="MeshInstance3D"]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
@@ -30,4 +34,22 @@ transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 1.33082, 0)
 visible = false
 mesh = ExtResource("4_fmk7p")
 
+[node name="Sprite3D" type="Sprite3D" parent="."]
+transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0, 3, 0)
+visible = false
+texture = ExtResource("5_aubuv")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Sprite3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Sprite3D/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.171326, 0, -0.0141602)
+shape = SubResource("BoxShape3D_0wmdd")
+
+[node name="sprite_countdown" type="Timer" parent="Sprite3D"]
+wait_time = 2.0
+one_shot = true
+
+[connection signal="input_event" from="StaticBody3D" to="." method="_on_static_body_3d_input_event"]
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="input_event" from="Sprite3D/StaticBody3D" to="." method="_input_event"]
+[connection signal="timeout" from="Sprite3D/sprite_countdown" to="." method="_on_sprite_countdown_timeout"]

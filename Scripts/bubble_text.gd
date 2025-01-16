@@ -11,7 +11,7 @@ signal repair_pressed(object)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	if not self.name == "Tetris building panel" and not self.name == "Workers buying panel":
+	if not self.name == "Tetris building panel" and not self.name == "Workers buying panel" and not self.name == "Resource Panel":
 		get_child(1).get_child(1).get_child(0).get_child(0).visible = false
 		object = null
 	
