@@ -74,8 +74,8 @@ var time_passed = 0.0  # Licznik czasu
 
 
 #sprite timer variables
-const MIN_TIME = 5
-const MAX_TIME = 25
+const MIN_TIME = 1
+const MAX_TIME = 15
 
 
 var current_cam_index = 0
@@ -847,7 +847,7 @@ func reset_build_timer():
 	UI.show_first_panel()
 	UI.bottom_panel.visible = true
 	build_timer.start()
-	sprite_timer.start()
+	sprite_timer.stop()
 
 #when end wave signal is recived resets build timer
 func _on_enemy_spawner_wave_ended() -> void:
@@ -884,6 +884,7 @@ func _on_enemy_spawner_wave_ended() -> void:
 	if game:
 		reset_build_timer()
 		UI.switch_skip_button_visiblity()
+		sprite_timer.start()
 
 #changes label 2 s after wave started
 func _on_switch_label_timer_timeout() -> void:
@@ -938,8 +939,8 @@ func _on_skip_button_pressed() -> void:
 	build_timer.stop()
 	
 	#after skip the sprite minigame triggers automatically
-	sprite_timer.stop()
-	resource_sprite_popup()
+	#sprite_timer.stop()
+	#resource_sprite_popup()
 	
 	prepare_wave()
 	

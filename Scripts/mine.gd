@@ -44,6 +44,7 @@ func _on_static_body_3d_input_event(_camera: Node, event: InputEvent, _event_pos
 			#print("Normal Tower clicked!")
 			emit_signal("resource_info",self)
 
+#collision with sprite
 func _input_event(camera: Node, event: InputEvent, event_position: Vector3, normal: Vector3, shape_idx: int) -> void:
 	if event is InputEventMouseButton and event.pressed:
 		if event.button_index == MOUSE_BUTTON_LEFT:
@@ -51,11 +52,15 @@ func _input_event(camera: Node, event: InputEvent, event_position: Vector3, norm
 			sprite_phase = false
 			sprite.visible = false
 			game_script.stats.minigames_won += 1
+			if game_script.enemy_spawner.current_wave<=10:
+				game_script.game_resources[resource_type]+=10
 
 func _on_sprite_countdown_timeout() -> void:
 	if sprite_phase:
-		disabled = true
+		if game_script.enemy_spawner.current_wave>=5:
+			disabled = true
 		sprite_phase = false
 		sprite.visible = false
 	round = game_script.enemy_spawner.current_wave
 	round+=2
+	
