@@ -18,6 +18,7 @@ var defence_group = ButtonGroup.new()
 # Called when the node enters the scene tree for the first time.
 
 @onready var game_script = get_parent().get_parent()
+@onready var grid_map = game_script.get_child(2)
 
 @onready var wood_count_label: Label = $"EQ container/MarginContainer/GridContainer/Wood count label"
 @onready var wheat_count_label: Label = $"EQ container/MarginContainer/GridContainer/Wheat count label"
@@ -484,6 +485,13 @@ func upgrade_tower(tower) ->void:
 	game_script.game_resources.stone -= tower.stone_to_upgrade[tower.level]
 	game_script.game_resources.wheat -= tower.wheat_to_upgrade[tower.level]
 	tower.upgrade()
+	var tile_pos = tower.position
+	tile_pos+=9
+	tile_pos/=2
+	#every upgrade adds 1 to the index so normal towers can be 3,4,5 freeze can be 6,7,8 and aoe can be 9,10,11
+	grid_map.tile_state[tile_pos.x][tile_pos.z]+=1
+	#print(grid_map.tile_state)
+	#grid_map.tile_state[][]+=1
 
 func switch_skip_button_visiblity() -> void:
 	if skip_button.visible == true:

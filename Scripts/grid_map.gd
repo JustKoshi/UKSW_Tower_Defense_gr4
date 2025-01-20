@@ -226,7 +226,10 @@ func dfs_search(current_pos: Vector3,target_pos: Vector3, visited) -> bool:
 			return true
 				
 	return false
-	
+
+#saveload gridmap tetris color state
+#func place_tetris_block_sl()
+
 #places whole tetris block checking all nessessary conditions	
 func place_tetris_block(position_tetris: Vector3, shape):
 	if can_place_tetris_block(position_tetris, shape):
@@ -350,11 +353,11 @@ func can_place_tower(col_point: Vector3)->bool:
 		return false
 
 #fucntion that updates tilemap after placing tower
-func place_tower_in_tilemap(col_point: Vector3)->void:
+func place_tower_in_tilemap(col_point: Vector3,tower_type: int)->void:
 	var grid_pos = self.local_to_map(col_point)
 	var tile_pos = Vector3(grid_pos.x+map_size, grid_pos.y, grid_pos.z+map_size)
 	if tile_state[tile_pos.z][tile_pos.x]==2:
-		tile_state[tile_pos.z][tile_pos.x]=3
+		tile_state[tile_pos.z][tile_pos.x]=tower_type
 
 func is_within_castle(vector_pos: Vector3)->bool:
 	return vector_pos.x>=-10 and vector_pos.x<=-7 and vector_pos.z>=-5 and vector_pos.z<=4

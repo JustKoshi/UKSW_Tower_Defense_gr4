@@ -415,7 +415,8 @@ func place_tower_on_click(tower_type:int):
 			tower.set_surface_override_material(1,mat_dup)
 		tower.get_node("MobDetector").visible=false
 		tower.connect("tower_info",UI._on_normal_tower_lvl_1_tower_info)
-		grid_map.place_tower_in_tilemap(collision_point)
+		tower_type*=3#This change is for the save/load
+		grid_map.place_tower_in_tilemap(collision_point, tower_type)
 		#print("Added tower in position: ",grid_pos)
 		game_resources.wood -= needed_wood
 		game_resources.stone -= needed_stone
@@ -1055,3 +1056,8 @@ func _on_sprite_timer_timeout()->void:
 	resource_sprite_popup()
 	var random_interval = randf_range(MIN_TIME, MAX_TIME)
 	sprite_timer.wait_time = random_interval
+	
+
+#func save_gamestate()->void:
+#	var game_state
+#	var file = FileAccess.open(, FileAccess.WRITE)
