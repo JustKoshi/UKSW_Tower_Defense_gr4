@@ -2,4 +2,4 @@
 .godot/
 *.tmp
 data.db
-save_file.json
+*.json
