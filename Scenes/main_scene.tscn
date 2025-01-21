@@ -1,4 +1,4 @@
-[gd_scene load_steps=121 format=3 uid="uid://chdc08c7ct8xv"]
+[gd_scene load_steps=135 format=3 uid="uid://chdc08c7ct8xv"]
 
 [ext_resource type="Script" path="res://Scripts/game_script.gd" id="1_wclms"]
 [ext_resource type="MeshLibrary" uid="uid://746jf5hii373" path="res://mesh_lib.tres" id="2_5f8px"]
@@ -20,8 +20,12 @@
 [ext_resource type="Texture2D" uid="uid://cgo3w8pokxeen" path="res://Resources/Icons/stone.png" id="10_kc5up"]
 [ext_resource type="Texture2D" uid="uid://irc84uh4ceqx" path="res://Resources/Icons/beer.png" id="10_xkq1o"]
 [ext_resource type="Texture2D" uid="uid://mli0shaoevoo" path="res://Resources/UI/options/342 px/options03.png" id="11_383yi"]
+[ext_resource type="Texture2D" uid="uid://cd26kynwd7uht" path="res://Resources/UI/load/load02.png" id="11_c845m"]
+[ext_resource type="Texture2D" uid="uid://bc738yi8lydjb" path="res://Resources/UI/load/load4.png" id="11_la5jy"]
+[ext_resource type="Texture2D" uid="uid://14fq6u2417td" path="res://Resources/UI/load/load03.png" id="12_45nt6"]
 [ext_resource type="Texture2D" uid="uid://e6o22e318htk" path="res://Resources/Icons/worker.png" id="12_ods8h"]
 [ext_resource type="Texture2D" uid="uid://cmfi6du3x0a6" path="res://Resources/UI/options/342 px/options01.png" id="12_yl8hm"]
+[ext_resource type="Texture2D" uid="uid://dyte47yv67brs" path="res://Resources/UI/load/load01.png" id="13_c4ail"]
 [ext_resource type="Texture2D" uid="uid://bygfrtxr7mhk8" path="res://Resources/UI/about/342 px/about02.png" id="13_i88m8"]
 [ext_resource type="Texture2D" uid="uid://d3oepobtsg5yx" path="res://Resources/UI/about/342 px/about03.png" id="14_8xkrs"]
 [ext_resource type="Texture2D" uid="uid://bn8dy1n7d2eb5" path="res://Resources/Icons/basic head.png" id="14_tqguo"]
@@ -76,7 +80,10 @@
 [ext_resource type="AudioStream" uid="uid://barv1fcw2wiqb" path="res://Resources/Music and sound/ornn-ult-made-with-Voicemod.mp3" id="73_2twgf"]
 [ext_resource type="AudioStream" uid="uid://kv4c7v2av5a3" path="res://Resources/Music and sound/mixkit-impact-of-a-blow-2150.mp3" id="74_lgq2q"]
 [ext_resource type="AudioStream" uid="uid://bavpef4x6a5yv" path="res://Resources/Music and sound/tada-fanfare-a-6313.mp3" id="75_u4e7l"]
+[ext_resource type="Texture2D" uid="uid://bixfrmhgabm7x" path="res://Resources/UI/back/342 px/342 px/back02.png" id="76_3kcoo"]
 [ext_resource type="AudioStream" uid="uid://js3wg2npo7je" path="res://Resources/Music and sound/sadtrombone.swf.mp3" id="76_ikto0"]
+[ext_resource type="Texture2D" uid="uid://cj7s235wddlqn" path="res://Resources/UI/back/342 px/342 px/back03.png" id="77_38i6l"]
+[ext_resource type="Texture2D" uid="uid://bhsklyyssbh1l" path="res://Resources/UI/back/342 px/342 px/back01.png" id="78_kpact"]
 [ext_resource type="AudioStream" uid="uid://jxxdmqjlrdmi" path="res://Resources/Music and sound/quack_5.mp3" id="78_mds3g"]
 
 [sub_resource type="Gradient" id="Gradient_lq3fq"]
@@ -121,6 +128,18 @@ texture = ExtResource("8_1dbgv")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_68eu4"]
 texture = ExtResource("9_f16ur")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_muf61"]
+texture = ExtResource("11_la5jy")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ai8ol"]
+texture = ExtResource("11_c845m")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_66new"]
+texture = ExtResource("12_45nt6")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_12ei5"]
+texture = ExtResource("13_c4ail")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_4bge7"]
 texture = ExtResource("10_06632")
@@ -245,6 +264,15 @@ texture_margin_top = 10.0
 texture_margin_right = 15.0
 texture_margin_bottom = 30.0
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_o2eta"]
+texture = ExtResource("76_3kcoo")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ly85x"]
+texture = ExtResource("77_38i6l")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_y7in3"]
+texture = ExtResource("78_kpact")
+
 [node name="Main_Scene" type="Node3D"]
 script = ExtResource("1_wclms")
 
@@ -340,11 +368,12 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -244.0
-offset_top = -168.0
+offset_top = -307.0
 offset_right = 243.0
-offset_bottom = 432.0
+offset_bottom = 571.0
 grow_horizontal = 2
 grow_vertical = 2
+scale = Vector2(0.95, 0.95)
 theme = ExtResource("6_nh21e")
 
 [node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Menu/Menu Buttons"]
@@ -361,6 +390,15 @@ focus_mode = 0
 theme_override_styles/hover = SubResource("StyleBoxTexture_peqyp")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_obu66")
 theme_override_styles/normal = SubResource("StyleBoxTexture_68eu4")
+
+[node name="Contine" type="Button" parent="CanvasLayer/Menu/Menu Buttons/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 135)
+layout_mode = 2
+focus_mode = 0
+theme_override_styles/disabled = SubResource("StyleBoxTexture_muf61")
+theme_override_styles/hover = SubResource("StyleBoxTexture_ai8ol")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_66new")
+theme_override_styles/normal = SubResource("StyleBoxTexture_12ei5")
 
 [node name="Options" type="Button" parent="CanvasLayer/Menu/Menu Buttons/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 135)
@@ -402,9 +440,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -271.0
-offset_top = -442.0
+offset_top = -524.0
 offset_right = 263.0
-offset_bottom = -244.0
+offset_bottom = -326.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_fonts/font = ExtResource("16_6tlrc")
@@ -2000,6 +2038,42 @@ offset_bottom = 539.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="Title" type="Label" parent="CanvasLayer/Pause Menu"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -695.0
+offset_top = -339.0
+offset_right = 695.0
+offset_bottom = -114.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.5, 0.5)
+pivot_offset = Vector2(695, 0)
+theme_override_font_sizes/font_size = 164
+text = "Game is paused..."
+
+[node name="Label" type="Label" parent="CanvasLayer/Pause Menu"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -154.5
+offset_top = -225.855
+offset_right = 154.5
+offset_bottom = -156.855
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 50
+text = "Game saved!"
+horizontal_alignment = 1
+
 [node name="Menu Buttons" type="PanelContainer" parent="CanvasLayer/Pause Menu"]
 layout_mode = 1
 anchors_preset = 8
@@ -2026,9 +2100,9 @@ layout_mode = 2
 custom_minimum_size = Vector2(0, 135)
 layout_mode = 2
 focus_mode = 0
-theme_override_styles/hover = SubResource("StyleBoxTexture_peqyp")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_obu66")
-theme_override_styles/normal = SubResource("StyleBoxTexture_68eu4")
+theme_override_styles/hover = SubResource("StyleBoxTexture_o2eta")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_ly85x")
+theme_override_styles/normal = SubResource("StyleBoxTexture_y7in3")
 
 [node name="Quit" type="Button" parent="CanvasLayer/Pause Menu/Menu Buttons/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 135)
@@ -2037,17 +2111,6 @@ focus_mode = 0
 theme_override_styles/hover = SubResource("StyleBoxTexture_s3n3l")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_ysp8k")
 theme_override_styles/normal = SubResource("StyleBoxTexture_vjq7h")
-
-[node name="Title" type="Label" parent="CanvasLayer/Pause Menu"]
-layout_mode = 0
-offset_left = 642.0
-offset_top = 200.0
-offset_right = 2032.0
-offset_bottom = 425.0
-scale = Vector2(0.5, 0.5)
-theme_override_font_sizes/font_size = 164
-theme_override_styles/normal = SubResource("StyleBoxFlat_eu65f")
-text = "Game is paused..."
 
 [node name="SFX and music" type="Node" parent="."]
 
@@ -2088,6 +2151,7 @@ bus = &"SFX"
 [connection signal="timeout" from="Sprite Timer" to="." method="_on_sprite_timer_timeout"]
 [connection signal="timeout" from="Switch Label Timer" to="." method="_on_switch_label_timer_timeout"]
 [connection signal="pressed" from="CanvasLayer/Menu/Menu Buttons/MarginContainer/VBoxContainer/Play" to="." method="_on_play_pressed"]
+[connection signal="pressed" from="CanvasLayer/Menu/Menu Buttons/MarginContainer/VBoxContainer/Contine" to="." method="_on_continem_pressed"]
 [connection signal="pressed" from="CanvasLayer/Menu/Menu Buttons/MarginContainer/VBoxContainer/Options" to="CanvasLayer/UI" method="_on_options_pressed"]
 [connection signal="pressed" from="CanvasLayer/Menu/Menu Buttons/MarginContainer/VBoxContainer/About" to="CanvasLayer/UI" method="_on_about_pressed"]
 [connection signal="pressed" from="CanvasLayer/Menu/Menu Buttons/MarginContainer/VBoxContainer/Leaderboard" to="CanvasLayer/UI" method="_on_leaderboard_pressed"]

@@ -37,6 +37,7 @@ func _ready() -> void:
 	get_node("MobDetector").get_child(0).shape.radius = 2*tower_range[level-1]+1
 	get_node("MobDetector").get_child(1).mesh.top_radius = 2*tower_range[level-1]+1
 	get_node("MobDetector").get_child(1).mesh.bottom_radius = 2*tower_range[level-1]+1
+	print("nodwa wieza")
 	
 func _process(_delta: float) -> void:
 	#print(get_node("MobDetector").get_child(0).shape.radius)

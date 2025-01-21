@@ -77,6 +77,8 @@ var time_passed = 0.0  # Licznik czasu
 const MIN_TIME = 1
 const MAX_TIME = 15
 
+var save_path = "res://save_file.json"
+var tower_hp =[]
 
 var current_cam_index = 0
 var coordinates_check_mode = false
@@ -214,11 +216,20 @@ func _ready() -> void:
 	add_child(duck_holder)
 	duck_holder.position = Vector3(0,0,30)
 	
+	for i in range(10):
+		var row2 = []
+		for j in range(10):
+			row2.append(0)
+		tower_hp.append(row2)
+		
+	
+	if !FileAccess.file_exists(save_path):
+		$"CanvasLayer/Menu/Menu Buttons/MarginContainer/VBoxContainer/Contine".disabled = true
 	#testing chagnes: 
 	#enemy_spawner.current_wave = 5
-	game_resources.wood = 999
-	game_resources.stone = 999
-	game_resources.wheat = 999
+	#game_resources.wood = 999
+	#game_resources.stone = 999
+	#game_resources.wheat = 999
 	
 	
 
@@ -250,11 +261,14 @@ func _process(delta: float) -> void:
 			coordinates_check_mode = false
 			
 	elif Input.is_action_just_pressed("pause") and game:
+		pause_menu.get_node("Label").visible = false
 		get_tree().paused = true
 		UI.visible = false
 		pause_menu.visible = true
 		load_data_to_database()
-		
+		if is_build_phase:
+			save_gamestate()
+			pause_menu.get_node("Label").visible = true
 	
 	if walls_build:
 		set_build_cam()
@@ -424,6 +438,8 @@ func place_tower_on_click(tower_type:int):
 		tower_hover_holder = null
 		hovering_tower = 0
 		stats.placed_towers += 1
+		for i in range(get_node("Tower Holder").get_child_count()):
+			print(get_node("Tower Holder").get_child(i).position)
 	else:
 		tower.queue_free()
 
@@ -632,6 +648,8 @@ func place_resource_on_click(resource_type:int):
 			color_transparent_mesh_instance(building,3)
 			check_resource_generation_req()
 			
+			
+			print(building.position)
 			#print("Added lumbermill in position: ",grid_pos)
 			game_resources.used_workers += 1
 			resource_hover_holder=null
@@ -855,6 +873,7 @@ func _on_enemy_spawner_wave_ended() -> void:
 	#print("Przekazano sygnal")
 	if game:
 		fanfare.play()
+		build_timer.wait_time=30
 	if enemy_spawner.current_wave == 5:
 		$"CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Wheat building".disabled = false
 		$"CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Workers".disabled = false
@@ -880,7 +899,7 @@ func _on_enemy_spawner_wave_ended() -> void:
 	enemy_spawner.current_wave += 1
 	enemy_spawner.update_wave_enemy_count()
 	UI.update_enemy_count_labels(enemy_spawner.basic_enemies_per_wave, enemy_spawner.fast_enemies_per_wave, enemy_spawner.boss_enemies_per_wave, enemy_spawner.pyro_enemies_per_wave)
-	UI.enemies_scaling()
+	UI.enemies_scaling(enemy_spawner.current_wave)
 	stats.defeated_waves += 1
 	if game:
 		reset_build_timer()
@@ -1056,8 +1075,201 @@ func _on_sprite_timer_timeout()->void:
 	resource_sprite_popup()
 	var random_interval = randf_range(MIN_TIME, MAX_TIME)
 	sprite_timer.wait_time = random_interval
-	
 
-#func save_gamestate()->void:
-#	var game_state
-#	var file = FileAccess.open(, FileAccess.WRITE)
+func update_tower_hp()->void:
+	for i in range(get_node("Tower Holder").get_child_count()):
+		var tower = get_node("Tower Holder").get_child(i)
+		var tile_pos = tower.position
+		#print(tile_pos)
+		tile_pos.x+=9
+		tile_pos.z+=9
+		tile_pos.z/=2
+		tile_pos.x/=2
+		tower_hp[tile_pos.z][tile_pos.x]=tower.current_health
+
+func save_gamestate()->void:
+	update_tower_hp()
+	var game_state = {}
+	game_state["Tower_state"] = grid_map.tile_state
+	game_state["Resource_state"] = grid_map.castle_state
+	game_state["Tetris_color"] = grid_map.tetris_color_state
+	game_state["Current_wave"] = enemy_spawner.current_wave
+	game_state["Game_resources"] = game_resources
+	game_state["Current_health"] = current_health
+	game_state["Time_left_in_build_phase"] = build_timer.time_left
+	game_state["Tower_hp"]=tower_hp
+	game_state["Start_point"] = grid_map.start_point
+	game_state["End_point"] = grid_map.end_point
+	game_state["Castle_state"] = grid_map.castle_state_sl
+	var file = FileAccess.open(save_path, FileAccess.WRITE)
+	if file:
+		file.store_string(JSON.stringify(game_state))
+		file.close()
+
+func load_gamestate()->void:
+	grid_map.start_point = Vector3(grid_map.start_point.x+1,grid_map.start_point.y-1, grid_map.start_point.z)
+	grid_map.end_point = Vector3(grid_map.end_point.x-1,grid_map.end_point.y-1, grid_map.end_point.z)
+	grid_map.set_cell_item(grid_map.start_point, 15)
+	grid_map.set_cell_item(grid_map.end_point, 15)
+	
+	var file = FileAccess.open(save_path, FileAccess.READ)
+	if file:
+		var game_state = JSON.parse_string(file.get_as_text())
+		file.close()
+		var tile_state = game_state["Tower_state"]
+		grid_map.tile_state = convert_2d_array_to_int(tile_state)
+		grid_map.castle_state = convert_2d_array_to_int(game_state["Resource_state"])
+		grid_map.tetris_color_state = convert_2d_array_to_int(game_state["Tetris_color"])
+		grid_map.castle_state_sl = game_state["Castle_state"]
+		enemy_spawner.current_wave = int(game_state["Current_wave"])
+		game_resources = game_state["Game_resources"]
+		current_health = game_state["Current_health"]
+		
+		build_timer.wait_time = game_state["Time_left_in_build_phase"]
+		tower_hp = game_state["Tower_hp"]
+		var start = game_state["Start_point"]
+		grid_map.start_point = string_to_vector3(start)
+		var end = game_state["End_point"]
+		grid_map.end_point = string_to_vector3(end)
+		grid_map.start_point = Vector3(grid_map.start_point.x+1,grid_map.start_point.y-1, grid_map.start_point.z)
+		grid_map.end_point = Vector3(grid_map.end_point.x-1,grid_map.end_point.y-1, grid_map.end_point.z)
+		grid_map.set_cell_item(grid_map.start_point, 4)
+		grid_map.set_cell_item(grid_map.end_point, 4)
+		grid_map.start_point = Vector3(grid_map.start_point.x-1,grid_map.start_point.y+1, grid_map.start_point.z)
+		grid_map.end_point = Vector3(grid_map.end_point.x+1,grid_map.end_point.y+1, grid_map.end_point.z)
+		for i in range(10):
+			for j in range(10):
+				if(grid_map.tetris_color_state[i][j])!=0:
+					grid_map.set_cell_item(Vector3(j-5,1,i-5),grid_map.tetris_color_state[i][j])
+		grid_map.shortest_path = grid_map.find_shortest_path(grid_map.start_point, grid_map.end_point)
+		grid_map.convert_path_to_grid_map()
+		grid_map.mark_shortest_path()
+		convert_path_to_local()
+		enemy_spawner.set_path(short_path)
+		grid_map.gen_walls(grid_map.end_point)		
+		for i in range(10):
+			for j in range(10):
+				var tower
+				var mat
+				if int(grid_map.tile_state[i][j]) in [3,4,5]:
+					tower = NormalTowerScene.instantiate()
+					mat = tower.get_active_material(0)
+					var mat_dup = mat.duplicate()
+					mat_dup.transparency=BaseMaterial3D.TRANSPARENCY_DISABLED
+					tower.set_surface_override_material(0,mat_dup)
+					tower.set_surface_override_material(1,mat_dup)
+					tower.current_health = tower_hp[i][j]
+					tower.position = Vector3(j*2-9,4.5,i*2-9)
+				elif int(grid_map.tile_state[i][j]) in [6,7,8]:
+					tower = FreezeTowerScene.instantiate()
+					mat = tower.get_active_material(0)
+					var mat_dup = mat.duplicate()
+					mat_dup.transparency=BaseMaterial3D.TRANSPARENCY_DISABLED
+					tower.set_surface_override_material(0,mat_dup)
+					tower.current_health = tower_hp[i][j]
+					tower.get_node("MobDetector").get_child(0).disabled=false
+					tower.position = Vector3(j*2-9,4.5,i*2-9)
+				elif int(grid_map.tile_state[i][j]) in [9,10,11]:
+					tower = AOETowerScene.instantiate()
+					mat = tower.get_active_material(0)
+					var mat_dup = mat.duplicate()
+					mat_dup.transparency=BaseMaterial3D.TRANSPARENCY_DISABLED
+					tower.set_surface_override_material(0,mat_dup)
+					tower.set_surface_override_material(1,mat_dup)
+					tower.current_health = tower_hp[i][j]
+					tower.position = Vector3(j*2-9,4.5,i*2-9)
+				if int(grid_map.tile_state[i][j]) in [4,5,7,8,10,11]:
+					tower.upgrade()
+					tower.current_health = tower_hp[i][j]
+					if int(grid_map.tile_state[i][j]) in [5,8,11]:
+						tower.upgrade()
+						tower.current_health = tower_hp[i][j]
+				if tower:
+					get_node("Tower Holder").add_child(tower)
+					tower.can_shoot = true
+					tower.get_node("MobDetector").visible=false
+					tower.connect("tower_info",UI._on_normal_tower_lvl_1_tower_info)
+		var building
+		for i in range(10):
+			for j in range(4):
+				var place_pos = Vector3(j-10,2.5,i-5)
+				place_pos = grid_map.map_to_local(place_pos)
+				place_pos.y=2.5
+				
+				match int(grid_map.castle_state_sl[i][j]):
+					1:
+						building = Lumbermill.instantiate()
+						place_pos.x+=1
+						place_pos.z+=1
+						building.position = place_pos
+					2:
+						building = Mine.instantiate()
+						place_pos.x+=1
+						place_pos.z+=1
+						building.position = place_pos
+					3:
+						building = Windmill.instantiate()
+						building.position = place_pos
+					4:
+						building = Tavern.instantiate()
+						building.position = place_pos
+				if building:
+					get_node("Resource Holder").add_child(building)
+					color_transparent_mesh_instance(building,3)
+					check_resource_generation_req()
+					building.connect("resource_info", UI._on_resource_info)
+		UI.update_hearts()
+		enemy_spawner.update_wave_enemy_count()
+		UI.update_enemy_count_labels(enemy_spawner.basic_enemies_per_wave,enemy_spawner.fast_enemies_per_wave,enemy_spawner.boss_enemies_per_wave,enemy_spawner.pyro_enemies_per_wave)
+		for i in range(enemy_spawner.current_wave):
+			UI.enemies_scaling(i)
+		if enemy_spawner.current_wave > 5:
+			$"CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Wheat building".disabled = false
+			$"CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Workers".disabled = false
+			for button in UI.locked_buttons:
+				for child in button.get_children():
+					if child is TextureRect:
+						if not UI.original_positions.has(child):
+							UI.original_positions[child] = child.position.y
+					var target_position = child.position
+					if not button.disabled:
+						target_position.y = UI.original_positions[child]
+						child.position = target_position
+		if enemy_spawner.current_wave > 10:
+			$"CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Beer building".disabled = false
+			for child in $"CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Beer building".get_children():
+				if child is TextureRect:
+					if not UI.original_positions.has(child):
+						UI.original_positions[child] = child.position.y
+				var target_position = child.position
+				target_position.y = UI.original_positions[child]
+				child.position = target_position
+
+func convert_2d_array_to_int(array_2d: Array) -> Array:
+	var result = []
+	for row in array_2d:
+		var new_row = []
+		for value in row:
+			new_row.append(int(value))
+		result.append(new_row)
+	return result
+
+func string_to_vector3(input_string: String) -> Vector3:
+	var cleaned_string = input_string.strip_edges().replace("(", "").replace(")", "").strip_edges()
+	var parts = cleaned_string.split(",")
+	if parts.size() == 3:
+		var x = parts[0].to_int()
+		var y = parts[1].to_int()
+		var z = parts[2].to_int()
+		return Vector3(x, y, z)
+	else:
+		print("Błąd: Niepoprawny format stringa:", input_string)
+		return Vector3.ZERO
+
+func _on_continem_pressed() -> void:
+	start_game()
+	load_gamestate()
+	if how_to_play.visible:
+		how_to_play.visible = false
+		value = 1.0
+		time_passed = 0.0

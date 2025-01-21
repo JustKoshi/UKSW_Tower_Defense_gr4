@@ -486,10 +486,13 @@ func upgrade_tower(tower) ->void:
 	game_script.game_resources.wheat -= tower.wheat_to_upgrade[tower.level]
 	tower.upgrade()
 	var tile_pos = tower.position
-	tile_pos+=9
-	tile_pos/=2
+	#print(tile_pos)
+	tile_pos.x+=9
+	tile_pos.z+=9
+	tile_pos.z/=2
+	tile_pos.x/=2
 	#every upgrade adds 1 to the index so normal towers can be 3,4,5 freeze can be 6,7,8 and aoe can be 9,10,11
-	grid_map.tile_state[tile_pos.x][tile_pos.z]+=1
+	grid_map.tile_state[tile_pos.z][tile_pos.x]+=1
 	#print(grid_map.tile_state)
 	#grid_map.tile_state[][]+=1
 
@@ -749,16 +752,16 @@ func _close_enemy_info_panels() -> void:
 		enemy_panel_holder.queue_free()
 		enemy_panel_holder = null
 	
-func enemies_scaling() ->void:
-	if game_script.get_node("Enemy Spawner").current_wave % 5 == 0:
+func enemies_scaling(_current_wave) ->void:
+	if _current_wave % 5 == 0:
 		basic_enemy.health *= 1.1
 		basic_enemy.speed += 0.05
-	if game_script.get_node("Enemy Spawner").current_wave % 10 == 0:
+	if _current_wave % 10 == 0:
 		fast_enemy.health *= 1.1
 		fast_enemy.speed += 0.1
-		pyro_enemy.helth *= 1.1
+		pyro_enemy.health *= 1.1
 		pyro_enemy.speed += 0.05
-	if game_script.get_node("Enemy Spawner").current_wave % 10 == 0 and game_script.get_node("Enemy Spawner").current_wave > 10:
+	if _current_wave % 10 == 0 and _current_wave > 10:
 		boss_enemy.health *= 1.1
 		boss_enemy.speed += 0.0025
 		
