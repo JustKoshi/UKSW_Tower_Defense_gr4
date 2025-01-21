@@ -755,7 +755,7 @@ func _close_enemy_info_panels() -> void:
 	
 func enemies_scaling(_current_wave) ->void:
 	if _current_wave % 5 == 0:
-		basic_enemy.health *= 1.2
+		basic_enemy.health *= 1.25
 		basic_enemy.speed += 0.1
 	if _current_wave % 10 == 0:
 		fast_enemy.health *= 1.25

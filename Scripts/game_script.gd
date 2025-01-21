@@ -1221,7 +1221,7 @@ func load_gamestate()->void:
 		UI.update_hearts()
 		enemy_spawner.update_wave_enemy_count()
 		UI.update_enemy_count_labels(enemy_spawner.basic_enemies_per_wave,enemy_spawner.fast_enemies_per_wave,enemy_spawner.boss_enemies_per_wave,enemy_spawner.pyro_enemies_per_wave)
-		for i in range(enemy_spawner.current_wave):
+		for i in range(1,enemy_spawner.current_wave):
 			UI.enemies_scaling(i)
 		if enemy_spawner.current_wave > 5:
 			$"CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Wheat building".disabled = false
