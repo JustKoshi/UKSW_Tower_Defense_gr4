@@ -678,8 +678,19 @@ theme_override_font_sizes/font_size = 32
 text = "Tower Defense Mechanics:
       - Enemies will follow the shortest possible path to
       reach their goal, if they do your base will lose HP!
+						-Enemies will scale as the game go on they will become
+							faster and healthier so be careful later on.
+						-You can check enemy stats by hovering over their
+							images in the top right corner of the UI.
       - Your objective is to stop them by building towers and 
       blocking their path strategically.
+Mini games:
+					-Once per wave resource object will appear above random
+					building in the castle. If you manage to click it within 2sec
+					you will get bonus resources.
+					-After 5th wave failing this minigame will give you penalty.
+					Your building will be disabled for 2 waves so be aware and
+					make sure to click the object fast
 Resource Management:
      - Use resources to buy Tetris blocks and towers.
      - Tetris blocks can be used for two purposes:
@@ -699,6 +710,19 @@ Tower Interaction:
       reposition it or recover resources.
       3. Repair: recover tower HP, consuming resources so you 
       don't lose it !
+Buildings interaction:
+				- Click on a building to open its management menu.
+ 				In there you can destroy the building and get your worker back
+
+FEW TIPS:
+				-In the early waves resources are the most important
+				place all available resource buildings as fast as possible.
+				-In the early game gather resources and
+				be aware to win those minigames for bonus rewards early on.
+				-Make sure to build walls carefully. They
+					are very powerful and you can make big and winding maze!
+
+
 
 "
 clip_text = true

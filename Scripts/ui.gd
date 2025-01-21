@@ -413,6 +413,7 @@ func _on_destroy_resource(resource)->void:
 	var tile_pos = Vector3(grid_pos.x+10, grid_pos.y, grid_pos.z+5)
 	for i in resource.shape:
 		game_script.grid_map.castle_state[tile_pos.z-i.z][tile_pos.x-i.x] = 0
+		game_script.grid_map.castle_state_sl[tile_pos.z-i.z][tile_pos.x-i.x] = 0
 	resource.free()
 	game_script.check_resource_generation_req()
 	_on_X_button_r()
@@ -754,16 +755,16 @@ func _close_enemy_info_panels() -> void:
 	
 func enemies_scaling(_current_wave) ->void:
 	if _current_wave % 5 == 0:
-		basic_enemy.health *= 1.1
-		basic_enemy.speed += 0.05
+		basic_enemy.health *= 1.2
+		basic_enemy.speed += 0.1
 	if _current_wave % 10 == 0:
-		fast_enemy.health *= 1.1
-		fast_enemy.speed += 0.1
-		pyro_enemy.health *= 1.1
-		pyro_enemy.speed += 0.05
-	if _current_wave % 10 == 0 and _current_wave > 10:
-		boss_enemy.health *= 1.1
-		boss_enemy.speed += 0.0025
+		fast_enemy.health *= 1.25
+		fast_enemy.speed += 0.15
+		pyro_enemy.health *= 1.25
+		pyro_enemy.speed += 0.1
+	if _current_wave % 10 == 0:
+		boss_enemy.health *= 1.25
+		boss_enemy.speed += 0.05
 		
 func destroy_tower(tower) ->void:
 	game_script.game_resources.wood +=tower.return_wood
@@ -777,10 +778,11 @@ func destroy_tower(tower) ->void:
 	
 func repair_tower(tower) ->void:
 	var missing_health = tower.health[tower.level-1]-tower.current_health
-	game_script.game_resources.wood -= (tower.repair_wood * missing_health)
-	game_script.game_resources.stone -= (tower.repair_stone * missing_health)
-	tower.current_health = tower.health[tower.level-1]
-	_on_X_button()
+	if game_script.is_enough_resources(tower.repair_wood * missing_health,tower.repair_stone * missing_health,0,0,0):
+		game_script.game_resources.wood -= (tower.repair_wood * missing_health)
+		game_script.game_resources.stone -= (tower.repair_stone * missing_health)
+		tower.current_health = tower.health[tower.level-1]
+		_on_X_button()
 
 
 func _on_h_slider_value_changed(value: float) -> void:

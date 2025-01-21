@@ -87,7 +87,7 @@ func _ready() -> void:
 	for i in range(10):
 		castle_state.append([0,0,0,0])#array[10][4]
 		tetris_color_state.append([0,0,0,0,0,0,0,0,0,0])
-		castle_state_sl.append([0,0,0,0,0,0,0,0,0,0])
+		castle_state_sl.append([0,0,0,0])
 	var end_point_w = generate_start_end_points()
 	shortest_path = find_shortest_path(start_point, end_point)
 	convert_path_to_grid_map()
