@@ -27,12 +27,14 @@ window/stretch/aspect="expand"
 folder_colors={
 "res://Resources/": "yellow",
 "res://Scenes/": "green",
-"res://Scripts/": "orange"
+"res://Scripts/": "orange",
+"res://addons/": "gray"
 }
 
 [global_group]
 
 Enemies="Moby"
+towers=""
 
 [input]
 

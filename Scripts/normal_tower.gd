@@ -1,43 +1,44 @@
 extends MeshInstance3D
 
 var bullet = preload("res://Scenes/bullet.tscn")
-var damage = 20
-var health = 5
-var tower_range = 2
+var damage = [20,25,33]
+var health = [4,5,7]
+var tower_range = [2,2,3]
 var level = 1
-var firerate
+var firerate = [1,1.1,1.2]
 var title = "Normal Tower"
+var current_health
 var enemies = []
 var current_enemy
 var can_shoot = true
 
 var return_wood
 var return_stone
-var wood_to_upgrade_lvl2
-var stone_to_upgrade_lvl2
-var wheat_to_upgrade_lvl2
-var wood_to_upgrade_lvl3
-var stone_to_upgrade_lvl3
-var wheat_to_upgrade_lvl3
+var repair_wood
+var repair_stone
+var wood_to_upgrade = [20,25,75,0]
+var stone_to_upgrade = [20,25,75,0]
+var wheat_to_upgrade = [0,25,75,0]
 
-var mesh_lvl2 = load("res://Resources/Towers/normalTower lvl1/normal_tower_lvl2.obj")
-var mesh_lvl3 = load("res://Resources/Towers/normalTower lvl1/normal_tower_lvl3.obj")
+var mesh_lvl2 = load("res://Resources/Towers/normalTower/normal_tower_lvl2.obj")
+var mesh_lvl3 = load("res://Resources/Towers/normalTower/normal_tower_lvl3.obj")
+var is_targeted = false
 
 signal tower_info(object)
 
+@onready var grid_map = self.get_parent().get_parent().grid_map
+
 func _ready() -> void:
+	current_health = health[level-1]
 	return_wood = 4
 	return_stone = 4
-	wood_to_upgrade_lvl2 = 10
-	stone_to_upgrade_lvl2 = 10
-	wheat_to_upgrade_lvl2 = 10
-	wood_to_upgrade_lvl3 = 50
-	stone_to_upgrade_lvl3 = 50
-	wheat_to_upgrade_lvl3 = 50
-	firerate = 1/get_node("Shooting CD").wait_time
-	get_node("MobDetector").get_child(0).shape.radius = 2*tower_range+1
-	get_node("MobDetector").get_child(1).mesh.top_radius = 2*tower_range+1
-	get_node("MobDetector").get_child(1).mesh.bottom_radius = 2*tower_range+1
+	repair_wood = 4
+	repair_stone = 4
+	get_node("MobDetector").get_child(0).shape.radius = 2*tower_range[level-1]+1
+	get_node("MobDetector").get_child(1).mesh.top_radius = 2*tower_range[level-1]+1
+	get_node("MobDetector").get_child(1).mesh.bottom_radius = 2*tower_range[level-1]+1
+	print("nodwa wieza")
+	
 func _process(_delta: float) -> void:
 	#print(get_node("MobDetector").get_child(0).shape.radius)
 	#print(get_node("MobDetector").get_child(1).mesh.radius)
@@ -85,7 +86,7 @@ func shooting() -> void:
 						mat_dup.albedo_color = Color(1,0,0)
 					new_bullet.get_child(0).set_surface_override_material(i,mat_dup)
 	new_bullet.target=current_enemy.get_node("Aim")
-	new_bullet.arrow_damage=damage
+	new_bullet.arrow_damage=damage[level-1]
 	get_node("Bullets").add_child(new_bullet)
 	new_bullet.global_position = $Aim2.global_position
 
@@ -102,26 +103,29 @@ func _on_static_body_3d_input_event(_camera: Node, event: InputEvent, _event_pos
 func upgrade() ->void:
 	#print("Upgrade normal")
 	if level == 1:
-		health = 6
-		damage = 25
-		firerate = 1.15
-		get_node("Shooting CD").wait_time = 1/firerate
+		get_node("Shooting CD").wait_time = 1/firerate[level]
 		self.mesh = mesh_lvl2
 		self.scale_object_local(Vector3(1.2,1.2,1.2))
-		get_node("MobDetector").get_child(0).shape.radius = (2*tower_range+1)/1.2
-		get_node("MobDetector").get_child(1).mesh.top_radius = (2*tower_range+1)/1.2
-		get_node("MobDetector").get_child(1).mesh.bottom_radius = (2*tower_range+1)/1.2
+		get_node("MobDetector").get_child(0).shape.radius = (2*tower_range[level]+1)/1.2
+		get_node("MobDetector").get_child(1).mesh.top_radius = (2*tower_range[level]+1)/1.2
+		get_node("MobDetector").get_child(1).mesh.bottom_radius = (2*tower_range[level]+1)/1.2
 		get_node("MobDetector").get_child(1).position.y = -1.6
 	if level == 2:
-		health = 8
-		damage = 33
-		tower_range = 3
-		firerate = 1.33
-		get_node("Shooting CD").wait_time = 1/firerate
+		get_node("Shooting CD").wait_time = 1/firerate[level]
 		self.mesh = mesh_lvl3
 		self.scale_object_local(Vector3(1.2,1.2,1.2))
-		get_node("MobDetector").get_child(0).shape.radius = (2*tower_range+1)/1.2/1.2
-		get_node("MobDetector").get_child(1).mesh.top_radius = (2*tower_range+1)/1.2/1.2
-		get_node("MobDetector").get_child(1).mesh.bottom_radius = (2*tower_range+1)/1.2/1.2
+		get_node("MobDetector").get_child(0).shape.radius = (2*tower_range[level]+1)/1.2/1.2
+		get_node("MobDetector").get_child(1).mesh.top_radius = (2*tower_range[level]+1)/1.2/1.2
+		get_node("MobDetector").get_child(1).mesh.bottom_radius = (2*tower_range[level]+1)/1.2/1.2
 		get_node("MobDetector").get_child(1).position.y = -1.38
 	level += 1
+	current_health = health[level-1]
+
+func take_damage(dmg: int) -> void:
+	current_health-=dmg
+	if current_health<=0 and (current_health+dmg) > 0:
+		var col_point = self.position
+		var grid_pos = grid_map.local_to_map(col_point)
+		var tile_pos = Vector3(grid_pos.x+grid_map.map_size, grid_pos.y, grid_pos.z+grid_map.map_size)
+		grid_map.tile_state[tile_pos.z][tile_pos.x] = 2
+		queue_free()

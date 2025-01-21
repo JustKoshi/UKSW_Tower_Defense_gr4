@@ -1,0 +1,147 @@
+[gd_scene load_steps=7 format=3 uid="uid://xqc0rhtdsxfv"]
+
+[ext_resource type="Theme" uid="uid://dik3dswqv7f6y" path="res://Resources/Themes/UI_info_panels_theme.tres" id="1_wsrs8"]
+[ext_resource type="Texture2D" uid="uid://bn8dy1n7d2eb5" path="res://Resources/Icons/basic head.png" id="2_ma320"]
+[ext_resource type="Texture2D" uid="uid://bivms320kp4bo" path="res://Resources/Icons/damage.png" id="3_jh55n"]
+[ext_resource type="Theme" uid="uid://bj4jsc3t11ucn" path="res://Resources/Themes/bubble_text_theme.tres" id="4_apb71"]
+[ext_resource type="Texture2D" uid="uid://b5eyxvf5y2v5n" path="res://Resources/Icons/Heart.png" id="5_c4or6"]
+[ext_resource type="Texture2D" uid="uid://dx1nr05cvv1lf" path="res://Resources/Icons/speed.png" id="6_646pf"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = 390.0
+offset_top = 7.0
+offset_right = 390.0
+offset_bottom = 7.0
+grow_horizontal = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 0
+offset_right = 188.0
+offset_bottom = 170.0
+theme = ExtResource("1_wsrs8")
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("2_ma320")
+expand_mode = 2
+
+[node name="Control2" type="Control" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "NAMEZZ ENEMY"
+horizontal_alignment = 1
+
+[node name="Control" type="Control" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TextureRect2" type="TextureRect" parent="PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("2_ma320")
+expand_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Type_png" type="TextureRect" parent="PanelContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+texture = ExtResource("3_jh55n")
+expand_mode = 2
+stretch_mode = 6
+
+[node name="PanelContainer" type="PanelContainer" parent="PanelContainer/VBoxContainer/HBoxContainer2/Type_png"]
+layout_mode = 0
+offset_left = 2.0
+offset_top = -6.0
+offset_right = 102.0
+offset_bottom = 39.0
+scale = Vector2(1.6479, 0.887325)
+theme = ExtResource("4_apb71")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/VBoxContainer/HBoxContainer2/Type_png/PanelContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer/HBoxContainer2/Type_png/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Name" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/Type_png/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Damage"
+
+[node name="Control" type="Control" parent="PanelContainer/VBoxContainer/HBoxContainer2/Type_png/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Name2" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/Type_png/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Health"
+
+[node name="Spring" type="Control" parent="PanelContainer/VBoxContainer/HBoxContainer2/Type_png/PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Name3" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2/Type_png/PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "Speed"
+horizontal_alignment = 1
+
+[node name="Damage" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "0"
+
+[node name="Spring" type="Control" parent="PanelContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Production_png" type="TextureRect" parent="PanelContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+texture = ExtResource("5_c4or6")
+expand_mode = 2
+
+[node name="Health" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "333"
+
+[node name="Control" type="Control" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Production_reduced_png" type="TextureRect" parent="PanelContainer/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+texture = ExtResource("6_646pf")
+expand_mode = 2
+
+[node name="Speed" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+text = "0.16 blocks/s"
+
+[node name="Control2" type="Control" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "This enemy runs much
+faster and deals
+more dmg"
+horizontal_alignment = 1

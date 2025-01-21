@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://c16ldellr638l"]
+
+[ext_resource type="PackedScene" uid="uid://2msihqbsw1rb" path="res://Resources/Weapons/Skeleton_Staff.gltf" id="1_7gu0v"]
+[ext_resource type="PackedScene" uid="uid://own8mtc5ri6l" path="res://Scenes/vfx_fire_red.tscn" id="2_jsuq6"]
+
+[node name="Skeleton_Staff2" instance=ExtResource("1_7gu0v")]
+
+[node name="vfx_fire_red" parent="." index="1" instance=ExtResource("2_jsuq6")]
+transform = Transform3D(0.6, 0, 0, 0, 0.6, 0, 0, 0, 0.6, -0.151, 0.818, 0.02)

@@ -66,6 +66,8 @@ var current_block = all_tetris_blocks[block_index] #current tetris block
 var current_shape = current_block[index] #current exact block shape (rotation)
 var tile_state = [] #We will call this array tileset. It holds current state of map but in 2D. 0-nothing 1-temp block 2-tetris block 3-tetris block with tower on
 var castle_state = [] #Same but with the left side of map
+var castle_state_sl = []
+var tetris_color_state = []#used for save/load
 
 var shortest_path = [] #Array that will hold fastest route from start to finish
 
@@ -84,6 +86,8 @@ func _ready() -> void:
 		tile_state.append(row)
 	for i in range(10):
 		castle_state.append([0,0,0,0])#array[10][4]
+		tetris_color_state.append([0,0,0,0,0,0,0,0,0,0])
+		castle_state_sl.append([0,0,0,0])
 	var end_point_w = generate_start_end_points()
 	shortest_path = find_shortest_path(start_point, end_point)
 	convert_path_to_grid_map()
@@ -157,6 +161,7 @@ func place_block_in_tilemap_permanent(pos: Vector3):
 	if is_within_bounds(pos):
 		var tile_pos = Vector3(pos.x+map_size, pos.y, pos.z+map_size)
 		tile_state[tile_pos.z][tile_pos.x] = 2
+		tetris_color_state[tile_pos.z][tile_pos.x] = block_type
 
 #removes invalid block from tilemap	
 func remove_block_from_tilemap(pos: Vector3):
@@ -226,7 +231,10 @@ func dfs_search(current_pos: Vector3,target_pos: Vector3, visited) -> bool:
 			return true
 				
 	return false
-	
+
+#saveload gridmap tetris color state
+#func place_tetris_block_sl()
+
 #places whole tetris block checking all nessessary conditions	
 func place_tetris_block(position_tetris: Vector3, shape):
 	if can_place_tetris_block(position_tetris, shape):
@@ -350,11 +358,11 @@ func can_place_tower(col_point: Vector3)->bool:
 		return false
 
 #fucntion that updates tilemap after placing tower
-func place_tower_in_tilemap(col_point: Vector3)->void:
+func place_tower_in_tilemap(col_point: Vector3,tower_type: int)->void:
 	var grid_pos = self.local_to_map(col_point)
 	var tile_pos = Vector3(grid_pos.x+map_size, grid_pos.y, grid_pos.z+map_size)
 	if tile_state[tile_pos.z][tile_pos.x]==2:
-		tile_state[tile_pos.z][tile_pos.x]=3
+		tile_state[tile_pos.z][tile_pos.x]=tower_type
 
 func is_within_castle(vector_pos: Vector3)->bool:
 	return vector_pos.x>=-10 and vector_pos.x<=-7 and vector_pos.z>=-5 and vector_pos.z<=4
@@ -374,6 +382,7 @@ func can_place_resource(grid_pos: Vector3, shape)->bool:
 func place_resource_in_tilemap(col_point: Vector3, resource_type):
 	var grid_pos = self.local_to_map(col_point)
 	var tile_pos = Vector3(grid_pos.x+10, grid_pos.y, grid_pos.z+5)
+	castle_state_sl[tile_pos.z][tile_pos.x] = resource_type
 	castle_state[tile_pos.z][tile_pos.x] = resource_type
 	if resource_type in [1,2,3]:
 		castle_state[tile_pos.z+1][tile_pos.x] = resource_type

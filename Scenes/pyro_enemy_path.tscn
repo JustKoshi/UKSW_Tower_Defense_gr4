@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://isooabj8rw86"]
+
+[ext_resource type="Script" path="res://Scripts/pyro_enemy_path.gd" id="1_g8ink"]
+[ext_resource type="PackedScene" uid="uid://dibelyortwr2f" path="res://Scenes/skeleton_pyro.tscn" id="1_pvbcj"]
+
+[node name="PathFollow3D" type="PathFollow3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40, 0, 0)
+loop = false
+script = ExtResource("1_g8ink")
+
+[node name="Skeleton_Pyro" parent="." groups=["Enemies"] instance=ExtResource("1_pvbcj")]

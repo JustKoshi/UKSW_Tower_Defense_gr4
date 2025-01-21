@@ -1,12 +1,12 @@
 extends PathFollow3D
 
-var speed = 0.5 #how fast character will follow path
+var speed #how fast character will follow path
 var curve_length = 0.0
 
 @onready var enemy = $Skeleton_Warrior
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass # Replace with function body.
+	speed = get_child(0).speed*2
 
 func set_curve_length(length) -> void:
 	curve_length = length

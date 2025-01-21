@@ -1,7 +1,7 @@
 extends Node3D
 
 #List containing all cameras and current cam index
-@onready var cameras = [$"Main Camera", $"Top Camera", $"Front camera", $"Front camera2", $"Resource Camera"]
+@onready var cameras = [$"Main Camera", $"Top Camera", $"Front camera", $"Front camera2", $"Resource Camera",$"Debug camera",$"Ship/Path3D2/PathFollow3D/SM_Galleon_MI_Base_Wood_Dark_0/Debug camera2"]
 
 #variable to contain main GridMap
 @onready var grid_map = $GridMap
@@ -10,7 +10,7 @@ extends Node3D
 @onready var build_timer = $"Build Timer"
 @onready var build_time_label = $"CanvasLayer/UI/Build time Label"
 @onready var switch_label_timer = $"Switch Label Timer"
-
+@onready var sprite_timer = $"Sprite Timer"
 #variable to contain raycast to detect clicks in build mode
 @onready var raycast = $"Top Camera/RayCast3D"
 
@@ -23,13 +23,25 @@ extends Node3D
 @onready var how_to_play: Control = $"CanvasLayer/Menu/How to Play"
 @onready var pause_menu: Control = $"CanvasLayer/Pause Menu"
 
+@onready var resource_holder: Node = $"Resource Holder"
+
+@onready var wave_start_sound: AudioStreamPlayer = $"SFX and music/Wave start"
+@onready var hit: AudioStreamPlayer = $"SFX and music/Hit"
+@onready var fanfare: AudioStreamPlayer = $"SFX and music/Fanfare"
+@onready var music: AudioStreamPlayer = $"SFX and music/Music"
+@onready var sad_trombone: AudioStreamPlayer = $"SFX and music/Sad trombone"
+@onready var quack_sound: AudioStreamPlayer = $"SFX and music/Quack_sound"
+
 
 var NormalTowerScene = preload("res://Scenes/normal_tower_lvl_1.tscn")
 var FreezeTowerScene = preload("res://Scenes/Freeze_tower_lvl_1.tscn")
+var AOETowerScene = preload("res://Scenes/aoe_tower.tscn")
 var Lumbermill = preload("res://Scenes/lumbermill.tscn")
 var Mine = preload("res://Scenes/mine.tscn")
 var Windmill = preload("res://Scenes/windmill.tscn")
 var Tavern = preload("res://Scenes/tavern.tscn")
+var Ship = preload("res://Scenes/ship.tscn")
+var duck = preload("res://Scenes/duck.tscn")
 
 var tower_build = false
 var tetris_build_mode = false
@@ -55,6 +67,19 @@ var hovering_resource = 0
 var resource_to_hover = 0#0 for none, 1 for lumbermill, 2 for mine, 3 for windmill, 4 for tavern
 var resource_shape
 
+#Vars for ship fadeout func
+var value = 1.0  # Startowa wartość
+var duration = 2.0  # Czas w sekundach
+var time_passed = 0.0  # Licznik czasu
+
+
+#sprite timer variables
+const MIN_TIME = 1
+const MAX_TIME = 15
+
+var save_path = "res://save_file.json"
+var tower_hp =[]
+
 var current_cam_index = 0
 var coordinates_check_mode = false
 var hover = [null, null, null, null] #array that holds blocks for hover. 4 couse very tetris block size = 4
@@ -62,7 +87,38 @@ var short_path = [] #array that holds shortest path converted to local
 
 var tower_hover_holder:MeshInstance3D = null#Object that holds tower instance that is now currently selected and might be placed
 var resource_hover_holder:MeshInstance3D = null
+var duck_holder = null
 
+#setting up the database and stats:
+var database: SQLite
+var stats = {
+	"placed_towers" : 0,
+	"placed_tetris_blocks" : 0,
+	"generated_wood" : 0,
+	"generated_stone" : 0,
+	"generated_wheat" : 0,
+	"generated_beer" : 0,
+	"killed_normal_enemies" : 0,
+	"killed_fast_enemies" : 0,
+	"killed_pyro_enemies" : 0,
+	"killed_boss_enemies" : 0,
+	"used_powerups" : 0,
+	"defeated_waves" : 0,
+	"times_played" : 0,
+	"time_in_game" : 0,
+	"has_1000_res" : 0,
+	"map_covered" : 0,
+	"lost_health" : 0,
+	"minigames_won" : 0,
+	"easter_egg" : 0
+}
+var start_time
+var end_time
+
+#achievement related variables
+var has_1000_res = 0
+var map_covered = 0
+var easter_egg = 0
 
 #resource counter:
 var game_resources = {
@@ -92,12 +148,41 @@ var normal_mat_range = StandardMaterial3D.new()
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	#testing chagnes: 
-	#enemy_spawner.current_wave = 5
-	print("2")
-	game_resources.wood = 999
-	game_resources.stone = 999
-	game_resources.wheat = 999
+	start_time = Time.get_unix_time_from_system()
+	#starting resources
+	game_resources.wood = 10
+	game_resources.stone = 10
+	
+	#opening database
+	database = SQLite.new()
+	database.path = "res://data.db"
+	database.open_db()
+	var main_table = {
+		"id" : {"data_type" : "int", "primary_key" : true, "not_null" : true, "auto_increment" : true},
+		"placed_towers" : {"data_type" : "int"},
+		"placed_tetris_blocks" : {"data_type" : "int"},
+		"generated_wood" : {"data_type" : "int"},
+		"generated_stone" : {"data_type" : "int"},
+		"generated_wheat" : {"data_type" : "int"},
+		"generated_beer" : {"data_type" : "int"},
+		"killed_normal_enemies" : {"data_type" : "int"},
+		"killed_fast_enemies" : {"data_type" : "int"},
+		"killed_pyro_enemies" : {"data_type" : "int"},
+		"killed_boss_enemies" : {"data_type" : "int"},
+		"used_powerups" : {"data_type" : "int"},
+		"defeated_waves" : {"data_type" : "int"},
+		"times_played" : {"data_type" : "int"},
+		"time_in_game" : {"data_type" : "int"},
+		"has_1000_res" : {"data_type" : "int"},
+		"map_covered" : {"data_type" : "int"},
+		"lost_health" : {"data_type" : "int"},
+		"minigames_won" : {"data_type" : "int"},
+		"easter_egg" : {"data_type" : "int"}
+	}
+	database.create_table("Stats",main_table)
+	var row = database.select_rows("Stats","id=1",["*"])
+	if row.is_empty():
+		database.insert_row("Stats",stats)
 	
 	current_health = max_health
 	game = false
@@ -126,21 +211,45 @@ func _ready() -> void:
 			hover[i].visible = false
 	convert_path_to_local()
 	enemy_spawner.set_path(short_path)
-	UI.update_enemy_count_labels(enemy_spawner.basic_enemies_per_wave, enemy_spawner.fast_enemies_per_wave, enemy_spawner.boss_enemies_per_wave)
-
+	UI.update_enemy_count_labels(enemy_spawner.basic_enemies_per_wave, enemy_spawner.fast_enemies_per_wave, enemy_spawner.boss_enemies_per_wave, enemy_spawner.pyro_enemies_per_wave)
+	duck_holder = duck.instantiate()
+	add_child(duck_holder)
+	duck_holder.position = Vector3(0,0,30)
+	
+	for i in range(10):
+		var row2 = []
+		for j in range(10):
+			row2.append(0)
+		tower_hp.append(row2)
+		
+	
+	if !FileAccess.file_exists(save_path):
+		$"CanvasLayer/Menu/Menu Buttons/MarginContainer/VBoxContainer/Contine".disabled = true
+	#testing chagnes: 
+	#enemy_spawner.current_wave = 5
+	#game_resources.wood = 999
+	#game_resources.stone = 999
+	#game_resources.wheat = 999
+	
+	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	#testing:
+	#print("fala: ",enemy_spawner.current_wave)
+	#enemy_spawner.update_wave_enemy_count()
+	#enemy_spawner.current_wave += 1
+	
 	update_resource_timers()
 	if Input.is_action_just_pressed("Camera_F1") and game:
 		if current_cam_index >0 :
 			current_cam_index -= 1
 		current_cam_index = current_cam_index%3
 		set_camera()
-		
+	
 	elif Input.is_action_just_pressed("Camera_F2") and game:
 		current_cam_index += 1
-		current_cam_index = current_cam_index%4
+		current_cam_index = current_cam_index%5
 		set_camera()
 		
 	elif Input.is_action_just_pressed("Camera_F9") and game:
@@ -152,10 +261,14 @@ func _process(delta: float) -> void:
 			coordinates_check_mode = false
 			
 	elif Input.is_action_just_pressed("pause") and game:
+		pause_menu.get_node("Label").visible = false
 		get_tree().paused = true
 		UI.visible = false
 		pause_menu.visible = true
-		
+		load_data_to_database()
+		if is_build_phase:
+			save_gamestate()
+			pause_menu.get_node("Label").visible = true
 	
 	if walls_build:
 		set_build_cam()
@@ -168,7 +281,11 @@ func _process(delta: float) -> void:
 		tower_to_hover = 2
 		hover_tower(tower_to_hover)
 		set_build_cam()
-	if not normal_tower_build and not freeze_tower_build:
+	if aoe_tower_build:
+		tower_to_hover = 3
+		hover_tower(tower_to_hover)
+		set_build_cam()
+	if not normal_tower_build and not freeze_tower_build and not aoe_tower_build:
 		tower_to_hover = 0
 	if wood_build:
 		set_resource_cam()
@@ -192,6 +309,18 @@ func _process(delta: float) -> void:
 		resource_to_hover = 0
 	if is_build_phase:
 		update_label_build_time()
+	if game_resources.wood >=1000 or game_resources.stone >=1000 or game_resources.wheat >=1000 or game_resources.beer >=1000:
+		has_1000_res = 1
+	if number_of_tetris_placed >=15:
+		map_covered = 1
+	if game and is_build_phase:
+		ship_sailin(delta)
+	elif game:
+		if value > 0:
+			time_passed += delta
+			value = clamp(1.0 - time_passed / duration, 0.0, 1.0)
+			ship_fadeout()
+	
 	
 	if not game:
 		get_node("Main Camera").angle += 0.1 * delta
@@ -208,7 +337,7 @@ func _input(event: InputEvent) -> void:
 	if coordinates_check_mode and event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
 			check_coordinates()
-	if (normal_tower_build or freeze_tower_build) and event is InputEventMouseButton:
+	if (normal_tower_build or freeze_tower_build or aoe_tower_build) and event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
 			place_tower_on_click(hovering_tower)
 	if (wood_build or stone_build or wheat_build or beer_build) and event is InputEventMouseButton:
@@ -251,12 +380,13 @@ func get_collision_point(): #returns raycast collision point with map
 #function places block on raycast position
 func place_block_on_click():
 	var collision_point = get_collision_point()
-	var needed_res = 2*(number_of_tetris_placed + 1)
+	var needed_res = 3*(number_of_tetris_placed + 1)
 	#checking if raycast detected any block if so place block on gridmap
 	if collision_point != null and is_enough_resources(needed_res,needed_res,0,0,0):
 		var grid_pos = grid_map.local_to_map(collision_point)
 		if grid_map.can_place_tetris_block(grid_pos,grid_map.current_shape):
 			number_of_tetris_placed += 1
+			stats.placed_tetris_blocks += 4
 			game_resources.wood -= needed_res
 			game_resources.stone -= needed_res
 		grid_map.place_tetris_block(grid_pos, grid_map.current_shape)
@@ -269,24 +399,21 @@ func place_tower_on_click(tower_type:int):
 	if tower_hover_holder != null:
 		tower_hover_holder.free()#deleting hover tower before getting collision point
 	var collision_point = get_collision_point()
-	var needed_wood = 0
-	var needed_stone = 0
-	var needed_wheat = 0
-	if tower_type == 1:
-		needed_wood = 10
-		needed_stone = 10
-	elif tower_type == 2:
-		needed_wood = 16
-		needed_stone = 16
+	var tower
+	if(tower_type==1):
+		tower = NormalTowerScene.instantiate()
+	elif(tower_type==2):
+		tower = FreezeTowerScene.instantiate()
+		tower.get_node("MobDetector").get_child(0).disabled=false
+	elif(tower_type==3):
+		tower = AOETowerScene.instantiate()
+	self.get_node("Tower Holder").add_child(tower)
+	var needed_wood = tower.wood_to_upgrade[0]
+	var needed_stone = tower.stone_to_upgrade[0]
+	var needed_wheat = tower.wheat_to_upgrade[0]
 	#checking if raycast detected any block if so place block on gridmap
 	if collision_point != null and grid_map.can_place_tower(collision_point) and is_enough_resources(needed_wood,needed_stone,needed_wheat,0,0):
 	#if tower can be placed instantiate tower and change its cordinates and turn off range and turning of hover transparency
-		var tower
-		if(tower_type==1):
-			tower = NormalTowerScene.instantiate()
-		elif(tower_type==2):
-			tower = FreezeTowerScene.instantiate()
-			tower.get_node("MobDetector").get_child(0).disabled=false
 		tower.can_shoot = true
 		var grid_pos = grid_map.local_to_map(collision_point)
 		var place_pos = grid_map.map_to_local(grid_pos)
@@ -298,16 +425,23 @@ func place_tower_on_click(tower_type:int):
 		tower.set_surface_override_material(0,mat_dup)
 		if tower_type == 1:
 			tower.set_surface_override_material(1,mat_dup)
+		if tower_type == 3:
+			tower.set_surface_override_material(1,mat_dup)
 		tower.get_node("MobDetector").visible=false
 		tower.connect("tower_info",UI._on_normal_tower_lvl_1_tower_info)
-		grid_map.place_tower_in_tilemap(collision_point)
-		self.get_node("Tower Holder").add_child(tower)
+		tower_type*=3#This change is for the save/load
+		grid_map.place_tower_in_tilemap(collision_point, tower_type)
 		#print("Added tower in position: ",grid_pos)
 		game_resources.wood -= needed_wood
 		game_resources.stone -= needed_stone
 		game_resources.wheat -= needed_wheat
 		tower_hover_holder = null
 		hovering_tower = 0
+		stats.placed_towers += 1
+		for i in range(get_node("Tower Holder").get_child_count()):
+			print(get_node("Tower Holder").get_child(i).position)
+	else:
+		tower.queue_free()
 
 #function that hover towers over the map showing where it can be placed and its range
 func hover_tower(_tower_type:int):
@@ -316,11 +450,14 @@ func hover_tower(_tower_type:int):
 	var needed_stone = 0
 	var needed_wheat = 0
 	if tower_to_hover == 1:
-		needed_wood = 10
-		needed_stone = 10
+		needed_wood = 20
+		needed_stone = 20
 	elif tower_to_hover == 2:
-		needed_wood = 16
-		needed_stone = 16
+		needed_wood = 30
+		needed_stone = 30
+	elif tower_to_hover == 3:
+		needed_wood = 50
+		needed_stone = 50
 	if tower_hover_holder==null or tower_to_hover!=hovering_tower:
 		#if there was no hover instantiate 1 hover tower and making its opacity = 0.5
 		if(tower_to_hover==1):
@@ -329,6 +466,9 @@ func hover_tower(_tower_type:int):
 		elif(tower_to_hover==2):
 			tower_hover_holder = FreezeTowerScene.instantiate()
 			hovering_tower = 2
+		elif(tower_to_hover==3):
+			tower_hover_holder = AOETowerScene.instantiate()
+			hovering_tower = 3
 		tower_hover_holder.can_shoot=false
 		tower_hover_holder.get_node("MobDetector").visible = true
 		get_node("Tower Holder").add_child(tower_hover_holder)
@@ -337,6 +477,8 @@ func hover_tower(_tower_type:int):
 			tower_hover_holder.set_surface_override_material(1,normal_mat)
 		if tower_to_hover == 2:
 			tower_hover_holder.get_node("Mage").visible = false
+		if tower_to_hover == 3:
+			tower_hover_holder.set_surface_override_material(1,normal_mat)
 	if collision_point != null:
 		tower_hover_holder.visible=true
 		var grid_pos = grid_map.local_to_map(collision_point)
@@ -350,12 +492,16 @@ func hover_tower(_tower_type:int):
 			tower_hover_holder.set_surface_override_material(0,normal_mat)
 			if tower_to_hover == 1:
 				tower_hover_holder.set_surface_override_material(1,normal_mat)
+			if tower_to_hover == 3:
+				tower_hover_holder.set_surface_override_material(1,normal_mat)
 		else:
 			#if it cant be placed change its color to red
 			#print("Red tower")
 			tower_hover_holder.get_node("MobDetector").get_child(1).set_surface_override_material(0,red_mat_range)
 			tower_hover_holder.set_surface_override_material(0,red_mat)
 			if tower_to_hover == 1:
+				tower_hover_holder.set_surface_override_material(1,red_mat)
+			elif tower_to_hover == 3:
 				tower_hover_holder.set_surface_override_material(1,red_mat)
 	else:
 		#free hover if cursor is out of gridmap
@@ -460,7 +606,8 @@ func color_transparent_mesh_instance(object, color):#1 - transparent, 2 - red/tr
 func update_resource_timers():
 	for i in range(get_node("Resource Holder").get_child_count()):
 		var child = get_node("Resource Holder").get_child(i)
-		if child.generator_on == true:
+		if child.generator_on and !child.disabled:
+			update_resource_stats(child)
 			child.get_node("Timer").start()
 			child.generator_on = false
 			if child.generation_depleted:
@@ -500,10 +647,14 @@ func place_resource_on_click(resource_type:int):
 			get_node("Resource Holder").add_child(building)
 			color_transparent_mesh_instance(building,3)
 			check_resource_generation_req()
+			
+			
+			print(building.position)
 			#print("Added lumbermill in position: ",grid_pos)
 			game_resources.used_workers += 1
 			resource_hover_holder=null
 			hovering_resource = 0
+			building.connect("resource_info", UI._on_resource_info)
 
 func check_resource_generation_req():
 	var shifts = [Vector3(-4,0,0),Vector3(4,0,0),Vector3(0,0,-4),Vector3(0,0,4)]
@@ -532,20 +683,30 @@ func check_resource_generation_req():
 				if resource is Tavern:
 					if resource2 is Windmill and resource2.transform.origin == resource.transform.origin+tavern_shift:
 						resource.generation_depleted = false
-
 				if resource is Windmill:
 					if resource2 is Mine or resource2 is Lumbermill:
-						print("farma:", resource.transform.origin, " drugie: ", resource2.transform.origin )
+						#print("farma:", resource.transform.origin, " drugie: ", resource2.transform.origin )
 						if resource2.transform.origin+windmill_shift == resource.transform.origin:
 							resource.generation_depleted = false
 					elif resource2 is Windmill:
 						if resource2.transform.origin+tavern_shift == resource.transform.origin:
+							resource.generation_depleted = false
+					elif resource2 is Tavern:
+						if resource.transform.origin == resource2.transform.origin+tavern_shift:
 							resource.generation_depleted = false
 		if resource.generation_depleted:
 			resource.get_node("exclamation_mark").visible = true
 		else:
 			resource.get_node("exclamation_mark").visible = false
 
+func resource_sprite_popup()->void:
+	var child_count = get_node("Resource Holder").get_child_count()
+	if child_count > 0:
+		var res = get_node("Resource Holder").get_child(randi()%child_count)
+		if res.disabled:#If the random chosenn building is alreaddy disabled then the minigame wont triggger that round
+			return
+		res.sprite_phase = true
+		res.get_node("Sprite3D").get_node("sprite_countdown").start()
 
 func hover_resource(resource_type:int):
 	var collision_point = get_collision_point()
@@ -600,6 +761,32 @@ func hover_resource(resource_type:int):
 		resource_hover_holder.queue_free()
 		resource_hover_holder = null
 
+func ship_sailin(delta: float)->void:
+	var move_speed = 20
+	get_node("Ship/Path3D2/PathFollow3D").progress +=move_speed*delta
+
+func ship_fadeout() -> void:
+	var mesh = get_node("Ship/Path3D2/PathFollow3D/SM_Galleon_MI_Base_Wood_Dark_0").mesh
+	for i in range(mesh.get_surface_count()):
+		var mat = mesh.surface_get_material(i)
+		var mat_dupe = mat.duplicate()
+		mat_dupe.flags_transparent = true
+		mat_dupe.albedo_color.a = value  
+		mesh.surface_set_material(i, mat_dupe)
+
+func ship_reset()->void:
+	var mesh = get_node("Ship/Path3D2/PathFollow3D/SM_Galleon_MI_Base_Wood_Dark_0").mesh
+	for i in range(mesh.get_surface_count()):
+		var mat = mesh.surface_get_material(i)
+		var mat_dupe = mat.duplicate()
+		mat_dupe.albedo_color.a = 1  
+		mat_dupe.flags_transparent = false
+		mat_dupe.transparency=BaseMaterial3D.TRANSPARENCY_DISABLED
+		mesh.surface_set_material(i, mat_dupe)
+		
+		get_node("Ship/Path3D2/PathFollow3D").progress = 0
+		value=1.0
+		time_passed = 0.0
 
 #Signal to enter build mode
 func _on_tetris_build_button_pressed() -> void:
@@ -637,7 +824,9 @@ func convert_path_to_local()-> void:
 	for vect in grid_map.shortest_path:
 			vect.y += 1
 			short_path.append(grid_map.map_to_local(vect))
-	#short_path.append(grid_map.map_to_local(path_end))
+	var new_end = grid_map.map_to_local(path_end)
+	new_end.x+=1
+	short_path.append(new_end)
 
 func update_label_build_time():
 	build_time_label.text = "Time for building: " + str(ceil(build_timer.time_left)) + "s"
@@ -654,9 +843,11 @@ func prepare_wave() -> void:
 		resource_hover_holder.free()
 	if !enemy_spawner.wave_in_progress:
 		enemy_spawner.start_wave()
+		wave_start_sound.play()
 		UI.bottom_panel.visible = false
 		UI.unpress_all_buttons()
 		UI._on_X_button()
+		UI._on_X_button_r()
 		for h in hover:
 			h.visible = false
 	UI.switch_skip_button_visiblity()
@@ -671,16 +862,19 @@ func is_enough_resources(wo:int, st:int, wh:int, be:int, pe:int) -> bool:
 #resets build timer and enables buttons
 func reset_build_timer():
 	is_build_phase = true
+	ship_reset()
 	UI.show_first_panel()
 	UI.bottom_panel.visible = true
 	build_timer.start()
+	sprite_timer.stop()
 
 #when end wave signal is recived resets build timer
 func _on_enemy_spawner_wave_ended() -> void:
 	#print("Przekazano sygnal")
+	if game:
+		fanfare.play()
+		build_timer.wait_time=30
 	if enemy_spawner.current_wave == 5:
-		#odblokuj farme
-		#print("Farm unlocked")
 		$"CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Wheat building".disabled = false
 		$"CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Workers".disabled = false
 		for button in UI.locked_buttons:
@@ -694,8 +888,6 @@ func _on_enemy_spawner_wave_ended() -> void:
 					child.position = target_position
 		game_resources.workers += 1
 	elif enemy_spawner.current_wave == 10:
-		#odblokuj piwo i skille
-		#print("Beer unlocked")
 		$"CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Beer building".disabled = false
 		for child in $"CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Beer building".get_children():
 			if child is TextureRect:
@@ -706,10 +898,13 @@ func _on_enemy_spawner_wave_ended() -> void:
 			child.position = target_position
 	enemy_spawner.current_wave += 1
 	enemy_spawner.update_wave_enemy_count()
-	UI.update_enemy_count_labels(enemy_spawner.basic_enemies_per_wave, enemy_spawner.fast_enemies_per_wave, enemy_spawner.boss_enemies_per_wave)
+	UI.update_enemy_count_labels(enemy_spawner.basic_enemies_per_wave, enemy_spawner.fast_enemies_per_wave, enemy_spawner.boss_enemies_per_wave, enemy_spawner.pyro_enemies_per_wave)
+	UI.enemies_scaling(enemy_spawner.current_wave)
+	stats.defeated_waves += 1
 	if game:
 		reset_build_timer()
 		UI.switch_skip_button_visiblity()
+		sprite_timer.start()
 
 #changes label 2 s after wave started
 func _on_switch_label_timer_timeout() -> void:
@@ -717,12 +912,18 @@ func _on_switch_label_timer_timeout() -> void:
 	
 #Function that happens when enemies deal damage to our gate and checks for game_over possibility
 func take_damage(dmg) -> void:
+	if game:
+		hit.play()
 	current_health = current_health-dmg
+	if game:
+		stats.lost_health += dmg
 	#print("Current health z maina:",current_health)
 	UI.update_hearts()
 	if current_health <= 0 and game:
 		print("GAMEOVER GG")
 		game = false
+		music.stop()
+		sad_trombone.play()
 		GameOver.visible = true
 		$CanvasLayer/UI/GameOverScreen/VBoxContainer/GameOverText.text = "Game Over!\nYou failed at\n wave number\n %d." % enemy_spawner.current_wave
 		$CanvasLayer/UI/GameOverScreen/VBoxContainer/MainMenu_button.disabled = false
@@ -734,6 +935,8 @@ func take_damage(dmg) -> void:
 			var building = get_node("Resource Holder").get_child(i)
 			building.get_node("Timer").stop()
 			building.generator_on = false
+		stats.times_played += 1
+		load_data_to_database()
 			
 func _on_skip_button_pressed() -> void:
 	var remaining_time = build_timer.time_left
@@ -741,19 +944,28 @@ func _on_skip_button_pressed() -> void:
 	var adding_beer = int(remaining_time/5)
 	for i in range(get_node("Resource Holder").get_child_count()):
 		var child = get_node("Resource Holder").get_child(i)
-		if not child.resource_type == "beer":
-			if child.generation_depleted:
-				game_resources[child.resource_type] += 1*adding_resources#polowa wartosci
+		if !child.disabled:
+			update_resource_stats(child)
+			if not child.resource_type == "beer":
+				if child.generation_depleted:
+					game_resources[child.resource_type] += 1*adding_resources#polowa wartosci
+				else:
+					game_resources[child.resource_type] += 2*adding_resources
 			else:
-				game_resources[child.resource_type] += 2*adding_resources
-		else:
-			if child.generation_depleted:
-				game_resources[child.resource_type] += 1*adding_beer#polowa wartosci
-			else:
-				game_resources[child.resource_type] += 2*adding_beer
+				if child.generation_depleted:
+					game_resources[child.resource_type] += 1*adding_beer#polowa wartosci
+				else:
+					game_resources[child.resource_type] += 2*adding_beer
 	build_timer.stop()
+	
+	#after skip the sprite minigame triggers automatically
+	#sprite_timer.stop()
+	#resource_sprite_popup()
+	
 	prepare_wave()
 	
+	get_node("Ship/Path3D2/PathFollow3D").progress = 565.87
+
 func start_game():
 	game = true
 	print("1")
@@ -765,6 +977,8 @@ func _on_play_pressed() -> void:
 	start_game()
 	if how_to_play.visible:
 		how_to_play.visible = false
+		value = 1.0
+		time_passed = 0.0
 
 func _on_quit_pressed() -> void:
 	get_tree().quit()
@@ -773,10 +987,289 @@ func _on_continue_pressed()->void:
 	get_tree().paused = false
 	pause_menu.visible = false
 	UI.visible = true
-	
+
 
 #fuction to buy workers
 func buy_workers() -> void:
 	game_resources.wheat -= (30 * (game_resources.workers - 2))
 	game_resources.workers += 1
 	UI._on_no_pressed()
+
+func rand_builiding_to_destroy():
+	return randi_range(0, resource_holder.get_child_count()-1)
+
+func destoy_resource_building():
+	if resource_holder.get_child_count()>0:
+		var resource = resource_holder.get_child(rand_builiding_to_destroy())
+		game_resources.used_workers-=1
+		game_resources.workers-=1
+		var col_point = resource.position
+		#print(col_point)
+		var grid_pos = grid_map.local_to_map(col_point)
+		var tile_pos = Vector3(grid_pos.x+10, grid_pos.y, grid_pos.z+5)
+		for i in resource.shape:
+			grid_map.castle_state[tile_pos.z-i.z][tile_pos.x-i.x] = 0
+		resource.free()
+		check_resource_generation_req()
+
+func update_enemy_killed_stats(enemy_type:String) ->void:
+	match enemy_type:
+		"Basic Enemy":
+			stats.killed_normal_enemies += 1
+		"Fast Enemy":
+			stats.killed_fast_enemies += 1
+		"Pyro":
+			stats.killed_pyro_enemies += 1
+		"Boss Enemy":
+			stats.killed_boss_enemies += 1
+
+func update_resource_stats(resource) ->void:
+	if resource.generation_depleted:
+		match resource.resource_type:
+			"wood":
+				stats.generated_wood += 1
+			"stone":
+				stats.generated_stone += 1
+			"wheat":
+				stats.generated_wheat += 1
+			"beer":
+				stats.generated_beer += 1
+	else:
+		match resource.resource_type:
+			"wood":
+				stats.generated_wood += 2
+			"stone":
+				stats.generated_stone += 2
+			"wheat":
+				stats.generated_wheat += 2
+			"beer":
+				stats.generated_beer += 2
+	
+func load_data_to_database() -> void:
+	end_time = Time.get_unix_time_from_system()
+	stats.time_in_game = (end_time-start_time)/60
+	start_time = Time.get_unix_time_from_system()
+	var stat
+	stat = database.select_rows("Stats","id=1",["*"])
+	for i in stats:
+		if i == "has_1000_res":
+			if stat[0][i] == 0:
+				stat[0][i] = has_1000_res
+		if i == "map_covered":
+			if stat[0][i] == 0:
+				stat[0][i] = map_covered
+		if i == "easter_egg":
+			if stat[0][i] == 0:
+				stat[0][i] = easter_egg
+		else:
+			stat[0][i] += stats[i]
+			stats[i] = 0
+	print(stat[0])
+	database.update_rows("Stats","id=1",stat[0])
+	
+func quack():
+	quack_sound.play()
+
+
+func _on_sprite_timer_timeout()->void:
+	resource_sprite_popup()
+	var random_interval = randf_range(MIN_TIME, MAX_TIME)
+	sprite_timer.wait_time = random_interval
+
+func update_tower_hp()->void:
+	for i in range(get_node("Tower Holder").get_child_count()):
+		var tower = get_node("Tower Holder").get_child(i)
+		var tile_pos = tower.position
+		#print(tile_pos)
+		tile_pos.x+=9
+		tile_pos.z+=9
+		tile_pos.z/=2
+		tile_pos.x/=2
+		tower_hp[tile_pos.z][tile_pos.x]=tower.current_health
+
+func save_gamestate()->void:
+	update_tower_hp()
+	var game_state = {}
+	game_state["Tower_state"] = grid_map.tile_state
+	game_state["Resource_state"] = grid_map.castle_state
+	game_state["Tetris_color"] = grid_map.tetris_color_state
+	game_state["Current_wave"] = enemy_spawner.current_wave
+	game_state["Game_resources"] = game_resources
+	game_state["Current_health"] = current_health
+	game_state["Time_left_in_build_phase"] = build_timer.time_left
+	game_state["Tower_hp"]=tower_hp
+	game_state["Start_point"] = grid_map.start_point
+	game_state["End_point"] = grid_map.end_point
+	game_state["Castle_state"] = grid_map.castle_state_sl
+	var file = FileAccess.open(save_path, FileAccess.WRITE)
+	if file:
+		file.store_string(JSON.stringify(game_state))
+		file.close()
+
+func load_gamestate()->void:
+	grid_map.start_point = Vector3(grid_map.start_point.x+1,grid_map.start_point.y-1, grid_map.start_point.z)
+	grid_map.end_point = Vector3(grid_map.end_point.x-1,grid_map.end_point.y-1, grid_map.end_point.z)
+	grid_map.set_cell_item(grid_map.start_point, 15)
+	grid_map.set_cell_item(grid_map.end_point, 15)
+	
+	var file = FileAccess.open(save_path, FileAccess.READ)
+	if file:
+		var game_state = JSON.parse_string(file.get_as_text())
+		file.close()
+		var tile_state = game_state["Tower_state"]
+		grid_map.tile_state = convert_2d_array_to_int(tile_state)
+		grid_map.castle_state = convert_2d_array_to_int(game_state["Resource_state"])
+		grid_map.tetris_color_state = convert_2d_array_to_int(game_state["Tetris_color"])
+		grid_map.castle_state_sl = game_state["Castle_state"]
+		enemy_spawner.current_wave = int(game_state["Current_wave"])
+		game_resources = game_state["Game_resources"]
+		current_health = game_state["Current_health"]
+		
+		build_timer.wait_time = game_state["Time_left_in_build_phase"]
+		tower_hp = game_state["Tower_hp"]
+		var start = game_state["Start_point"]
+		grid_map.start_point = string_to_vector3(start)
+		var end = game_state["End_point"]
+		grid_map.end_point = string_to_vector3(end)
+		grid_map.start_point = Vector3(grid_map.start_point.x+1,grid_map.start_point.y-1, grid_map.start_point.z)
+		grid_map.end_point = Vector3(grid_map.end_point.x-1,grid_map.end_point.y-1, grid_map.end_point.z)
+		grid_map.set_cell_item(grid_map.start_point, 4)
+		grid_map.set_cell_item(grid_map.end_point, 4)
+		grid_map.start_point = Vector3(grid_map.start_point.x-1,grid_map.start_point.y+1, grid_map.start_point.z)
+		grid_map.end_point = Vector3(grid_map.end_point.x+1,grid_map.end_point.y+1, grid_map.end_point.z)
+		for i in range(10):
+			for j in range(10):
+				if(grid_map.tetris_color_state[i][j])!=0:
+					grid_map.set_cell_item(Vector3(j-5,1,i-5),grid_map.tetris_color_state[i][j])
+		grid_map.shortest_path = grid_map.find_shortest_path(grid_map.start_point, grid_map.end_point)
+		grid_map.convert_path_to_grid_map()
+		grid_map.mark_shortest_path()
+		convert_path_to_local()
+		enemy_spawner.set_path(short_path)
+		grid_map.gen_walls(grid_map.end_point)		
+		for i in range(10):
+			for j in range(10):
+				var tower
+				var mat
+				if int(grid_map.tile_state[i][j]) in [3,4,5]:
+					tower = NormalTowerScene.instantiate()
+					mat = tower.get_active_material(0)
+					var mat_dup = mat.duplicate()
+					mat_dup.transparency=BaseMaterial3D.TRANSPARENCY_DISABLED
+					tower.set_surface_override_material(0,mat_dup)
+					tower.set_surface_override_material(1,mat_dup)
+					tower.current_health = tower_hp[i][j]
+					tower.position = Vector3(j*2-9,4.5,i*2-9)
+				elif int(grid_map.tile_state[i][j]) in [6,7,8]:
+					tower = FreezeTowerScene.instantiate()
+					mat = tower.get_active_material(0)
+					var mat_dup = mat.duplicate()
+					mat_dup.transparency=BaseMaterial3D.TRANSPARENCY_DISABLED
+					tower.set_surface_override_material(0,mat_dup)
+					tower.current_health = tower_hp[i][j]
+					tower.get_node("MobDetector").get_child(0).disabled=false
+					tower.position = Vector3(j*2-9,4.5,i*2-9)
+				elif int(grid_map.tile_state[i][j]) in [9,10,11]:
+					tower = AOETowerScene.instantiate()
+					mat = tower.get_active_material(0)
+					var mat_dup = mat.duplicate()
+					mat_dup.transparency=BaseMaterial3D.TRANSPARENCY_DISABLED
+					tower.set_surface_override_material(0,mat_dup)
+					tower.set_surface_override_material(1,mat_dup)
+					tower.current_health = tower_hp[i][j]
+					tower.position = Vector3(j*2-9,4.5,i*2-9)
+				if int(grid_map.tile_state[i][j]) in [4,5,7,8,10,11]:
+					tower.upgrade()
+					tower.current_health = tower_hp[i][j]
+					if int(grid_map.tile_state[i][j]) in [5,8,11]:
+						tower.upgrade()
+						tower.current_health = tower_hp[i][j]
+				if tower:
+					get_node("Tower Holder").add_child(tower)
+					tower.can_shoot = true
+					tower.get_node("MobDetector").visible=false
+					tower.connect("tower_info",UI._on_normal_tower_lvl_1_tower_info)
+		var building
+		for i in range(10):
+			for j in range(4):
+				var place_pos = Vector3(j-10,2.5,i-5)
+				place_pos = grid_map.map_to_local(place_pos)
+				place_pos.y=2.5
+				
+				match int(grid_map.castle_state_sl[i][j]):
+					1:
+						building = Lumbermill.instantiate()
+						place_pos.x+=1
+						place_pos.z+=1
+						building.position = place_pos
+					2:
+						building = Mine.instantiate()
+						place_pos.x+=1
+						place_pos.z+=1
+						building.position = place_pos
+					3:
+						building = Windmill.instantiate()
+						building.position = place_pos
+					4:
+						building = Tavern.instantiate()
+						building.position = place_pos
+				if building:
+					get_node("Resource Holder").add_child(building)
+					color_transparent_mesh_instance(building,3)
+					check_resource_generation_req()
+					building.connect("resource_info", UI._on_resource_info)
+		UI.update_hearts()
+		enemy_spawner.update_wave_enemy_count()
+		UI.update_enemy_count_labels(enemy_spawner.basic_enemies_per_wave,enemy_spawner.fast_enemies_per_wave,enemy_spawner.boss_enemies_per_wave,enemy_spawner.pyro_enemies_per_wave)
+		for i in range(1,enemy_spawner.current_wave):
+			UI.enemies_scaling(i)
+		if enemy_spawner.current_wave > 5:
+			$"CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Wheat building".disabled = false
+			$"CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Workers".disabled = false
+			for button in UI.locked_buttons:
+				for child in button.get_children():
+					if child is TextureRect:
+						if not UI.original_positions.has(child):
+							UI.original_positions[child] = child.position.y
+					var target_position = child.position
+					if not button.disabled:
+						target_position.y = UI.original_positions[child]
+						child.position = target_position
+		if enemy_spawner.current_wave > 10:
+			$"CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Beer building".disabled = false
+			for child in $"CanvasLayer/UI/Bottom_panel/Resource buildings/HBoxContainer/Beer building".get_children():
+				if child is TextureRect:
+					if not UI.original_positions.has(child):
+						UI.original_positions[child] = child.position.y
+				var target_position = child.position
+				target_position.y = UI.original_positions[child]
+				child.position = target_position
+
+func convert_2d_array_to_int(array_2d: Array) -> Array:
+	var result = []
+	for row in array_2d:
+		var new_row = []
+		for value in row:
+			new_row.append(int(value))
+		result.append(new_row)
+	return result
+
+func string_to_vector3(input_string: String) -> Vector3:
+	var cleaned_string = input_string.strip_edges().replace("(", "").replace(")", "").strip_edges()
+	var parts = cleaned_string.split(",")
+	if parts.size() == 3:
+		var x = parts[0].to_int()
+		var y = parts[1].to_int()
+		var z = parts[2].to_int()
+		return Vector3(x, y, z)
+	else:
+		print("Błąd: Niepoprawny format stringa:", input_string)
+		return Vector3.ZERO
+
+func _on_continem_pressed() -> void:
+	start_game()
+	load_gamestate()
+	if how_to_play.visible:
+		how_to_play.visible = false
+		value = 1.0
+		time_passed = 0.0
